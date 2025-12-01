@@ -1,0 +1,1001 @@
+first_name,last_name,dob,year_of_birth,gender,zip,email,phone,address
+Adrian,Pruschke,19490218,1949,M,90576,xjunk@googlemail.com,05745888234,Pechelstr. 7
+Harro,Kramer,19730715,1973,M,44252,frust@hotmail.de,(05577) 13843,Gröttnerweg 98-32
+Anneke,Finke-gumprich,19540513,1954,F,74895,dzahn@web.de,+49(0) 787957677,Gumprichstraße 61/91
+Natalja,Steinberg,19810608,1981,F,34404,loefflerellen@aol.de,+49(0)3408561050,Austermühleallee 3
+Damian,Säuberlich,20050505,2005,M,81682,aline10@web.de,+49(0)4810311138,Ortmannweg 3/4
+Ildiko,Tröst,20070219,2007,F,30694,evelynullmann@aol.de,+49(0) 601946458,Scholtzgasse 94-28
+Niko,Briemer,19951125,1995,M,45279,ltrapp@yahoo.de,07230 59893,Adelinde-Bloch-Weg 69-65
+Gerda,Jungfer,19780121,1978,F,46943,rustfriedemann@gmail.com,+49(0)7890 00788,Hessegasse 558
+Harald,Baum,20001114,2000,M,18605,joerg40@gmx.de,0927626895,Sibilla-Döring-Platz 37/17
+Liliane,Schmidtke,19631122,1963,F,42490,tlustekbirgid@hotmail.de,05674 431991,Sieringweg 334
+Isabella,Steinberg,19540423,1954,F,32926,myriamkensy@web.de,08456725012,Krausweg 4
+Flora,Johann-aumann,20070924,2007,F,14200,maria-theresiaboucsein@googlemail.com,(04360) 686509,Liane-Speer-Straße 9
+Karina,Hänel,20010514,2001,F,52662,lorchalexandros@gmx.de,(08814) 83030,Tadeusz-Hornich-Gasse 2/2
+Abraham,Hornig,19540606,1954,M,41817,adolphdiether@hotmail.de,(02499) 27985,Bolzmanngasse 8
+Eberhardt,Stadelmann-stadelmann,20040112,2004,M,01480,waltherwulff@gmail.com,03862 649004,Andrei-Buchholz-Ring 146
+Isolde,Klotz,19820810,1982,F,93449,pietrolehmann@gmail.com,0668080253,Schmidtgasse 4-8
+Helmtrud,Lorch,19500630,1950,F,69465,ariane20@web.de,03014 34632,Stefan-Reinhardt-Platz 9
+Silva,Juncken,19611204,1961,F,11725,cscholz@gmx.de,+49(0)1082 06050,Sina-van der Dussen-Weg 794
+Henri,Hartmann-löffler,19530928,1953,M,39798,siglinde34@web.de,+49(0)9649 794934,Putzring 304
+Krystyna,Bähr,19560717,1956,F,44120,oboucsein@gmx.de,05154728774,Theo-Kaul-Platz 55
+Meral,Barth,19750327,1975,F,37288,friedl33@googlemail.com,03025 388340,Löchelring 11
+Käthe,Mälzer,19570721,1957,F,32705,yvogt@googlemail.com,09615556947,Bachmannstr. 76-96
+Priska,Schweitzer,19950216,1995,F,74861,mariobolzmann@web.de,07194877282,Thanelstr. 8832
+Wolfram,Hecker,19900130,1990,M,57138,soedingsteven@web.de,(03529) 768096,Marta-Dietz-Weg 44
+Uschi,Rogge,20030626,2003,F,62227,nadianerger@gmail.com,(05060) 15249,Beerplatz 401
+Gunther,Briemer,20041013,2004,M,67506,kreuselhinrich@gmx.de,01319195484,Ladeckring 5/2
+Aenne,Rust Beng,19911211,1991,F,66401,gscholl@web.de,(09054) 625506,Hellwigstraße 19
+Anette,Grein Groth,19840315,1984,F,75843,pscholz@gmx.de,(00808) 37707,Mijo-Wirth-Ring 6-6
+Benita,Renner,20061020,2006,F,75567,doehnmargarete@gmail.com,+49(0)1282251681,Roy-Karge-Weg 41-53
+Ingeburg,Neuschäfer-jäkel,19491205,1949,F,39292,filizschmidt@aol.de,09110012518,Schmiedtplatz 748
+Mona,Walter,19760920,1976,F,94519,baldur88@aol.de,+49 (0) 0324 846700,Horst-Weihmann-Gasse 1-1
+Gusti,Löffler,19860220,1986,F,92366,irinaweinhold@yahoo.de,+49(0) 021536622,Markus-Tintzmann-Gasse 589
+Marianna,Heidrich,19610611,1961,F,55692,margritweihmann@yahoo.de,+49(0)0555512698,Sontagstr. 4199
+Renata,Mentzel,19480301,1948,F,61640,gertraut90@gmail.com,+49(0)0045 50477,Beyerweg 25-46
+Harm,Höfig,19450903,1945,M,04834,striebitzcecilia@hotmail.de,+49 (0) 3150 638463,Bergerring 7
+Ernst-august,Mies,19620803,1962,M,29097,muelichensusi@yahoo.de,(04792) 285648,Kristiane-Siering-Allee 3
+Natascha,Kaul,19760513,1976,F,45141,henrike63@yahoo.de,+49(0)3525 71313,Stiffelweg 38/94
+Athanasios,Berger,19810606,1981,M,19236,ccichorius@googlemail.com,+49(0)8676 59733,Trübplatz 6-6
+Lucie,Lindner,19540326,1954,F,23875,annemariehecker@web.de,+49(0)9069852089,Junckstr. 16/40
+Ivo,Ullrich,19940305,1994,M,79051,dannywiek@gmail.com,07221 451636,Jäntschstr. 33/28
+Gabi,Flantz,19861129,1986,F,87202,vheintze@googlemail.com,(01555) 774785,Francis-Wilmsen-Ring 82/77
+Utz,Jüttner,19650129,1965,M,62611,eleonora70@hotmail.de,+49 (0) 1698 516537,Sofie-Neuschäfer-Weg 528
+Magdalena,Hesse,19770625,1977,F,53612,tdobes@yahoo.de,+49(0)6276 56038,Wibke-Tlustek-Straße 73-16
+Rosl,Süßebier-sager,19690831,1969,F,15248,roerrichtsilke@aol.de,02771 470948,Kai-Uwe-Franke-Ring 3
+Wolf-dietrich,Schulz,19450809,1945,M,27384,iheintze@gmail.com,(09709) 71144,Jozef-Segebahn-Straße 3
+Aldo,Radisch,19811105,1981,M,64719,pladeck@web.de,02099 400417,Rudolphallee 9-7
+Birgitta,Beer,20060830,2006,F,72797,svetlanaschweitzer@gmail.com,+49 (0) 1111 313486,Erwin-Gute-Ring 2
+Wiltrud,Stolze,19910910,1991,F,22315,maltereinhardt@web.de,(01811) 335876,Steuerring 88-45
+Willy,Heidrich,19880528,1988,M,31655,dgertz@gmx.de,0167618650,Atzlergasse 22/99
+Jeanette,Klingelhöfer,19490311,1949,F,26321,wherrmann@aol.de,(00267) 724245,Andrew-Löwer-Allee 72-81
+Ansgar,Ernst,19600721,1960,M,57201,rosemannstephan@yahoo.de,+49(0)5538 370430,Nada-Köster-Straße 28/16
+Hans-werner,Scheuermann,20050704,2005,M,93684,viktoriajuncken@hotmail.de,0415789945,Eitel-Schenk-Weg 3213
+Edith,Wesack,19621223,1962,F,65634,paulinesuessebier@gmail.com,+49(0) 308286703,Werneckegasse 306
+Else,Meister,19451220,1945,F,86642,hasanmielcarek@hotmail.de,+49 (0) 8318 218797,Walburga-Krebs-Ring 2/4
+Anka,Zimmer,19730813,1973,F,45649,pruschkealena@yahoo.de,09684 68158,Hella-Weller-Gasse 856
+Aloisia,Heinrich,19740926,1974,F,93454,doerschnersebastiano@web.de,+49(0)8565 221401,Schäferplatz 949
+Mijo,Ziegert,19590308,1959,M,10937,hans-karl32@yahoo.de,+49 (0) 6406 952414,Steuerallee 56-21
+Tania,Trapp,19710702,1971,F,12591,otaesche@hotmail.de,04662 357215,Faustgasse 3/9
+Radmila,Bolander,20050226,2005,F,61799,salzannelore@yahoo.de,+49(0)1266 043924,Stahrallee 66/77
+Lisa,Kade,19640316,1964,F,09048,ruppersbergerswantje@yahoo.de,+49(0)8703 122268,Hentschelgasse 24
+Lea,Geißler,19830528,1983,F,65555,ljunken@googlemail.com,+49(0)5249963717,Plathring 39-38
+Britta,Döhn,19971103,1997,F,31511,koch-iihenning@hotmail.de,+49(0)8659 420431,Klappgasse 60/78
+Emilie,Jopich,20060811,2006,F,51039,iriehl@gmail.com,06219 298954,Ditmar-Ebert-Weg 54
+Gabriella,Kade,19741004,1974,F,30599,oniemeier@googlemail.com,(08166) 590394,Baumgasse 740
+Roy,Staude,19810312,1981,M,74275,lindautibor@aol.de,+49(0) 898691418,Säuberlichallee 6-7
+Max,Hettner,20070704,2007,M,44683,melanieflantz@yahoo.de,(06212) 02475,Rebecca-Kabus-Weg 591
+Marlies,Rudolph,19650607,1965,F,70402,vassilios00@gmx.de,04275 49632,Antonietta-Trub-Weg 2/2
+Dorothea,Koch,19761114,1976,F,95273,karla95@web.de,+49(0) 608004630,Ansgar-Heinrich-Straße 48
+Michelle,Auch Schlauchin,19820926,1982,F,97071,mmuelichen@aol.de,(06634) 712516,Martin-Hiller-Ring 18-49
+Zita,Juncken,19971112,1997,F,24506,kriemhildehlert@hotmail.de,00580 246858,Wagnerstraße 2
+Fernando,Binner,19530418,1953,M,15860,olenawinkler@hotmail.de,0657782567,Dippelring 8-2
+Katy,Kraushaar,19950610,1995,F,74189,jannbutte@googlemail.com,(08623) 73594,Gehringerring 2267
+Ortwin,Rudolph Beng,19671017,1967,M,27856,josefaliebelt@aol.de,+49(0)5921 27278,Nina-Bachmann-Ring 8-8
+Beatrice,Reichmann,19610909,1961,F,69710,axelsoeding@googlemail.com,+49(0)6720 80391,Albin-Koch-Straße 2861
+Marion,Benthin,19620523,1962,F,64888,lara89@gmail.com,05011874023,Marjan-Hande-Ring 3
+Antje,Juncken,19780415,1978,F,87494,troestbrunhild@yahoo.de,+49(0) 564248130,Karzstraße 8/9
+Veronika,Mangold,19820702,1982,F,97220,katrin19@aol.de,+49(0)2618191747,Kochstraße 1
+Franz,Bender,19570806,1957,M,44229,herrmannalbers@yahoo.de,+49(0)3023 67568,Wähnerstraße 6
+Dietmar,Trommler,20040123,2004,M,93086,joanareuter@yahoo.de,05775 15468,Ira-Johann-Weg 66
+Gertrud,Noack,19600924,1960,F,63019,tbutte@googlemail.com,+49 (0) 6540 650811,Aneta-Cichorius-Straße 76
+Björn,Häring,19770116,1977,M,77864,irosemann@aol.de,+49 (0) 8765 089189,Wilhelmine-Förster-Straße 8-6
+Elisa,Gumprich,19450404,1945,F,67630,xanders@googlemail.com,01637583486,Flantzstraße 47-13
+Ulrike,Gumprich,19970424,1997,F,63633,druppersberger@gmx.de,00897437203,Kathleen-Beyer-Straße 68/20
+Jonas,Börner-tröst,19541109,1954,M,25153,wulffelisabeth@yahoo.de,+49(0)4009479833,Beierring 76
+Emilia,Dussen Van-bauer,19540601,1954,F,87727,heidibender@aol.de,(08809) 952421,Lotti-Röhrdanz-Ring 9820
+Markus,Auch Schlauchin,19921127,1992,M,77380,wagenknechtgeorgios@hotmail.de,0523823734,Weihmannstraße 9868
+Nicolaus,Bärer-seifert,19470130,1947,M,28861,waltergumprich@gmx.de,+49(0)3948056266,Suse-Wähner-Platz 382
+Antonia,Löwer,19560524,1956,F,60549,vgeisel@aol.de,08669866816,Ringstr. 719
+Klaus-peter,Röhricht,19801030,1980,M,44928,hermann-josef12@web.de,0605826199,Joseph-Ehlert-Allee 4358
+Hanno,Hertrampf,19960408,1996,M,51306,qfreudenberger@aol.de,+49(0)4832 56592,Walterweg 30-29
+Laurenz,Döring,19750321,1975,M,03875,leo08@web.de,0600913901,Eckhart-Baum-Straße 52/46
+Irene,Jacob,19981101,1998,F,00203,sontagauguste@gmail.com,04150 49454,Butteallee 96/98
+Eckart,Grein Groth,19790919,1979,M,50815,junkenkristin@aol.de,05877 725965,Carolin-Mülichen-Straße 12-80
+Gitta,Heinrich,19480524,1948,F,52638,anastasia26@aol.de,07716188847,Fritschweg 4-4
+Delia,Stey,19480113,1948,F,48053,nfechner@googlemail.com,0557718259,Segebahnstr. 5604
+Heinz-günther,Häring,19931113,1993,M,47255,cgotthard@gmail.com,0164844044,Norman-Lehmann-Straße 188
+Renato,Werner,19880725,1988,M,58105,ingetrautriehl@gmail.com,+49 (0) 1775 393548,Henkstr. 2
+Ayten,Anders,20070228,2007,F,60756,hniemeier@aol.de,0761613673,Marjan-Römer-Weg 9
+Hans-ludwig,Weiß Beng,19701120,1970,M,16937,annetteriehl@aol.de,+49 (0) 7671 821760,Guido-Briemer-Allee 3/6
+André,Stroh,19910319,1991,M,61773,gutelidwina@gmx.de,06044168743,Suzanne-Fritsch-Ring 7833
+Philipp,Wilms-sorgatz,19671001,1967,M,18115,stiebitzisabella@googlemail.com,0154542352,Eckbauerring 21-65
+Reiner,Textor,19681203,1968,M,04894,martinulf@yahoo.de,01748 19175,Radmila-Kitzmann-Gasse 9202
+Walter,Lachmann-gumprich,19660317,1966,M,11389,tadeuszdoehn@gmx.de,08114875021,Ebertgasse 72-61
+Nadine,Jessel,19610228,1961,F,99216,junkwalburga@gmail.com,(00310) 253091,Marliese-Fliegner-Straße 269
+Heide-marie,Gehringer,19620813,1962,F,73503,maurizio76@googlemail.com,+49(0)5385754230,Ignaz-Sontag-Straße 0
+Christine,Killer,19490625,1949,F,62058,beritsalz@aol.de,+49 (0) 1568 790930,Kranzgasse 43-51
+Chantal,Renner,19890201,1989,F,23682,eckbauerbeata@gmx.de,08784 21083,Francis-Becker-Straße 58/60
+Gretel,Gertz-mälzer,19851024,1985,F,16043,njacob@web.de,(01922) 52006,Dolores-Jüttner-Gasse 2-3
+Carlo,Kambs,19880607,1988,M,40636,annita11@web.de,0560674033,Abram-Hölzenbecher-Weg 51
+Nicole,Stolze,19740115,1974,F,28210,useifert@googlemail.com,01875449771,Textorweg 20
+Marco,Dussen Van,19881002,1988,M,76160,tlustekmary@web.de,01023 866131,Kaspar-Kranz-Platz 2/6
+Tadeusz,Käster,20031004,2003,M,04397,iroerricht@gmail.com,01897 970864,Geislerring 9/6
+Gotthold,Dippel Beng,19630311,1963,M,21513,ffechner@gmx.de,04578 414974,Schottinstraße 26
+Aribert,Nerger,19901015,1990,M,18720,philippschwital@gmail.com,+49(0)5973302955,Margret-Boucsein-Allee 75
+Rabea,Tlustek,19610110,1961,F,62439,wolf-ruedigerkrein@aol.de,(02473) 582122,Zänkergasse 3
+Marika,Hermann,19890927,1989,F,56744,heinz-josef48@yahoo.de,06869 68253,Plathstr. 32
+Karolina,Ernst,19931207,1993,F,17057,gotthardtrubin@gmx.de,+49(0) 936037900,Gießstr. 18-31
+Jens-uwe,Thies,19900821,1990,M,05118,alicja82@web.de,06000 038420,Geiselgasse 30
+Larissa,Scheel,19941110,1994,F,76419,hermann-josefbeckmann@googlemail.com,08707 49125,Elisabeth-Weller-Weg 12
+Leonore,Mentzel,19671021,1967,F,65744,bhering@gmx.de,+49(0)0268583205,Manfred-Adler-Ring 12-90
+Lisa,Mans,19480715,1948,F,69957,stahrolav@aol.de,+49(0)0561315896,Horst-Jacob-Platz 88
+Luisa,Neureuther,19740528,1974,F,02746,gerlachattila@gmx.de,(03735) 071120,Stiebitzplatz 84
+Tamara,Scheel,19580618,1958,F,99880,vanessatextor@yahoo.de,(05829) 163201,Karlheinz-Hänel-Platz 730
+Rotraud,Säuberlich,19720103,1972,F,43080,guelaymies@gmx.de,(04802) 732995,Stanislaw-Vollbrecht-Allee 3102
+Irmela,Klotz,19850807,1985,F,67829,tjopich@googlemail.com,0079917898,Wulffgasse 0
+Zenta,Schweitzer,19800725,1980,F,80570,ron41@hotmail.de,00852220574,Cathleen-Heintze-Allee 5-6
+Asta,Juncken-stiebitz,19470722,1947,F,88809,heserrotraud@web.de,+49(0)0229 17659,Bonbachgasse 85-41
+Antonio,Rust,19810109,1981,M,65598,rohtstefan@googlemail.com,0742362753,Valentina-Mende-Gasse 724
+Apollonia,Gerlach,19670508,1967,F,91181,tania08@googlemail.com,(04147) 98973,van der Dussenweg 59
+Mirjam,Pärtzelt,19470719,1947,F,26640,adrianenette@yahoo.de,+49(0)6837 942871,Mitschkestraße 6724
+Ehrhard,Freudenberger,19960224,1996,M,01183,pawel96@gmail.com,07751518277,Rolf-Dieter-Mielcarek-Gasse 9/8
+Eduard,Gute,20040420,2004,M,61210,heringbertha@web.de,03474 883255,Hans Jürgen-Dörr-Straße 2-6
+Siegried,Schlosser,19620228,1962,U,01894,ohuebel@googlemail.com,+49(0) 967096620,Jäkelstr. 5-2
+Philomena,Kraus Beng,19940913,1994,F,45713,regine33@web.de,+49(0)4705 588347,Siegmund-Budig-Allee 49
+Lena,Schlosser,19590818,1959,F,77532,mikhailreichmann@googlemail.com,09765 523387,Davidsweg 27-27
+Linda,Döring,19600328,1960,F,27487,annemarie95@gmx.de,+49 (0) 9977 736135,Atzlerweg 2
+Gina,Bärer-hiller,19510626,1951,F,11351,elenahentschel@gmail.com,+49(0)0569 878494,Carina-Niemeier-Straße 34-91
+Kazim,Schuchhardt,19690909,1969,M,47766,weitzelhans-gerhard@googlemail.com,(08056) 980230,Dorothea-Naser-Straße 30/43
+Lena,Berger,19530922,1953,F,73980,evangeloshuebel@googlemail.com,(09088) 21471,Alwin-Schüler-Straße 10
+Hassan,Löffler,19710803,1971,M,37809,josefagiess@gmail.com,00874 00938,Roggeplatz 63/51
+Imre,Davids,19620224,1962,M,39590,cschacht@gmx.de,+49(0) 350485938,Abram-Spieß-Platz 835
+Swetlana,Rohleder,19800408,1980,F,82457,tmende@googlemail.com,+49(0)8747 26085,Roman-Bauer-Ring 7-6
+Hassan,Anders,19830923,1983,M,84882,lissygeisler@yahoo.de,0062459799,Stjepan-Schinke-Gasse 1/8
+Victoria,Werner,19810531,1981,F,95176,rsuessebier@gmx.de,+49(0)5340 54829,Fiebigplatz 7/9
+Rudi,Rädel,20060628,2006,M,79486,gudeclaudio@web.de,09767 216097,Conradigasse 2-7
+Berend,Förster,19670313,1967,M,94095,theobald52@aol.de,0764378683,Leopold-Mosemann-Weg 21-34
+Erhard,Rust Beng,19570428,1957,M,58227,fatma78@yahoo.de,+49(0)7989801647,Anneliese-Eimer-Weg 1/1
+Hans-otto,Fröhlich,20020528,2002,M,57616,stellahoffmann@hotmail.de,(00088) 53896,Paffrathallee 90-55
+Niklas,Schinke,20070222,2007,M,15514,romantrommler@aol.de,+49(0)6388585574,Heinzring 1-9
+Aleksej,Scheuermann,19840403,1984,M,63813,leonardojuncken@yahoo.de,00386 40548,Ortmannplatz 1/6
+Pius,Gierschner,19911116,1991,M,97749,laszloritter@hotmail.de,+49(0)6985 99415,Scholtzstr. 7096
+Lucia,Karz-huhn,19790605,1979,F,50771,ohoefig@yahoo.de,01313 63755,Tobias-Tröst-Platz 878
+Gabor,Buchholz,19690906,1969,U,71821,sotto@gmx.de,0112976345,Wernerstraße 2/4
+Armin,Sauer,19860426,1986,M,35344,geiselharro@googlemail.com,+49(0)2559 737144,Janusz-Beer-Allee 5/9
+Dursun,Bohnbach,19611207,1961,M,72336,reinhardtfranco@yahoo.de,0521825364,Tlustekgasse 51
+Peer,Söding,19571207,1957,M,70027,vschenk@gmail.com,(03768) 024125,Beckmannweg 5218
+Magret,Hörle,19961021,1996,F,70377,schleichfredo@aol.de,(04351) 888456,Margrafweg 69/79
+Monika,Stadelmann,19920608,1992,F,35401,kloos@googlemail.com,+49(0) 480172643,Alice-Kambs-Ring 5169
+Maximilian,Paffrath,19740306,1974,M,29312,isoeding@hotmail.de,+49(0) 240995381,Kostolzinstr. 6285
+Jolanda,Eckbauer,19631119,1963,F,58685,rennerilhan@aol.de,+49(0)2792013465,Ottoplatz 9735
+Aleksej,Bohnbach,19960831,1996,M,16533,kristinaweinhage@googlemail.com,(00973) 74283,Dietmar-Hamann-Weg 56/62
+Leander,Süßebier,20060831,2006,M,22246,alice55@gmx.de,0798350662,Josefa-Henschel-Weg 98/12
+Caroline,Metz,19490303,1949,F,83436,theinz@web.de,05970459975,Reinhardtallee 546
+Philippe,Trommler,19831106,1983,M,10459,christinheinrich@googlemail.com,+49 (0) 2914 187729,Knut-Hübel-Platz 39/38
+Nadin,Kranz Beng,19880831,1988,F,51287,ftrubin@gmx.de,0565868474,Drubinring 80/74
+Marjan,Kruschwitz,19860710,1986,M,30296,margit30@aol.de,(02510) 28938,Heidelore-Löffler-Allee 3/5
+Apostolos,Noack Beng,19830727,1983,M,53220,haenelmiodrag@yahoo.de,03708 71847,Greta-Hande-Weg 94
+Anthony,Boucsein,19821027,1982,M,29946,schoenlandimelda@hotmail.de,09093 15450,Petros-Cichorius-Ring 9-2
+Agata,Börner-wohlgemut,19710821,1971,F,80978,roseklemt@gmx.de,(01314) 06866,Sophie-Trupp-Gasse 8
+Heiko,Reuter Beng,20040906,2004,M,22683,hettnerullrich@aol.de,06245 470650,Bohlanderallee 25/44
+Fredy,Römer,19850716,1985,M,78049,ywernecke@googlemail.com,+49 (0) 4478 962393,Gorlitzplatz 2
+Ingeborg,Schäfer,20000825,2000,F,47867,wendehilda@web.de,+49(0)7651 551268,Löwerring 86-61
+Ilja,Stahr,19830502,1983,M,98108,margaretha63@gmail.com,0539507531,Cemal-Reinhardt-Weg 8134
+Mattias,Segebahn Beng,19741116,1974,M,82897,andreybeyer@web.de,+49 (0) 2101 653028,Liebeltring 2
+Vitali,Schäfer,19900831,1990,M,40392,heinrich94@googlemail.com,+49(0) 447962638,Rennerweg 4/6
+Benjamin,Jungfer,19550820,1955,M,29904,margaretha44@gmail.com,+49(0)6454 40925,Annegrete-Neureuther-Weg 61-15
+Reinhold,Seifert,20030312,2003,M,74841,draganschulz@web.de,+49(0)4915581339,Virginia-Heidrich-Straße 4/3
+Gundi,Juncken,19960720,1996,F,07844,aheinrich@aol.de,+49(0)2020 727015,Hans-Michael-Briemer-Platz 0
+Liliana,Hövel,19841005,1984,F,04896,stilla88@gmail.com,(04212) 55688,Buttestraße 83-99
+William,Dussen Van,19720929,1972,M,75252,cmuehle@aol.de,04565 152623,Babett-Scheel-Weg 56
+Burkard,Steinberg,19870705,1987,M,12793,emmy68@web.de,(01106) 681943,Cetin-Etzler-Ring 3-3
+Doreen,Säuberlich Beng,19860510,1986,F,65423,sevimschueler@web.de,(09713) 586970,Wilma-Steinberg-Ring 443
+Elisabet,Gute,19860604,1986,F,12161,valentinschleich@aol.de,02279 78651,Karzstraße 4-5
+Nicolai,Weller,19851017,1985,M,60082,xsuessebier@googlemail.com,(07152) 77056,Drewesweg 732
+Carolin,Bachmann,19491126,1949,F,87985,danilo74@gmail.com,+49(0)7239 763113,Fiebigweg 5-7
+Antoinette,Thies,19900531,1990,F,99545,volkmarbaum@aol.de,+49(0)0799626500,Jockelgasse 9/6
+Katharina,Jopich,19850808,1985,F,61815,leifweiss@gmx.de,(01763) 03684,Löchelring 3
+Guiseppe,Fiebig,19470623,1947,U,92713,mathias31@gmx.de,+49(0)8377 99403,Heidemarie-Patberg-Ring 91/24
+Irmtraut,Schottin,19780314,1978,F,15949,blochbeate@web.de,(07624) 269992,Imre-Steuer-Weg 324
+Priska,Lindner-hübel,19911104,1991,F,17306,siegridbruder@web.de,+49(0)0333 43301,Nettestraße 405
+Danilo,Holt,19890929,1989,M,47825,stavros44@googlemail.com,02869 004821,Weinhagegasse 640
+Evelyn,Schulz,19720104,1972,F,30031,dittmarwarmer@googlemail.com,(06436) 74430,Timm-Ullrich-Weg 99
+Hans-uwe,Keudel,19811023,1981,M,16427,evelinedavids@googlemail.com,07898425500,Abdul-Graf-Allee 501
+Mariola,Grein Groth,20030812,2003,F,43284,willibertkaul@googlemail.com,+49(0) 717662368,Birgitta-Gunpf-Gasse 856
+Mike,Müller,19480330,1948,M,21727,marie-louisehartmann@gmail.com,(00114) 436733,Darko-Zobel-Straße 8311
+Benjamin,Walter,19940129,1994,M,10083,horst-dieter26@aol.de,06458 73024,Lidia-Zimmer-Straße 92/69
+Waltraut,Killer,20020216,2002,F,14262,oluebs@googlemail.com,+49(0) 302503050,Dussen vanplatz 2/9
+Jan-peter,Heinrich,19930511,1993,M,18172,adele44@gmail.com,+49(0)4200358957,Elfriede-Geisel-Straße 19
+Edeltraut,Steinberg,19530527,1953,F,57795,sven35@gmx.de,+49(0)7493 82497,Karin-Jähn-Allee 1
+Timo,Loos,19811222,1981,M,25382,klaere91@googlemail.com,03895 77834,Sigrun-van der Dussen-Platz 66-49
+Pirmin,Huhn Beng,19560901,1956,M,04693,annelore24@yahoo.de,(00184) 34412,Pruschkeweg 2161
+Carla,Mälzer,19881215,1988,F,29814,hoefigabbas@web.de,+49 (0) 7638 313712,Meyerstraße 23
+Dennis,Bender,19950701,1995,M,68240,meralrose@gmail.com,(01818) 212308,Sontagplatz 806
+Woldemar,Jäkel-heidrich,20060715,2006,M,81794,mansmadlen@aol.de,(04792) 514853,Hellwigplatz 337
+Swen,Barkholz,19641211,1964,M,47625,ischolz@googlemail.com,+49(0)3252042632,Bonbachgasse 606
+Klaus-günter,Bruder,19480901,1948,M,58379,wilmaheuser@aol.de,+49(0)7105 682905,Vollbrechtplatz 4818
+Gerolf,Hellwig,19920818,1992,M,07165,irmgard00@gmx.de,09640 30303,Ansgar-Mitschke-Ring 8588
+Maik,Hein,19550610,1955,M,53805,insahaase@gmx.de,+49 (0) 0432 888318,Bährgasse 41
+Hartmuth,Stiebitz,19880501,1988,M,48668,wibkemaelzer@web.de,+49(0) 863399398,Steuergasse 74/33
+Norma,Sauer,20020412,2002,F,82737,selimschlosser@yahoo.de,08786257418,Rosenowstraße 1-4
+Sofia,Stiffel,20040622,2004,F,34032,ladeckfredi@gmail.com,0819352380,Mansgasse 55-65
+Meike,Junitz,19951129,1995,U,53454,ante39@googlemail.com,07976 92664,Aloys-Hoffmann-Gasse 71-45
+Yasemin,Jungfer,19820807,1982,F,70264,xjaentsch@googlemail.com,07115 62860,Matthäiweg 974
+Heimo,Hoffmann,19480329,1948,M,81388,sibelschaefer@web.de,05256 998031,Ullmannplatz 31/82
+Diethard,Johann,19941030,1994,M,15001,lzaenker@aol.de,+49(0)7256175555,Gierschnerallee 5-5
+Katarina,Lehmann,19830228,1983,F,71977,verenahornig@googlemail.com,(06085) 22372,Wilmsstr. 36/46
+Kristiane,Mans,19900325,1990,F,26730,ustadelmann@gmx.de,05559 94213,Jäkelgasse 2396
+Michaele,Kuhl,19880213,1988,F,93382,damaris75@gmx.de,04342 859962,Paulo-Süßebier-Platz 95
+Melissa,Nerger,19740518,1974,F,00646,rkoch@gmail.com,+49(0) 872336244,Anne-Kensy-Platz 9-3
+Larissa,Bolander,19910620,1991,F,57751,hweiss@yahoo.de,0091713025,Frank-Zobel-Straße 134
+Corina,Schacht Beng,19901125,1990,F,01946,annerose08@hotmail.de,03626378653,Heinzplatz 5/2
+Ruth,Rogner Beng,20070430,2007,F,28694,sknappe@yahoo.de,+49(0) 112201881,Heidrichstr. 704
+Hassan,Gierschner,19500830,1950,M,55512,norma48@googlemail.com,00695481926,Kitzmannring 25/10
+Ada,Gotthard,19890408,1989,F,67453,caroline02@hotmail.de,+49 (0) 9890 219692,Zänkerring 427
+Bernadette,Benthin,20060710,2006,F,63561,heinrichrenata@hotmail.de,+49(0)3985973691,Otto-Hartung-Platz 13-11
+Serpil,Renner,19810520,1981,F,98754,hartmuthbender@hotmail.de,04263509425,Angelica-Riehl-Weg 8
+Marija,Gute,19900822,1990,F,93752,hjaekel@hotmail.de,00413681672,Tania-Kruschwitz-Straße 32/30
+Rosa-maria,Kensy,19830217,1983,F,29032,hans-erichhoffmann@yahoo.de,00063 34226,Johannes-Fechner-Ring 960
+Annekatrin,Van Der Dussen,19540510,1954,F,16606,ingriedklotz@googlemail.com,+49(0)3096 52647,Boris-Neuschäfer-Gasse 8404
+Lidia,Nette,20031016,2003,F,57039,doloresscholl@googlemail.com,+49(0) 759673545,Henner-Misicher-Gasse 56
+Lili,Käster-pärtzelt,19951119,1995,F,60016,mudepaul-heinz@yahoo.de,+49(0)4926 132173,Nadia-Riehl-Straße 826
+Sönke,Hänel,19921031,1992,M,17213,rohlederguenther@gmail.com,01599 86591,Eva-Maria-Krebs-Straße 45/41
+Rena,Heidrich-jähn,19610429,1961,F,22896,pgumprich@aol.de,(08254) 449558,Jozef-Johann-Gasse 7466
+Marie-louise,Reichmann,20070617,2007,F,17953,drubinmarcus@yahoo.de,(03605) 39356,Niemeierplatz 890
+Hedda,Jopich,19491027,1949,F,12293,witoldstiffel@web.de,+49 (0) 4624 185428,Schmiedeckeallee 1
+Antonina,Mitschke,19650330,1965,F,07122,ianders@hotmail.de,+49(0)1841219630,Malgorzata-Adler-Platz 7
+Karsten,Dietz,19920510,1992,M,23521,jasmina69@gmx.de,03707 40479,Meral-Winkler-Gasse 2
+Gerd,Kramer,19830127,1983,M,85584,lkallert@aol.de,+49(0)7652 06217,Reisingweg 5-4
+Denise,Berger,19811122,1981,F,16949,otlustek@web.de,0589293057,Wolfgang-Stadelmann-Weg 8142
+Georg,Roskoth,19760409,1976,M,32319,thenk@hotmail.de,08524 77996,Karsten-Hornich-Allee 97
+Kristian,Killer,19470529,1947,M,90473,girschnerjanet@web.de,0382113071,Linkegasse 3-5
+Walter,Dobes,19500725,1950,M,74174,bohlanderbaldur@gmx.de,+49(0)9366741344,Tintzmannstr. 4/7
+Antonietta,Thanel,19971107,1997,F,47922,loewerluciano@yahoo.de,+49(0)9385272452,Trude-Ring-Gasse 57
+Wenke,Zahn,19480702,1948,U,02322,pgeisel@yahoo.de,+49(0)2110808859,Lehmannstraße 15/11
+Heinz-walter,Mans,19740324,1974,M,45043,romuald79@gmail.com,+49 (0) 6769 039936,Raisa-Faust-Platz 854
+Franca,Van Der Dussen Beng,19990316,1999,F,35381,andreykuhl@gmx.de,03418 15382,Lambert-Ring-Gasse 4/5
+Marek,Lehmann,19490712,1949,M,08466,hertrampfjoerg-peter@gmx.de,(00303) 31086,Wulf-Seifert-Allee 38/89
+Nikola,Jüttner,19720318,1972,M,91569,bhermighausen@aol.de,(04863) 578031,Anneliese-Gehringer-Platz 1402
+Sevim,Rosenow,19650318,1965,F,28780,qharloff@web.de,0125344364,Birnbaumweg 20
+Franca,Wilmsen,19860420,1986,F,01603,nmende@gmx.de,+49(0)9900 84156,Dorle-Löwer-Allee 4187
+Lisa,Klemt,19980906,1998,F,97997,snohlmans@gmail.com,0049749996,Killerplatz 3-5
+Nadia,Keudel,19690419,1969,F,56993,dietlindebutte@web.de,(01462) 32620,Hubert-Ernst-Gasse 2-8
+Mercedes,Walter,19971030,1997,F,61848,sonja74@web.de,+49(0) 194240652,Seifertallee 2989
+Anne-marie,Gute-gunpf,19810611,1981,F,71754,kzobel@aol.de,+49(0)5716396497,Lorchallee 8/3
+Kamil,Karge,19941231,1994,M,90797,hertrampfgisa@web.de,04572798901,Ehrentraud-Graf-Gasse 4-3
+Felizitas,Pieper,19490119,1949,F,68122,linkeramazan@gmail.com,0249438326,Junkplatz 9
+Gerhild,Knappe,19940601,1994,F,01001,lena23@hotmail.de,+49(0) 974139287,Fechnerstraße 97
+Sedat,Reising-auch Schlauchin,19540426,1954,M,62771,hanno86@aol.de,+49(0)4256 117906,Steuerplatz 9
+Nils,Bolnbach,19450427,1945,M,36447,hrogge@gmail.com,01688 46773,Bianka-Albers-Gasse 930
+Klaus-werner,Wirth,19610407,1961,M,74509,margrafsiegmund@gmail.com,03985 481651,Monja-Wohlgemut-Allee 68
+Bernward,Siering,19660413,1966,M,59706,hans-hinrichpaffrath@gmail.com,02363 256081,Inken-Förster-Ring 2-7
+Valentine,Karge Beng,19640611,1964,F,83174,alma48@yahoo.de,(01477) 042502,Losekannplatz 9997
+Mirjam,Tröst,19531217,1953,F,31980,januszhermann@aol.de,(08144) 707971,Wilmsengasse 4/6
+Sylvie,Heidrich,19820130,1982,F,66617,hans-wolfgangdrewes@gmail.com,(02712) 77182,Beergasse 1
+Enrico,Schwital,19880207,1988,M,14834,speercaecilie@hotmail.de,0196019215,Scheuermannring 2472
+Gerard,Dussen Van,19540418,1954,M,74548,hjohann@gmail.com,(06793) 24711,Wulffweg 5-3
+Karolin,Matthäi-kramer,19620915,1962,F,20329,rebekkafaust@hotmail.de,+49 (0) 7989 493145,Toni-Niemeier-Straße 8-1
+Liesbeth,Beer,19711024,1971,F,63219,aurelia30@yahoo.de,00416 52185,Iwona-Spieß-Platz 3-1
+Lucia,Henschel,19610629,1961,F,07679,anna-marieschulz@hotmail.de,(00131) 98891,Zdenka-Römer-Platz 1-2
+Arndt,Hesse,20040820,2004,M,73913,loeffleredward@googlemail.com,+49 (0) 5659 421588,Lindnergasse 53
+Cynthia,Misicher,19600123,1960,F,93895,muharremladeck@yahoo.de,+49(0)5756422333,Fredo-Hering-Ring 73
+Dorit,Ullrich,19770525,1977,F,80248,hornichwilli@googlemail.com,+49(0)4551 437441,Paul-Gerhard-Gehringer-Gasse 170
+Jeanette,Huhn-heser,19980726,1998,F,09028,weigenwillig@hotmail.de,+49 (0) 9577 118226,Milka-Kroker-Weg 567
+Beate,Albers Beng,20021020,2002,F,91917,birgereberth@hotmail.de,+49(0)7254 111072,Martin-Kruschwitz-Ring 7
+Alois,Dippel,19920312,1992,M,55789,froehlichtobias@hotmail.de,02013 902211,Haeringstraße 8/8
+Helmtrud,Mielcarek,20041119,2004,F,37059,gudrun51@aol.de,+49(0) 508850363,Eberthring 51/92
+Sigurd,Rose,19860911,1986,M,27325,noackmagrit@hotmail.de,+49(0)9751075264,Tina-Mans-Weg 208
+Elisa,Vogt,19540320,1954,F,92758,gesche84@hotmail.de,(02092) 44429,Ritterring 82/48
+Antonina,Barkholz-adler,19450226,1945,F,62182,annaliesejungfer@gmx.de,+49 (0) 2848 820574,Rörrichtgasse 3-9
+Wieslaw,Juncken,19950707,1995,U,29182,ozimmer@hotmail.de,+49(0)9332595724,Kathi-Gotthard-Gasse 4780
+Mechtild,Margraf,19900201,1990,F,02530,swetlana63@hotmail.de,+49(0)3541 164974,Hellwigring 53/43
+Isabella,Finke,19991214,1999,F,44751,leigenwillig@yahoo.de,08393 387614,Alessandro-Klotz-Allee 3
+Lotte,Sontag-birnbaum,19630323,1963,F,71873,waltrud26@hotmail.de,0663677977,Drewesring 1/8
+Hans-uwe,Cichorius-metz,19741001,1974,M,50038,hoerleedeltraut@aol.de,+49(0)3769460070,Fernando-Mans-Gasse 262
+Geza,Döhn,20020823,2002,U,62385,nergercornelia@hotmail.de,+49 (0) 0127 715460,Karla-Noack-Gasse 8412
+Carolina,Geißler,19450608,1945,F,82421,ibaehr@gmail.com,02762 112753,Fritz-Trubin-Gasse 87/76
+Kay-uwe,Täsche-junken,19920812,1992,M,61063,magdalenefinke@yahoo.de,+49(0)2885 191615,Sontagring 30-90
+Ludwig,Wagenknecht-köhler,19550118,1955,M,35230,huebelmalte@gmx.de,08021 38679,Sebastiano-Döhn-Platz 9976
+Paul-heinz,Krebs,19560508,1956,M,83437,zwagner@gmx.de,+49(0)1886 013889,Mathilde-Plath-Platz 9/4
+Krystyna,Reichmann,19870409,1987,F,35051,noackkarolina@aol.de,05976 41453,Leonore-Linke-Allee 9-1
+Ansgar,Eigenwillig-bärer,19551108,1955,M,11829,gerard52@web.de,+49(0)2616 74176,Fiebigstraße 2
+Ferdi,Freudenberger,19540112,1954,M,51649,hanspeterring@hotmail.de,09566 76320,Henkplatz 9
+Joachim,Atzler,19671114,1967,M,15278,koch-iimaximilian@yahoo.de,08351 76962,Burkhard-Beer-Weg 27-18
+Ehrentraud,Kraushaar-scheuermann,19890608,1989,F,15248,kreinsibylla@web.de,+49(0) 728762165,Wagnerstraße 8826
+Norbert,Scheibe,19620402,1962,M,72455,fliegnerwolf-dieter@aol.de,09896 69852,Pruschkegasse 9-1
+Laila,Klotz,19770523,1977,F,01395,abram58@googlemail.com,+49(0)2018 59038,Paffrathstr. 9/4
+Ewa,Trub-rudolph,19900527,1990,F,57628,dhoffmann@yahoo.de,(09488) 130797,Sibylle-Striebitz-Ring 98/88
+Heike,Beyer,19940417,1994,F,69260,jhiller@aol.de,0808435695,Bärerallee 0
+Fadime,Röhrdanz,19550822,1955,F,43929,heinz-gerd99@yahoo.de,0966505963,Aldo-Mohaupt-Allee 72/69
+Urszula,Hornig,19610514,1961,F,09867,loretta14@googlemail.com,02488 828008,Heserring 22
+Rolf-peter,Hänel,20051223,2005,M,11320,meryemvogt@hotmail.de,05900844558,Marcel-Wilms-Ring 4-3
+Henriette,Täsche-kuhl,19671016,1967,F,84150,udojopich@hotmail.de,06527 51791,Claas-Carsten-Weg 11
+Luka,Riehl,20040404,2004,M,31876,johannanaser@hotmail.de,+49(0) 668877234,Oliver-Harloff-Straße 7
+Elsbeth,Herrmann,19980405,1998,F,39502,mangoldcindy@googlemail.com,02506 039536,Sylvia-Pruschke-Gasse 21-84
+Franjo,Holsten,19790619,1979,M,00561,guelay89@yahoo.de,+49(0) 777265901,Neureutherstr. 1144
+Amir,Mitschke,19820113,1982,M,48588,kreszenz47@aol.de,09991 856013,Frank-Peter-Stoll-Straße 74
+Ahmet,Spieß,19741007,1974,M,88806,haeringedelgard@gmx.de,0963082085,Klotzweg 4
+Jasmina,Röhrdanz,19700902,1970,F,97774,heikebaehr@gmail.com,(04965) 64610,Loosallee 5619
+Marie,Pieper,19601121,1960,F,53801,hannchensauer@gmx.de,+49(0)0366649726,Austermühlestraße 35/61
+Vitus,Zirme,19741111,1974,M,58256,hermannyasemin@hotmail.de,(03374) 841299,Kobeltgasse 4
+Jessika,Ullrich,19851111,1985,F,46701,elisabet39@yahoo.de,+49 (0) 0187 709104,Resi-Drewes-Ring 485
+Eva-marie,Gertz,19590820,1959,F,47992,knappedunja@gmail.com,+49(0)5477 587146,Gerlind-Becker-Weg 61
+Dietmar,Hertrampf,19470129,1947,M,14743,petra50@aol.de,+49(0)6813604195,Boucseinring 9/3
+Kenan,Mende-klotz,19860220,1986,M,08653,scheibeannelene@gmail.com,+49 (0) 7724 395657,Schaafstraße 85/75
+Roland,Kobelt Beng,19870713,1987,M,24782,gottharddaniele@web.de,+49 (0) 3444 526754,Rosemannallee 88
+Kai-uwe,Karz,19991213,1999,M,16722,nhethur@gmx.de,+49(0)3799 96984,Denny-Geisler-Weg 84-61
+Anne,Hövel-martin,19611207,1961,F,16463,margaret76@hotmail.de,+49(0)1979991209,Pia-Oestrovsky-Ring 5/7
+Anka,Barth,19580729,1958,F,23451,mechthild57@web.de,+49(0)7963 435585,Brita-Aumann-Straße 9
+Nicolaus,Boucsein,19801102,1980,M,65833,bmosemann@web.de,0016942435,Erika-Lehmann-Straße 4/3
+Jerzy,Mentzel,19441008,1944,M,94675,bolanderjurij@gmx.de,+49(0) 176481739,Herwig-Koch II-Platz 5/1
+Thorben,Zimmer-drewes,19710326,1971,M,00048,strohtony@web.de,+49(0) 859152154,Zahnring 8622
+Albert,Putz,20000420,2000,M,64981,wojciechdavids@yahoo.de,01224 862452,Ludger-Liebelt-Allee 3/1
+Wolf-dieter,Heinz,20061209,2006,M,05242,ostumpf@web.de,+49(0)1757964534,Pedro-Mülichen-Platz 5-6
+Nikolaus,Carsten,19471129,1947,M,05714,edithabenthin@aol.de,(04965) 35571,Xaver-Meister-Platz 1605
+Regina,Thanel,19470616,1947,F,38667,harloffjohann@web.de,04453474725,Eberthstraße 74
+Ann,Ladeck Beng,19940415,1994,F,88333,zbiggen@googlemail.com,06889 48041,Sieringallee 5/8
+Marisa,Henschel,19691112,1969,F,86898,carlalehmann@web.de,02333 807952,Annegret-Häring-Allee 8/8
+Kira,Juncken,19880523,1988,F,40326,lilianewilmsen@web.de,00542811756,Ingolf-Speer-Weg 48/10
+Eugenie,Heuser,19770527,1977,F,22290,clausjunk@hotmail.de,(07551) 91791,Piotr-Weihmann-Platz 6-1
+Alwin,Rohleder,19840829,1984,M,51649,roggemadlen@web.de,+49(0)9885559199,Juan-Krebs-Platz 27-10
+Henriette,Gude,19520813,1952,F,96498,sigismund63@aol.de,06416 835464,Gießgasse 64-30
+Anneliese,Zänker,19771112,1977,F,42006,immobolander@gmx.de,04645 81204,Tlustekstraße 5208
+Reinhardt,Davids-wulff,19730628,1973,M,74089,nzobel@gmx.de,+49(0) 275889325,Haeringallee 2/1
+Rudolph,Gehringer,19590201,1959,M,44202,liesapatberg@yahoo.de,0106745029,Julian-Killer-Gasse 3/6
+Darko,Weimer,19680808,1968,M,22009,qseifert@web.de,08795 393089,Kensygasse 3/7
+Pauline,Kraus,19660308,1966,F,25120,heimobolnbach@web.de,(07287) 29025,Lena-Schacht-Straße 5-4
+Bela,Seidel,19490809,1949,F,53257,bolzmannjoerg@googlemail.com,+49(0)3186712607,Urte-Mälzer-Ring 328
+Kristin,Gnatz,19950124,1995,F,59122,ingetraudmies@hotmail.de,07764 39804,Hans-Ludwig-Schlosser-Platz 89-84
+Danuta,Karz,19930405,1993,F,92849,irmaladeck@gmx.de,0904170793,Vogtstraße 0
+Mahmut,Dehmel,19730612,1973,M,32442,adalberteberhardt@gmx.de,+49(0)8314353377,Adelgunde-Klapp-Platz 7-9
+Metin,Becker,19910815,1991,M,16207,blochhendrik@googlemail.com,+49(0)5555 126344,Diana-Adolph-Weg 6
+Dora,Barth,19720203,1972,F,91689,niklasrosenow@gmail.com,(02805) 475276,Nils-Kallert-Ring 40-50
+Fabienne,Linke,19721002,1972,F,79421,annelorejohann@gmx.de,+49(0)0806 28792,Conny-Schmiedecke-Straße 0
+Franka,Geisel-pechel,19550831,1955,F,34001,dgude@aol.de,+49(0)2805085291,Heinzallee 1
+Greta,Pieper,19990111,1999,F,54815,gbaum@web.de,+49(0)2753 611282,Rena-Dietz-Platz 60-56
+Uwe,Kraushaar-winkler,20010707,2001,M,22435,ute83@googlemail.com,+49(0)7806230018,Erdogan-Kensy-Platz 6804
+Auguste,Lübs,19531221,1953,M,44532,tstriebitz@hotmail.de,08715030680,Langeallee 4/7
+Alessandro,Bauer,19750812,1975,M,25497,goenueldavids@aol.de,+49(0) 685078403,Luigi-Trommler-Allee 62
+Alexandros,Nerger,19841208,1984,M,18368,nstoll@aol.de,03864 37970,Rüdiger-Börner-Platz 97
+Othmar,Scheibe,20031203,2003,M,74648,artur82@aol.de,+49(0)6742 200216,Marie-Theres-Schenk-Allee 6138
+Vitali,Wagenknecht,19560205,1956,M,86164,gkrause@gmx.de,(06485) 459326,Hans Josef-Jüttner-Platz 23
+Luka,Blümel,19530213,1953,M,34939,nbriemer@yahoo.de,+49(0)5156 78732,Fritschweg 7627
+Milan,Schleich,19650422,1965,M,81904,rritter@gmx.de,05016 20395,Reinald-Schulz-Ring 82/63
+Olivia,Benthin,19640206,1964,F,53381,wielochgiuseppina@googlemail.com,+49 (0) 4037 529701,Sandor-Kitzmann-Platz 3-8
+Detlef,Schomber,19580523,1958,M,83369,plathgerhardt@yahoo.de,+49(0)6259 72495,Heinrichring 33/76
+Wibke,Mentzel,19910506,1991,F,87356,yhuhn@gmail.com,+49(0) 297942515,Textorallee 82
+Andreas,Junck,20031209,2003,M,48668,dianabluemel@yahoo.de,+49(0)6089 604393,Mechtild-Scholl-Ring 21-99
+Dragica,Hornich Beng,19820507,1982,F,85514,delia17@hotmail.de,07350 248302,Aumanngasse 9-9
+Valeri,Heydrich,19760401,1976,M,38531,detlef99@yahoo.de,+49(0) 781388905,Ilias-Höfig-Ring 60/52
+Rigo,Vogt,19541205,1954,M,79191,nadia58@gmail.com,(03392) 69948,Mülichenweg 51
+Cora,Römer,20020913,2002,F,81171,eggertheintze@gmx.de,+49 (0) 9553 455564,Zobelallee 8
+Carmen,Roht,19470201,1947,F,14934,haraldhamann@hotmail.de,+49(0)0970 712071,Süßebierstraße 5-4
+Ingried,Pohl-seifert,20060109,2006,F,56631,sibel05@hotmail.de,(08091) 01487,Jäntschgasse 64-38
+Marie,Pölitz,19530814,1953,F,57669,hansgeorg99@aol.de,(05719) 64964,Gorlitzring 0
+Julie,Schottin,20060731,2006,F,58109,willyklotz@web.de,07814 93714,Selim-Ullrich-Allee 47
+Utz,Röhricht,19500912,1950,M,33914,pbender@yahoo.de,03320 316864,Junkstraße 68-86
+Maria-theresia,Thies,19820426,1982,F,97976,burkhardtkade@hotmail.de,+49(0)2288 977127,Bachmannring 72-92
+Dogan,Weinhage,19710114,1971,U,64944,rwirth@gmx.de,+49(0) 545871943,Corinna-Köhler-Ring 1194
+Heiko,Jungfer,19830311,1983,M,53255,bschwital@googlemail.com,(09529) 07397,Koch IIallee 4-9
+Concetta,Hettner,20011016,2001,F,65597,bsiering@gmx.de,+49(0) 941422645,Nergerstr. 6/2
+Lorenzo,Käster-ring,19560512,1956,M,54850,enginruppert@googlemail.com,+49(0)9090 331326,Dussen vanallee 374
+Anka,Rogge,19460208,1946,F,65455,jeannette65@aol.de,+49(0)2416682217,Rosalie-Ditschlerin-Straße 7-2
+Hubertine,Steinberg,20020112,2002,F,34031,rdrub@web.de,+49(0) 736600839,Steckelstraße 5-3
+Berndt,Bolander,19730208,1973,M,63929,liebelttatiana@web.de,+49(0)9844463749,Textorstraße 6-4
+Ariane,Schinke Beng,20031126,2003,F,88623,mloeffler@hotmail.de,+49(0) 415114872,Ramona-Fröhlich-Ring 70
+Hanne-lore,Ullmann,19520330,1952,F,70242,aynurbirnbaum@hotmail.de,(08793) 48807,Warmerstr. 43-93
+Hans-erich,Dobes,19710126,1971,M,99469,qhermann@gmx.de,07589248126,Oxana-Dippel-Straße 3
+Ellen,Oderwald,19841126,1984,F,43388,mschuchhardt@yahoo.de,+49(0)5602 28076,Heinzweg 21-28
+Ingetraud,Finke Beng,19890515,1989,F,32199,mirconeureuther@gmx.de,09329 23549,Gitte-Bolander-Platz 79-95
+Nicole,Finke,19490107,1949,F,89947,milka16@hotmail.de,07056232941,Marc-Biggen-Straße 3/7
+Halil,Kraus,19500530,1950,M,53144,agnes20@gmx.de,(09682) 931579,Roseweg 90-52
+Jonas,Weinhage,19491205,1949,M,14418,doeringhans-michael@aol.de,00894 85347,Patricia-Jüttner-Weg 15/97
+Mirko,Bohnbach,19451205,1945,M,78635,keudelhans-detlef@gmx.de,+49(0)4998807549,Gunda-Wirth-Ring 9-1
+Chantal,Wesack,19660710,1966,F,14982,omatthaei@web.de,07410395048,Gerta-Misicher-Ring 8047
+Nuran,Winkler-heintze,19450521,1945,F,98978,burckhardwaehner@web.de,06592 810031,Lidia-Reinhardt-Ring 970
+Edelgard,Becker,19940622,1994,F,08779,cichoriusyasmin@aol.de,0467923689,Henriette-Drubin-Gasse 5/1
+Christian,Hörle,19511104,1951,M,29341,ahendriks@googlemail.com,+49(0)4603550059,Ana-Siering-Weg 48-52
+Gabor,Mülichen,19470423,1947,U,73262,maricabarth@gmail.com,+49(0)4695016675,Undine-Tlustek-Weg 9
+Hans-bernd,Losekann,19670830,1967,M,95816,carstennohlmans@googlemail.com,06457 459011,Sina-Heidrich-Gasse 5
+Hans-walter,Hermann,20010626,2001,M,58998,stefanierenner@web.de,(08229) 854481,Striebitzplatz 5/9
+Anika,Henschel,20070130,2007,F,62262,scheuermannherbert@yahoo.de,+49(0)4467 459096,Heidrichplatz 16
+Magdalene,Fechner,19890620,1989,F,33776,idrub@aol.de,+49(0)0378 619763,Steyallee 2486
+Egbert,Trommler Beng,19840205,1984,M,48463,truebkatalin@web.de,(02411) 94814,Briemergasse 59/68
+Marija,Zänker,19530303,1953,F,76848,herwigkoester@gmx.de,06668 086495,Gisa-Kohl-Weg 94-83
+Tim,Birnbaum,19631207,1963,M,18349,lieselotte11@hotmail.de,+49(0)1527 54692,Fiebigstraße 6
+Frithjof,Putz,19850904,1985,M,47860,dietlindmans@gmx.de,07981547930,Zirmeallee 2/7
+Tamara,Scholl Beng,19530825,1953,F,99196,estroh@googlemail.com,+49(0)4107 73699,Karl Heinz-Hendriks-Allee 9
+Regine,Rogner,19610603,1961,F,97396,iragehringer@gmail.com,(09246) 20276,Natalja-Geißler-Weg 51
+Lena,Trüb,19940522,1994,F,62591,sylvia19@googlemail.com,08246112536,Heinrichstraße 8/7
+Liesbeth,Steckel-striebitz,19821107,1982,F,81177,segebahnfriedo@googlemail.com,+49(0)3092 41772,Centa-Stiebitz-Gasse 65-29
+Piotr,Lübs,19890120,1989,M,45266,bhenschel@googlemail.com,0272679034,Jochen-Warmer-Ring 2-4
+Mirja,Rogge,20050212,2005,F,89522,cheinrich@yahoo.de,0065627801,Lisette-Rose-Platz 255
+Agnes,Heser,19850504,1985,F,47847,herwigkraushaar@web.de,+49(0)2750 75660,Kabusplatz 2741
+Sigurd,Lindner,19710526,1971,M,01624,sjuettner@hotmail.de,+49(0) 766287492,Weimerallee 4-1
+Annett,Harloff,20060913,2006,F,61327,fechnersabine@hotmail.de,+49(0)9666 311051,Alex-Klotz-Allee 8140
+Karina,Meister-haering,20050607,2005,F,35566,anthonyweihmann@web.de,09350878457,Centa-Dörschner-Platz 6/2
+Adam,Barth-ring,19790207,1979,M,23714,mkostolzin@gmx.de,06108988726,Frida-Jungfer-Platz 20
+Margareta,Vollbrecht,19910718,1991,F,76494,gottfriedhahn@web.de,+49(0)4101 46405,Kenneth-Margraf-Straße 4/8
+Siegried,Kroker,19630709,1963,U,00883,walteralmut@web.de,+49(0) 593456853,Kreinweg 1
+Anka,Schwital,19740623,1974,F,28567,sfoerster@web.de,+49 (0) 0754 829534,Matthäiallee 5-9
+Phillip,Tlustek,19650913,1965,M,96539,lernst@hotmail.de,+49(0) 030856609,Sibel-Kambs-Straße 512
+Emma,Klotz,19521206,1952,F,63518,ehande@yahoo.de,02937124976,Alexej-Baum-Gasse 1246
+Mesut,Bolnbach,19880615,1988,M,58067,ajessel@web.de,+49(0) 170284704,Louise-Drewes-Platz 49-13
+Mirja,Hartmann,19750721,1975,F,46451,yusuf98@gmx.de,00271 99091,Haaseallee 28
+Myriam,Döhn,19590302,1959,F,69036,erdmute25@web.de,(03145) 115785,Felicia-Vogt-Ring 7
+Hedi,Schulz,20030704,2003,F,98349,cstaude@yahoo.de,(07204) 15023,Laila-Röhrdanz-Platz 5890
+Jolanta,Seip,19560115,1956,F,99604,cdehmel@hotmail.de,(02181) 763864,Beyerstraße 82-12
+Klara,Killer,19691212,1969,F,13714,rabeapieper@web.de,07471 821700,Rafael-Täsche-Gasse 61/70
+Harriet,Röhrdanz,19711105,1971,F,44926,fdrubin@googlemail.com,04434322293,Istvan-Henck-Straße 5
+Hanni,Trapp,20010218,2001,F,41739,steinbergelke@web.de,01317 56137,Kreinplatz 8-7
+Rigo,Reising,19510615,1951,M,83808,rditschlerin@gmail.com,+49(0)2408866997,Gumprichstraße 231
+Nico,Ebert,20021211,2002,M,84843,shaering@yahoo.de,+49(0)7751 444040,Schusterring 4/4
+Walter,Sorgatz,19610507,1961,M,06946,xwieloch@yahoo.de,+49(0)4123198181,Scheibegasse 43
+Anke,Van Der Dussen,19770410,1977,F,13798,myriam24@aol.de,05591 968247,Eberhardt-Wohlgemut-Allee 167
+Wolf-rüdiger,Putz,19730216,1973,M,95162,mmohaupt@gmail.com,+49(0)0168 971926,Franca-Ring-Ring 10-79
+Leo,Reising-adolph,19490619,1949,M,73217,burghard28@aol.de,05373 853165,Schmidtgasse 3/3
+Brit,Heser,19720329,1972,F,21293,wbohlander@gmx.de,01240076677,Gerald-Stroh-Straße 4/2
+Ernst-dieter,Roskoth,19710927,1971,M,79156,mtlustek@web.de,0224749324,Kambsplatz 3
+Constantin,Aumann,19610927,1961,M,07060,gabrielbauer@yahoo.de,(09484) 273313,Bergerstraße 999
+Nancy,Kohl-ackermann,19811106,1981,F,62677,philip91@gmx.de,+49 (0) 2148 697167,Loosallee 74-89
+Uta,Ruppersberger,19700323,1970,F,85619,vcaspar@aol.de,+49 (0) 3339 962170,Gereon-Trub-Weg 53/66
+Paul-gerhard,Cichorius,19610604,1961,M,51061,trubsylvia@aol.de,(06102) 82995,Hölzenbecherplatz 61
+Theobald,Römer,19800103,1980,M,61865,janus76@yahoo.de,+49(0)3960171380,Adrian-Paffrath-Platz 959
+Bernward,Hölzenbecher,19910823,1991,M,08088,svetlanafliegner@web.de,+49(0)3275818543,Johannplatz 4-7
+Tilo,Mitschke-finke,19831013,1983,M,16943,mielcareknatalja@googlemail.com,00090123545,Ruppertstr. 46
+Bertha,Aumann,19950302,1995,F,67948,etzoldmagdalene@googlemail.com,+49(0)8146294180,Agatha-Heser-Straße 1569
+Carla,Lorch,19911114,1991,F,23882,gundel18@gmx.de,02642885502,Christiana-Becker-Platz 7
+Jörn,Wieloch-süßebier,19880322,1988,M,84385,dieter65@googlemail.com,0448100142,Renata-Otto-Weg 4
+Annerose,Krein,19450505,1945,F,82455,haeringcarl-heinz@gmx.de,+49(0)6437 12670,Rosel-Röhricht-Gasse 4970
+Hiltraud,Gehringer,20061125,2006,F,01657,volker39@hotmail.de,02385 04439,Mitschkeallee 7/5
+Hannes,Heidrich,19721107,1972,M,70470,alfonsoholsten@gmail.com,(00034) 733774,Lübsring 137
+Nurten,Hauffer Beng,19570520,1957,F,46482,elsakrause@hotmail.de,+49(0) 214437302,Kostolzinweg 3
+Alexa,Gierschner,19541007,1954,F,01405,wigbert53@gmail.com,+49(0)6214 571443,Conradiplatz 3
+Korbinian,Biggen,19480712,1948,M,14554,bruniwieloch@aol.de,+49(0)5089 369255,Karl Heinz-Ehlert-Weg 0
+Roland,Kühnert,19770327,1977,M,62842,elenirogner@gmail.com,04235 76848,Eva-Ortmann-Weg 8/5
+Sebastian,Ackermann,19651016,1965,M,67072,oestrovskypero@googlemail.com,+49(0)7277 120761,Gorlitzring 2/7
+Vito,Stahr,19801222,1980,M,26873,rstadelmann@yahoo.de,(01310) 846241,Mirco-Margraf-Straße 95/42
+Wilhelmine,Krebs,20010116,2001,F,42522,pasquale62@gmail.com,00865 388334,Christiane-Trub-Platz 3
+Sigmar,Jockel-becker,19500910,1950,M,87486,lindaugernot@yahoo.de,04794181402,Siegried-Johann-Straße 3
+Ernest,Carsten-kohl,20060619,2006,M,92599,weberhardt@web.de,0945917757,Annemarie-Wernecke-Allee 5
+Natalie,Fröhlich,20040405,2004,F,68036,meyeralwin@gmail.com,+49 (0) 2789 418916,Walfried-Rogge-Weg 4287
+Irmela,Fröhlich,19530403,1953,F,31320,erhardwagenknecht@aol.de,+49(0)1016 87736,Meinolf-Weitzel-Gasse 8822
+Hartmuth,Faust Beng,19500515,1950,M,70667,kgierschner@aol.de,+49(0)2147 529419,Pascale-Löffler-Straße 55/74
+Dimitrios,Pärtzelt-thanel,19810424,1981,M,98497,gerhartstolze@googlemail.com,09405 701303,Regine-Patberg-Gasse 9
+Orhan,Werner-hörle,19920205,1992,M,77355,jconradi@web.de,08269 980387,Wilmsenweg 892
+Adelbert,Weinhage,19840608,1984,M,62960,ckohl@web.de,+49 (0) 7656 551507,Flantzallee 653
+Dittmar,Dussen Van-faust,19810611,1981,M,40017,wirthhans-peter@hotmail.de,0955384128,Ingrid-Holsten-Ring 93-53
+Melissa,Gunpf Beng,19640202,1964,F,07249,birgermuehle@googlemail.com,00831 004295,Herrmannstraße 94-35
+Viktoria,Christoph,19560713,1956,F,84248,jovan84@googlemail.com,+49 (0) 5449 358607,Lindnerstraße 393
+Irina,Klapp,19500906,1950,F,40583,wstadelmann@gmx.de,(08513) 108249,Ditschlerinallee 9419
+Edda,Christoph,19690517,1969,F,85039,alfredo30@googlemail.com,+49(0)5542992737,Isabella-Eigenwillig-Weg 9839
+Delia,Schmidt,19970709,1997,F,71144,tlustekwulf@yahoo.de,0356722674,Simona-Täsche-Platz 1203
+Hanne,Kusch Beng,19960601,1996,F,65070,isa15@hotmail.de,+49 (0) 2499 053967,Frankeweg 21-28
+Francisco,Bolnbach,19981209,1998,M,60042,carmen64@hotmail.de,+49 (0) 8754 239665,Wagnerallee 80
+Fadime,Holzapfel,19650811,1965,F,84595,shornich@gmail.com,+49(0)9038867910,Sophia-Heinz-Allee 3/9
+Niklas,Misicher-bauer,19850623,1985,M,70888,wkallert@gmail.com,(09635) 051201,Armin-Schomber-Ring 62/15
+Ludger,Dehmel,19460902,1946,M,27496,lweller@gmail.com,(02875) 67243,Lindnerstr. 1295
+Jerzy,Stahr Beng,20050811,2005,M,33824,margarethevogt@gmail.com,+49(0)7021 68025,Steinbergallee 5
+Frederic,Langern,19730330,1973,M,24953,esegebahn@hotmail.de,0719969864,Wulffstr. 145
+Rebekka,Lindau-höfig,19670501,1967,F,02749,beckmannvera@gmx.de,+49 (0) 1006 392181,Seifertallee 687
+Elizabeth,Hendriks-fritsch,19480605,1948,F,16920,gilbert51@gmail.com,02692 504297,Wencke-Gerlach-Ring 5
+Erhardt,Häring,19471128,1947,M,50308,seifertfilippo@googlemail.com,+49 (0) 6071 675159,Darius-Finke-Platz 8800
+Michaela,Jacob-weiß,19620219,1962,F,79087,jennifermentzel@gmx.de,(05230) 20308,Erica-Metz-Weg 4
+Luzia,Rädel,19990130,1999,F,30100,kunigunda24@hotmail.de,+49(0)2016 173202,Holstenstraße 89-35
+Anne-rose,Weitzel,19991018,1999,F,60497,frankeadelbert@aol.de,+49(0)0885 97726,Dörrplatz 52/98
+Alena,Thanel,19800208,1980,F,66236,ghamann@googlemail.com,+49(0)5436 49485,Jost-Zimmer-Platz 8
+Klaus,Peter Säuberlich,19910603,1991,M,01590,iherrmann@gmx.de,(05547) 022372,Mosemannweg 3
+Tom,Karz,19530105,1953,M,97581,baumhans-albert@aol.de,06038 372749,Heinz-Walter-Schmidtke-Weg 3-7
+Karl-heinz,Rädel,19450302,1945,M,76904,astadelmann@gmx.de,(00398) 099826,Kadering 87/13
+Irmhild,Seifert,19820125,1982,F,40188,marlisschinke@aol.de,+49(0)4717599645,Geislerstraße 47
+Jenny,Schäfer,19600311,1960,F,04271,jaquelineadolph@yahoo.de,+49(0)5257 809829,Liebeltstr. 7843
+Hans-hermann,Matthäi,19911128,1991,M,36441,jgehringer@yahoo.de,08540 606211,Kay-Uwe-Aumann-Gasse 69/93
+Lotti,Mangold-schenk,19890208,1989,F,58416,muelichenkarin@gmx.de,+49(0)3102 137993,Vladimir-Römer-Ring 5/3
+Jozef,Schweitzer,19830926,1983,M,13015,casparstephanie@googlemail.com,+49 (0) 5519 636093,Roderich-Fritsch-Gasse 73/94
+Muzaffer,Faust,19471219,1947,M,48844,aluebs@googlemail.com,+49(0)9539 313496,Netteplatz 782
+Thomas,Davids,19681218,1968,M,47147,gditschlerin@googlemail.com,04970803727,Schlosserstr. 37-38
+Knud,Herrmann,19521119,1952,M,88223,augustinwagenknecht@gmx.de,0452518475,Kadeweg 5
+Paolo,Döring,19441217,1944,M,10394,traugottsoelzer@hotmail.de,02929667277,Adrian-Pergande-Ring 67
+Hans-gerd,Hermighausen,19481010,1948,M,91301,jbiggen@hotmail.de,02927 896680,Huhnstr. 41-53
+Rolf-peter,Wende,19690925,1969,M,09607,wstey@hotmail.de,+49(0) 053677591,Ruppertring 5/1
+Jessika,Fritsch,19770724,1977,F,71241,bonbachhelene@googlemail.com,09840 816093,Albersring 79
+Anastasia,Salz,19831018,1983,F,26985,ruedigerpreiss@googlemail.com,(00954) 181021,Bergerring 2
+Bela,Vogt,19510919,1951,F,41863,laraoestrovsky@gmx.de,+49(0)0039 75786,Cosima-Kohl-Gasse 3
+Frieder,Stroh-beckmann,20060106,2006,M,71843,fwulff@aol.de,+49(0)3107 29273,Jopichplatz 6426
+Bernadette,Schleich,19620821,1962,F,00918,ilka07@gmail.com,04728 876692,Hilma-Fröhlich-Ring 1580
+Marleen,Ring,19740225,1974,F,26167,hermannralph@yahoo.de,+49(0)3051468567,Wilfriede-Schmidt-Allee 245
+Vladimir,Geißler,20040721,2004,M,57170,selim22@gmx.de,(04983) 091493,Gustav-Jäntsch-Ring 904
+Reimar,Neureuther,19610328,1961,M,35661,schleichjens-uwe@googlemail.com,+49(0)3074 64168,Preißallee 78/88
+Deborah,Beier,19890801,1989,F,85189,schottinmargarethe@gmx.de,(09041) 24244,Schmiedtring 1/3
+Thorben,Wulf-köhler,19450905,1945,M,89533,kuehnertdarko@hotmail.de,+49(0)6701 46724,Heinzweg 68/27
+Claudius,Haering,20000119,2000,M,85334,steckelthea@gmail.com,+49(0)9045638969,Hans-Heinrich-Lindner-Allee 37/56
+Pero,Christoph,19790302,1979,M,71649,kordulatroest@hotmail.de,+49(0)1793 510216,Tom-Preiß-Ring 577
+Hannah,Hahn,20000317,2000,F,98849,aloysholt@googlemail.com,05734 67176,Otfried-Barkholz-Allee 9-4
+Bartholomäus,Stadelmann,19480902,1948,M,11118,ernestineanders@yahoo.de,+49(0)8028 03705,Roggeallee 5
+Siglinde,Bauer,20040907,2004,F,41045,klaus-dieterfranke@aol.de,+49(0)0997 764568,Thekla-Klemt-Gasse 32
+Sebastian,Beyer,19640629,1964,M,79970,jpruschke@gmx.de,+49(0)7674 598948,Butteweg 52-36
+Ida,Klemt,19731212,1973,F,57005,timmetz@gmx.de,(01506) 40811,Stiffelstraße 10/61
+Blanka,Jockel-schleich,19451027,1945,F,68735,walfried70@googlemail.com,0511312107,Södingweg 1
+Ida,Dippel,19800606,1980,F,24447,ytrupp@googlemail.com,+49 (0) 2661 918425,Dörschnerstr. 2
+Selim,Tschentscher,19850324,1985,M,36345,kathytrommler@yahoo.de,(04400) 66980,Fadime-Bloch-Gasse 9/2
+Petra,Kraus,19651203,1965,F,71893,rotraud87@yahoo.de,+49 (0) 4344 184656,Hethurplatz 5
+Andre,Gehringer,19880228,1988,M,70174,hahnsiegfried@gmx.de,07922804894,Mangoldstr. 9815
+Kerstin,Sontag,19720116,1972,F,18208,stollclarissa@gmx.de,03786 63853,Margrafweg 1-5
+Timm,Beyer,19970826,1997,M,06408,pjuettner@hotmail.de,07403592081,Stollstraße 6/1
+Ilse,Hellwig,19810530,1981,F,76406,noackangelika@googlemail.com,(01409) 15438,Silva-Rörricht-Ring 1017
+Brian,Börner-scheel,19840510,1984,M,93909,lkiller@hotmail.de,+49(0)6142 58985,Hänelstraße 6-1
+Tadeusz,Jessel-vollbrecht,19920416,1992,M,54575,jann25@gmail.com,+49(0) 392922787,Edmund-Jähn-Straße 2180
+Janos,Scholtz,20020617,2002,U,79842,zdravkobruder@gmx.de,(09062) 684162,Hildegund-Heidrich-Gasse 9
+Erik,Bauer,19631006,1963,M,83624,ajunck@web.de,+49(0)7170 498256,Mansring 755
+Aribert,Barkholz,19530803,1953,M,72488,neuschaefergotthilf@aol.de,+49(0)4987577509,Reimund-Sager-Gasse 2942
+Patricia,Kitzmann,19921130,1992,F,35884,ihartung@aol.de,00543 96683,Jaroslaw-Thies-Allee 5-9
+Gülay,Häring-flantz,19921107,1992,F,27581,engelbert42@gmx.de,+49(0)3356 35961,Nicole-Bien-Straße 8
+Dorothee,Fliegner Beng,19661020,1966,F,31925,izorbach@googlemail.com,08323 00782,Meta-Hiller-Gasse 81/99
+Sepp,Mans,19660129,1966,M,84796,phillip06@yahoo.de,+49(0)1132452722,Jasmin-Eberth-Weg 4-3
+Maja,Reuter,20050315,2005,F,67062,drubanne-kathrin@gmail.com,0965010136,Edeltraut-Harloff-Straße 8-4
+Rotraud,Neuschäfer,19630707,1963,F,17937,niels61@gmx.de,+49(0) 610158075,Nikolas-Ehlert-Weg 41
+Heinz-günther,Gnatz,19760109,1976,M,21014,owinkler@aol.de,+49(0)4232 19686,Beckerweg 46/76
+Mahmut,Holzapfel,19580425,1958,M,83342,hans-gerdtroest@gmail.com,0634580912,Jäntschstraße 7
+Margret,Nohlmans,19711017,1971,F,92219,rainer90@googlemail.com,09021131426,Fechnerallee 39/73
+Ivanka,Benthin,19770131,1977,F,83401,julia41@yahoo.de,+49 (0) 4388 183822,Heinz-Werner-Linke-Ring 87-79
+Harald,Juncken Beng,19890705,1989,M,29702,steuerabraham@yahoo.de,(01068) 84478,Mirja-Bien-Straße 934
+Utz,Herrmann,19700829,1970,M,96497,sigrunweihmann@aol.de,00848 779395,Koch IIweg 27-89
+Arnulf,Fröhlich,19770214,1977,M,08920,maelzermara@gmx.de,0447303151,Tassilo-Wulf-Ring 1261
+Gülay,Steckel,20000926,2000,F,36434,erik33@yahoo.de,+49(0)5350220309,Textorgasse 16/78
+Claus,Berger,19451126,1945,M,83857,fridaebert@googlemail.com,(05417) 11214,Lübsstr. 6
+Zenta,Zahn,19840909,1984,F,54161,weinholdfranjo@gmail.com,(01316) 956046,Birnbaumstr. 565
+Mohammad,Patberg,19780201,1978,M,93666,birgit12@web.de,(08525) 31258,Inken-Hiller-Straße 73-66
+Rosalie,Schuchhardt,19780215,1978,F,11493,aroehrdanz@gmail.com,+49(0)4470 83302,Josef-Drewes-Allee 7
+Ricardo,Rosenow,19520206,1952,M,03667,mgrein-groth@web.de,00760572914,Bert-Holt-Allee 1823
+Jutta,Fliegner,19820118,1982,F,15093,heidelindekrebs@googlemail.com,+49(0)3426 78786,Marian-Kruschwitz-Straße 2
+Lea,Döhn,20060122,2006,F,41309,egrein-groth@hotmail.de,00379 50401,Justina-Förster-Allee 135
+Mahmoud,Jopich,19730831,1973,M,63598,hwilmsen@gmail.com,(01232) 367149,Loni-Tröst-Ring 37-76
+Samira,Ullrich,19651118,1965,F,29358,dcaspar@gmail.com,04084 21112,Daniele-Hering-Straße 79/89
+Danica,Pärtzelt,19490814,1949,F,64387,andrey94@web.de,+49(0)3423 90546,Hans-Erich-Trubin-Gasse 364
+Burkard,Gerlach Beng,19970904,1997,M,38682,zahnjobst@gmail.com,09890 363692,Rörrichtring 949
+Ditmar,Beckmann,19751206,1975,M,77518,joschmidtke@googlemail.com,0773480121,Peggy-Lübs-Gasse 4-3
+Gina,Schmiedt,19690121,1969,F,84366,ivankabien@aol.de,+49 (0) 5568 579999,Dehmelring 71/14
+Guiseppe,Gerlach,19541019,1954,U,66428,pthanel@googlemail.com,(09423) 65890,Gesine-Karz-Allee 94-40
+Gerald,Geißler,19650307,1965,M,54328,liebelturszula@gmail.com,+49(0)1199 801665,Violetta-Warmer-Platz 9
+Abbas,Birnbaum-adler,19470623,1947,M,74277,francesca98@gmx.de,+49(0)1633 80489,Wladimir-Sager-Gasse 1-2
+Jaroslav,Mies,19761224,1976,M,22780,raisavan-der-dussen@yahoo.de,+49 (0) 4429 216521,Isabell-Reichmann-Straße 37-86
+Linda,Gute,19960704,1996,F,11589,alida97@gmail.com,00335 458134,Katja-Eimer-Straße 630
+Drago,Spieß,19940121,1994,M,28895,martenoestrovsky@hotmail.de,(03092) 027830,Geiselplatz 0
+Michelle,Stadelmann,19801217,1980,F,28767,uroerricht@hotmail.de,08298 168368,Beatrix-Klemm-Gasse 86
+Mina,Pohl,19800408,1980,F,90188,antoniettaaustermuehle@gmail.com,+49(0)7623 04728,Mehdi-Weinhage-Straße 9
+Kaspar,Stey,19580521,1958,M,89438,metzbrian@googlemail.com,+49(0) 744600646,Sabrina-Lachmann-Straße 60/69
+Alma,Dörschner,19510426,1951,F,33218,marit04@hotmail.de,+49(0) 017877191,Anett-Lübs-Allee 7/7
+Hilmar,Killer-mälzer,19480618,1948,M,56418,dunja09@gmx.de,+49(0)1296221679,Mentzelweg 4/4
+Alfonso,Seip,19981118,1998,M,55144,qmeister@web.de,+49(0)9774629097,Anto-Koch II-Platz 956
+Hans-henning,Gude,19470301,1947,M,41194,doerthe11@web.de,05207 48904,Putzallee 3667
+Ladislaus,Hein,19940630,1994,M,42283,nhoevel@yahoo.de,01975 740516,Kreuselstr. 793
+Henrike,Weiß,19590709,1959,F,89171,karl-juergenwarmer@hotmail.de,+49(0)0963 915688,Bauerplatz 1-6
+Nuray,Wieloch,19681209,1968,F,34282,riehliwona@hotmail.de,0032716488,Hans-Otto-Ritter-Straße 71-30
+Lisbeth,Hermighausen,19770411,1977,F,19465,kathringierschner@gmail.com,0218320172,Betina-Mülichen-Allee 6614
+Felix,Lübs,20050718,2005,M,61842,magritlehmann@gmail.com,07919 227455,Antonina-Ziegert-Weg 40/79
+Pascal,Thies,19880501,1988,M,90536,elwira00@web.de,+49(0)7656233016,Saban-Liebelt-Straße 9-1
+Günther,Jockel,19530903,1953,M,38546,waltrud92@googlemail.com,00112736677,Murat-Stolze-Weg 2/5
+Fredo,Kohl,20011113,2001,M,37982,liesbethputz@gmx.de,04383436317,Rosenowgasse 95-78
+Karina,Franke,19640630,1964,F,55378,karl-werner19@gmail.com,+49(0)3379 202302,Rigo-Patberg-Ring 50/62
+Beatrix,Heß,19531217,1953,F,71549,qsontag@web.de,(01317) 700498,Burghard-Koch II-Straße 5-5
+Pia,Zobel-ullmann,19870826,1987,F,29045,pgude@gmail.com,05175565463,Ruststr. 690
+Leni,Stolze,19941112,1994,F,42264,ritterjessika@googlemail.com,08971 702050,Heiner-Buchholz-Ring 26
+David,Reichmann Beng,19820407,1982,M,99965,meral05@hotmail.de,+49(0) 347443415,Anthony-Wulff-Straße 5
+Reinhild,Bauer,19780522,1978,F,16163,sdussen-van@hotmail.de,(06062) 28508,Bährweg 86/96
+Jan-peter,Herrmann Beng,19980922,1998,M,79892,knappeevangelos@gmx.de,+49(0) 577729791,Gerhart-Putz-Weg 5-1
+Hiltrud,Tintzmann,19730819,1973,F,33438,xgiess@aol.de,0982273102,Fritz-Tintzmann-Straße 8-1
+Raissa,Schenk,20060315,2006,F,74147,qscholl@aol.de,+49(0)1505 63318,Waltrud-Zimmer-Ring 3
+Sophie,Flantz,19750224,1975,F,84692,gudegerlind@yahoo.de,(07740) 569090,Mälzergasse 39-50
+Marit,Henk,19621210,1962,F,11478,ditschlerinhans-joachim@gmx.de,+49 (0) 3738 379565,Birthe-Henck-Weg 59/58
+Mara,Trub,19560718,1956,F,79053,hans-joergbaerer@gmx.de,0442693524,Eberhardtgasse 58/86
+Hilmar,Henk,19480322,1948,M,17601,ole56@gmail.com,+49(0) 834199747,Ehrhard-Beckmann-Allee 0
+Karl-friedrich,Schleich-gehringer,19741025,1974,M,22773,francoiseheinz@gmx.de,06753852819,Hänelstraße 16
+Claus,Hande,19670118,1967,M,88663,dbaerer@gmx.de,05824740726,Kochallee 9/8
+Erwin,Johann Beng,19741230,1974,M,65261,nharloff@aol.de,+49(0)4908 905611,Jockelring 2
+Boris,Dörschner,19840504,1984,M,50334,beckmanngertraude@gmx.de,+49(0)7695830455,Conradiweg 92-60
+Hanni,Schäfer,19981125,1998,F,22392,heinzheidemarie@gmail.com,01280021960,Justine-Weimer-Weg 77/98
+Viola,Kallert,19840513,1984,F,27747,barthdaniel@googlemail.com,09090 46852,Helga-Preiß-Ring 56-24
+Franca,Paffrath,19841120,1984,F,35922,nseip@hotmail.de,(07758) 324315,Hans-Walter-Jäntsch-Straße 4/8
+Marcel,Drubin,19770907,1977,M,63328,sherrmann@aol.de,+49(0)1681 786720,Dirk-Koch-Platz 256
+Stephen,Kuhl,19491018,1949,M,67447,olga39@aol.de,+49(0)7853509911,Lisa-Junck-Weg 3453
+Marita,Flantz Beng,19910421,1991,F,35206,chantalspiess@yahoo.de,07861 832681,Frieda-Weinhage-Platz 487
+Karl-heinz,Zänker-schmiedecke,19930719,1993,M,13948,gereon88@gmx.de,+49(0)8286 20075,Orhan-Röhricht-Platz 7/9
+Marie-theres,Pruschke,19510917,1951,F,26590,stiebitzreinhold@aol.de,02462 866036,Werneckeplatz 75
+Bruno,Siering,19730130,1973,M,16221,klaussorgatz@gmx.de,+49(0) 985659272,Hövelring 9558
+Suse,Gunpf,19510616,1951,F,48797,gabrielkoehler@aol.de,03115 828392,Rose-Marie-Becker-Ring 7
+Annelene,Sontag Beng,19800119,1980,F,01438,heringfranca@web.de,04261 222655,Herrmannring 9-5
+Raphael,Spieß,19640411,1964,M,38514,vlado99@web.de,+49(0)5119 64521,Wigbert-Junck-Gasse 75/30
+Aynur,Gnatz,19910903,1991,F,60991,raimundrogner@web.de,+49(0)3760 789234,Sagergasse 515
+Hans,Josef Henck,19601126,1960,M,11539,christa-mariacarsten@gmx.de,+49(0)4361 76396,Imre-Kruschwitz-Gasse 18
+Gottlieb,Henck-hamann,19930404,1993,M,23584,gunpfkarl-georg@web.de,03275 285245,Berit-Schlosser-Weg 934
+Daniele,Vollbrecht Beng,19920313,1992,F,26648,hans-detlef70@yahoo.de,0085928138,Iwona-Weinhold-Weg 367
+Bernhardine,Schmidtke,19591004,1959,F,46907,jungfermarie-luise@yahoo.de,+49(0)9223 933498,Kensyring 8
+Niels,Fritsch Beng,19740418,1974,M,18140,kadegustav@aol.de,0930861399,Jonas-Hering-Straße 6/5
+Gottfried,Beer,19930511,1993,M,76545,robert40@gmail.com,07440 43018,Eberhardtgasse 43-75
+Boris,Siering-vollbrecht,19910922,1991,M,92674,schombergilbert@googlemail.com,+49 (0) 5768 631188,Kobeltstraße 210
+Kreszentia,Heß,20050516,2005,F,23473,fwesack@gmx.de,(03283) 056683,Nikolaos-Langern-Weg 1
+Gernot,Ullrich,19890824,1989,M,34847,paertzeltsiegrid@googlemail.com,+49(0)9970 006909,Schmiedeckestraße 5/8
+Roswitha,Römer,19761006,1976,F,19617,frankeselma@yahoo.de,03415057772,Kühnertring 6841
+Wenke,Hentschel,19871006,1987,U,02997,theakarz@hotmail.de,+49(0)3439340485,Biengasse 3
+Lissy,Mude,19881211,1988,F,09625,akeudel@hotmail.de,(08067) 68056,Sibel-Scholtz-Platz 4-9
+Katharine,Neuschäfer-liebelt,19930602,1993,F,08647,jopichalbina@web.de,+49(0) 100056187,Radischweg 3
+Alicia,Ladeck Beng,19610908,1961,F,02245,zeyneproht@web.de,(08637) 493788,Helmtrud-Mühle-Gasse 2115
+Alwina,Warmer,19610912,1961,F,69717,alexgute@hotmail.de,(02127) 20683,Junckweg 5-6
+Monika,Klotz,19940513,1994,F,28284,mario05@googlemail.com,00520 284739,Bienweg 499
+Andrea,Etzold,19921016,1992,F,20096,heserilias@yahoo.de,+49(0)4708 394993,Hermighausengasse 4807
+Utz,Röhricht Beng,19930808,1993,M,24148,doerschnermonica@gmx.de,+49(0)2246 41381,Hettnerweg 8
+Mareike,Henk,19550302,1955,F,01603,lehmannkata@gmx.de,0999273412,Hasso-Gude-Ring 92/29
+Hans-jörg,Matthäi Beng,19880110,1988,M,28237,ziegertaugustin@gmail.com,06719 65332,Hellwigring 310
+Cosima,Scholz,19940107,1994,F,11183,joergenreichmann@hotmail.de,0494482267,Alfonso-Römer-Ring 95/51
+Gottlob,Jüttner,19740922,1974,M,37316,werneckemagdalena@gmail.com,03502 50301,Astrid-Weimer-Allee 3-5
+Rebekka,Geisler,19560630,1956,F,53559,bonbachluigi@aol.de,+49(0)6420375447,Bolanderplatz 642
+Serge,Stoll,19860804,1986,M,44477,jens-peterbien@googlemail.com,0752639976,Hethurweg 92/36
+Juliane,Franke,19450512,1945,F,57119,ullrichphilip@aol.de,+49 (0) 6133 753909,Suse-Sölzer-Straße 711
+Abdul,Hänel,19620709,1962,M,33526,gottfrieddowerg@hotmail.de,(09933) 646178,Tina-Neuschäfer-Ring 99/86
+Winfried,Anders,19991231,1999,M,34870,giovannaloeffler@web.de,+49 (0) 9951 432403,Schusterplatz 5/1
+Czeslaw,Kallert,19630816,1963,U,26214,wilma19@gmx.de,+49(0)8180 487933,Röhrdanzplatz 79
+Bayram,Heinz,19500627,1950,M,58213,ygunpf@googlemail.com,+49(0)4802 642723,Zänkerplatz 232
+Katalin,Scholl,19471121,1947,F,17523,sandro50@gmail.com,0378273698,Maren-Austermühle-Platz 2-5
+Sigmund,Ortmann-kranz,20030718,2003,M,43667,sigurdheidrich@gmx.de,00840 30242,Holzapfelring 639
+Irmtraut,Barkholz,20040326,2004,F,47575,koesterrosl@gmail.com,+49 (0) 8922 280919,Fritschstr. 4-7
+Dominic,Hendriks,19781116,1978,M,37584,verenadoerr@hotmail.de,+49 (0) 5271 720148,Trübstr. 59-90
+Emilia,Schönland-haase,19791217,1979,F,36812,krokergilbert@googlemail.com,03078685055,Kochgasse 8
+Mirco,Boucsein,19821221,1982,M,47203,elisabet13@web.de,0630368385,Jerzy-Pechel-Gasse 30
+Korinna,Riehl,19670806,1967,F,71110,edehmel@gmail.com,+49(0) 454658374,Weinhagering 7
+Helga,Zänker,19550721,1955,F,62546,iladeck@googlemail.com,01639 253582,Andreas-Gotthard-Ring 73
+Aleksandar,Drub-gumprich,19470218,1947,M,81365,sieglinde33@yahoo.de,+49(0) 280573857,Schmiedtring 80-78
+Bartholomäus,Lorch,19760701,1976,M,39726,neureutherannett@gmail.com,+49(0)6403 49972,Hans Georg-Caspar-Ring 2
+Francesca,Ernst,19510302,1951,F,46826,schlosserheinz-wilhelm@googlemail.com,05740 342534,Frederik-Klemt-Gasse 23
+Claas,Kallert,19790314,1979,M,47851,ptschentscher@yahoo.de,+49(0)4974 68793,Victor-Huhn-Ring 77
+Wilhelm,Mangold-klapp,20070808,2007,M,90064,traudellachmann@hotmail.de,08756 240822,Döhnstr. 2/1
+Ernst-dieter,Rudolph,19700430,1970,M,57922,walburga42@gmail.com,+49(0) 036295211,Schlosserweg 3/8
+Egon,Etzold,19781016,1978,M,98612,smitschke@gmx.de,+49(0)7947 196531,Mariola-Ullrich-Ring 35-20
+Franziska,Steinberg,19770409,1977,F,79419,scheelantje@googlemail.com,07579 29962,Sevim-Rogge-Straße 805
+Heinrich,Tlustek,19671115,1967,M,59902,silvesteroestrovsky@gmail.com,0781066791,Andreas-Nerger-Platz 87
+Auguste,Fritsch,19791212,1979,M,48006,roberto29@googlemail.com,+49 (0) 5446 597855,Tintzmannstr. 7
+Insa,Trub,20010118,2001,F,89895,ferdinandkusch@aol.de,05286 03563,Sieringring 7/3
+Eggert,Gotthard,19831113,1983,M,88325,dnette@googlemail.com,(04169) 141996,Friedhilde-Barkholz-Ring 89
+Frieda,Dörr Beng,19761125,1976,F,97449,zdravko61@gmx.de,(01554) 730839,Reinhart-van der Dussen-Ring 49
+Konstanze,Gorlitz,19850726,1985,F,29612,heinz-guenterortmann@aol.de,+49(0)5129768199,Eckart-Junken-Straße 350
+Natalie,Jacob,20040410,2004,F,89455,brittahertrampf@gmx.de,04209 66346,Hilda-Pechel-Weg 97-41
+Erhard,Loos-ziegert,19901009,1990,M,96489,iwona41@web.de,0916291861,Kreuselstraße 99-20
+Cathrin,Huhn-scheuermann,19760618,1976,F,36640,karin19@gmail.com,+49(0)8600 757090,Faustplatz 9
+Else,Ruppersberger,19470713,1947,F,36951,ftrommler@gmail.com,07474321426,Etta-Scheel-Platz 253
+Gundolf,Koch Ii,19530817,1953,M,92669,hamannibrahim@gmail.com,+49(0)8491583013,Sauerplatz 25-73
+Berndt,Hartmann,19450829,1945,M,61638,norbertbiggen@gmx.de,+49(0)5847 013728,Georgine-Kaul-Weg 6439
+Urs,Fiebig,20050210,2005,M,47493,sigridrenner@aol.de,(07044) 98511,Friedrich-Hertrampf-Straße 4349
+Detlev,Junck,19690403,1969,M,42746,thiesjochen@gmail.com,+49 (0) 3592 018438,Frida-Hölzenbecher-Platz 6
+Calogero,Kobelt Beng,19670215,1967,M,06660,ann-kathringotthard@aol.de,+49(0) 068624149,Jadwiga-Schüler-Straße 6-9
+Arthur,Winkler,20060221,2006,M,52705,friedlinde23@web.de,0409478155,Roskothallee 185
+Anne-rose,Mühle-bähr,19850325,1985,F,49058,annekatrin36@hotmail.de,(05335) 91046,Arnulf-Austermühle-Gasse 61/97
+Muharrem,Kostolzin,19801011,1980,M,08527,xhahn@gmail.com,+49(0)4759864756,Bianka-Hettner-Straße 5180
+Paula,Kallert,19850712,1985,F,25828,stollleni@gmail.com,00026705562,Meral-Ziegert-Straße 3478
+Heimo,Weinhold,20040213,2004,M,48024,orogge@gmx.de,0772982000,Gudeplatz 12
+Cosimo,Weinhage-beier,19680827,1968,M,53270,sara77@web.de,(08101) 36939,Hethurallee 48-32
+Stephen,Walter,19781210,1978,M,79290,pascal50@gmx.de,+49(0) 265985890,Adlerring 36
+Achim,Mude,20020503,2002,M,72136,ugroettner@yahoo.de,+49(0)6224098040,Anneke-Trubin-Straße 86
+Hildegund,Lehmann,20041105,2004,F,13031,loewergisbert@web.de,+49(0)7573 060655,Hans-Ludwig-Liebelt-Ring 189
+Leon,Lehmann,19551018,1955,M,68822,natalja18@hotmail.de,04621 956408,Henkgasse 3
+Wolfgang,Scholz,19930404,1993,M,88690,piepergeert@gmx.de,06205 95850,Kranzstr. 1
+Uta,Henschel,19471004,1947,F,24619,klaus-juergenbauer@gmail.com,06944425883,Jähnweg 6
+Inken,Bolander Beng,19471130,1947,F,23325,wohlgemutmagarete@yahoo.de,07858 53167,Edgar-Juncken-Straße 2-1
+Ralph,Lübs-tschentscher,19770627,1977,M,15517,zorbachsara@gmail.com,0348928383,Budigstr. 6972
+Hedwig,Gierschner,19620406,1962,F,91949,wkiller@hotmail.de,(03074) 203284,Rohlederstraße 72
+Daniele,Eberth,19930917,1993,F,96449,patriziahethur@gmail.com,+49(0)5615 94938,Sorgatzstr. 413
+Beate,Wulff,19941013,1994,F,15961,ljiljanagirschner@googlemail.com,05067541712,Wesackallee 32
+Liane,Röhrdanz,19560226,1956,F,11599,hubertinerenner@yahoo.de,07084 00601,Wesackstraße 1/2
+Grit,Kraus,19480220,1948,F,67591,fscheel@googlemail.com,+49(0)9172 22266,Waltraut-Kabus-Ring 1
+Henriette,Söding,19541102,1954,F,11348,scheibemato@gmx.de,04860 93604,Austermühlering 4/5
+Ekaterina,Kraushaar,19810425,1981,F,97434,egbertcaspar@gmx.de,09190 34495,Kühnertallee 9
+Dagobert,Kensy,19990418,1999,M,56649,acaspar@gmail.com,02687 130121,Roman-Kaul-Ring 725
+Slawomir,Krause,19760104,1976,U,34732,lotharreichmann@gmail.com,+49(0)1694 326010,Nurettin-Schmiedt-Platz 2/1
+Sylvio,Ring,19631009,1963,M,48622,hildegund61@gmail.com,+49(0)4507 90126,Antonios-Benthin-Ring 32/97
+Ella,Biggen,19910409,1991,F,01672,hans-wolfganghermighausen@googlemail.com,03342 822134,Mirko-Geisler-Ring 79
+Wenzel,Weitzel,19540331,1954,M,96775,rhesse@googlemail.com,00819726626,Rena-Jäntsch-Straße 342
+Benjamin,Mitschke,19511212,1951,M,71418,gundulaweihmann@aol.de,+49(0)6016 087578,Wagnerplatz 83-44
+Pia,Neuschäfer,19491031,1949,F,40505,gerard44@gmail.com,+49(0)1844243873,Junkstr. 8/4
+Sigurd,Mälzer,19870621,1987,M,41118,doreen29@web.de,07893 221805,Hans-Wilhelm-Baum-Weg 8/5
+Dina,Dobes-reichmann,20060720,2006,F,00354,rennerstanislaus@yahoo.de,02129 42377,Roswita-Graf-Ring 3/9
+Ralf-peter,Fechner Beng,20050415,2005,M,95415,jamesbeyer@yahoo.de,0432004603,Tröstallee 1
+Jutta,Fröhlich,19480421,1948,F,17731,dippelthorben@aol.de,04616 84616,Grafplatz 2957
+Susi,Peukert,19830107,1983,F,86526,wmeister@aol.de,+49(0)8020 104742,Elif-Gumprich-Platz 882
+Wencke,Hethur,19920622,1992,F,93832,uschmiedt@gmail.com,+49(0)7108 40236,Anastasia-Hauffer-Gasse 9005
+Catharina,Herrmann,20030211,2003,F,37401,conrad55@yahoo.de,+49(0) 591984511,Heintzeplatz 17/16
+Hans-albert,Matthäi Beng,19990120,1999,M,11639,patrick33@hotmail.de,03058 36118,Oscar-Hettner-Gasse 78
+Niklas,Döring,19770322,1977,M,24568,gerhart99@googlemail.com,03706 508798,Aynur-Margraf-Weg 96-97
+Andrzej,Säuberlich-gotthard,19690823,1969,M,91493,hansholsten@gmail.com,+49(0)2777 43505,Noackstraße 3/9
+Frederik,Eimer,20001220,2000,M,21237,gumprichhellmut@googlemail.com,0659741391,Woldemar-Pechel-Straße 87
+Stilla,Stolze-krein,19970613,1997,F,59050,hrenner@gmail.com,+49(0) 929891816,René-Fechner-Platz 57/97
+Sybille,Wohlgemut,19680303,1968,F,71834,hesseolav@web.de,0392344530,Pieperweg 68/63
+Sybilla,Heinrich,19600702,1960,F,93125,recepkarz@hotmail.de,0605174920,Henckweg 11
+Gertraud,Winkler,19600121,1960,F,46357,mohammad52@gmail.com,+49(0)0933 11600,Harloffallee 15-89
+Bartholomäus,Hertrampf-drubin,19640714,1964,M,99216,hethurklaus-guenter@hotmail.de,(04938) 69438,Jacobi Jäckelgasse 47-63
+Elizabeth,Budig,19841014,1984,F,92593,hesseottomar@web.de,03789499889,Weinholdstraße 9518
+Konstanze,Haering,19750910,1975,F,53264,bluemelhans-peter@gmx.de,03002656176,Hardy-Röhrdanz-Gasse 175
+Martha,Junitz Beng,19720208,1972,F,18099,epieper@gmx.de,+49(0)5166 097652,Ludger-Salz-Ring 6
+Klaus-michael,Pärtzelt-jüttner,19620206,1962,M,97784,eseip@gmail.com,05862 783452,Trappplatz 9-1
+Raphael,Hamann,19970916,1997,M,76662,schlosserpedro@gmx.de,(06238) 54084,Wibke-Otto-Weg 4389
+René,Keudel,19690609,1969,M,09768,torstenschmidtke@gmail.com,00290 347202,Hiltrud-Sauer-Straße 1-7
+Frederik,Wiek,19460111,1946,M,19117,gkallert@yahoo.de,00828 885414,Martina-Dietz-Ring 52
+Miroslawa,Lorch-huhn,19590123,1959,U,56801,elenorejuettner@hotmail.de,01171379170,Irene-Kuhl-Platz 12
+Vanessa,Gröttner Beng,19640908,1964,F,46697,ewagner@yahoo.de,+49(0)5397 80199,Frankestraße 40/97
+Aline,Graf,19570225,1957,F,44671,nklemt@gmx.de,00902911325,Henkweg 421
+Hildburg,Jessel,19640904,1964,F,91695,qhering@hotmail.de,+49(0) 938890744,Wohlgemutring 68
+Nadia,Holsten,19450713,1945,F,55417,gschuster@yahoo.de,+49 (0) 8515 744826,Nuray-Bender-Straße 6
+Kaspar,Pechel,19900210,1990,M,59945,strohklaus-michael@aol.de,+49(0)4579647275,Constantin-Jungfer-Straße 8046
+Heinz,Dieter Mude,19570628,1957,M,56742,gsorgatz@aol.de,+49(0)8403 879757,Roskothallee 2639
+Niklas,Zorbach,19971229,1997,M,69316,paertzeltannelies@gmail.com,(07289) 45079,Theodoros-Koch II-Straße 59
+Urban,Fechner,19591012,1959,M,69347,sigmundsager@web.de,(05518) 992441,Patbergring 62/59
+Ottilie,Dörr,19800426,1980,F,48569,krzysztof99@gmx.de,(07916) 968639,Bonbachallee 14/39
+Swetlana,Pergande,19860228,1986,F,48016,luziezimmer@yahoo.de,03029 70967,Schollstr. 86
+Ida,Pärtzelt,19971015,1997,F,40482,ihecker@web.de,+49 (0) 6446 836250,Sagergasse 261
+Luka,Jäkel,19770227,1977,M,53436,reisingelias@googlemail.com,+49(0) 530727271,Liliana-Vollbrecht-Ring 4
+Angela,Mangold-killer,19990406,1999,F,18083,eoestrovsky@hotmail.de,06882 077124,Löchelgasse 2259
+Artur,Weitzel Beng,19990221,1999,M,11577,folkertbohlander@web.de,+49 (0) 0958 770517,Scheelstraße 3540
+Berthold,Van Der Dussen,19930125,1993,M,22336,aennespiess@gmx.de,+49(0)8836 603061,Henckstr. 580
+Arnfried,Rosenow,19650523,1965,M,75418,rigofreudenberger@web.de,+49(0)9591 156369,Nick-Rohleder-Ring 89-55
+Jenny,Zobel-baum,19640625,1964,F,63676,juliane82@aol.de,+49(0)7495 922724,Nikola-Steckel-Ring 4
+Sven,Jüttner,19680203,1968,M,63440,lschuchhardt@aol.de,06123263494,Jockelallee 2-2
+Alida,Austermühle Beng,19620530,1962,F,11889,mielcarekgertrud@gmx.de,+49(0) 562949122,Ulf-Jäkel-Straße 5798
+Minna,Ebert,19880120,1988,F,66062,giovannaotto@web.de,+49 (0) 4375 397032,Drubweg 8
+Ahmad,Weller-schmiedt,19790819,1979,M,33566,hans-rainerweiss@googlemail.com,+49 (0) 3512 214829,Gerlind-Schottin-Straße 149
+Friedo,Löwer,19980107,1998,M,38430,hartmuthbachmann@aol.de,(02729) 50973,Gina-Löwer-Gasse 3-2
+Kristin,Drub,19700906,1970,F,55436,stjepanknappe@hotmail.de,+49(0)7717 57962,Löchelstraße 1-2
+August,Löchel Beng,19900525,1990,M,25973,dianaring@hotmail.de,(08889) 848689,Raymond-Ebert-Weg 80-52
+Olga,Budig,19950215,1995,F,81304,nicole58@yahoo.de,(08456) 07753,Schmiedeckestraße 1832
+Ortwin,Kuhl,19780628,1978,M,27238,njaentsch@web.de,+49(0)4632133955,Karl-Jürgen-Dussen van-Ring 2772
+Justus,Barkholz,19920425,1992,M,95519,pascalenette@hotmail.de,+49(0) 565957234,Seidelstraße 4-2
+Ron,Schönland,20011219,2001,M,42790,hettnerroswita@hotmail.de,07430 391219,Rittergasse 42/81
+Belinda,Ritter,19660721,1966,F,67448,bfliegner@hotmail.de,+49 (0) 3533 195276,Bolzmannweg 696
+Norma,Wernecke,19700806,1970,F,62481,karl-ludwigweiss@gmx.de,+49(0)5165 238073,Adolphring 94
+Erica,Meyer,19810223,1981,F,66398,harloffgunda@yahoo.de,+49(0)4433057427,Dietzgasse 57
+Helmtrud,Etzler,19910622,1991,F,75884,vanders@web.de,+49(0)9447692550,Hornichring 336
+Hans-erich,Schacht,19490116,1949,M,10872,rebekkaullrich@gmx.de,05687498910,Zobelstr. 374
+Joanna,Karz-briemer,19711215,1971,F,43498,ernest36@aol.de,03594 79332,Bärerstr. 389
+Hans-hermann,Schinke,20050418,2005,M,27219,aumannsylwia@gmx.de,0092212887,Fernando-Scholtz-Straße 862
+Hakan,Stolze,19470127,1947,M,77252,haeneladam@aol.de,08501 51976,Ortmannallee 5-8
+Hans-dieter,Stey,19810304,1981,M,75613,eddahahn@googlemail.com,06400 73163,Rosemannstraße 20
+Tibor,Pärtzelt,19770906,1977,M,95147,cnerger@yahoo.de,(00499) 578359,Cristina-Koch II-Allee 32/45
+Corina,Roskoth,19480928,1948,F,69346,hgierschner@googlemail.com,+49 (0) 5587 531482,Bolnbachplatz 699
+Silvester,Bohnbach-wähner,19861028,1986,M,43995,rosaliastaude@hotmail.de,+49(0) 909181580,Wilhelm-Hofmann-Straße 77/47
+Willi,Geisel,19770207,1977,M,74702,hklapp@gmx.de,+49(0)3309548008,Stefania-Bachmann-Weg 6
+Karl-wilhelm,Herrmann,19591222,1959,M,38765,pavel05@gmail.com,+49(0) 278293793,Boucseinweg 50
+Nelli,Hering,20030208,2003,F,67782,schweitzerbogdan@hotmail.de,+49 (0) 0808 039555,Junkstr. 23-84
+Evamaria,Rudolph-rädel,19830419,1983,F,55814,petzler@web.de,05869 435284,Wiebke-Roskoth-Straße 3/9
+Mary,Hahn,19671125,1967,U,01719,leohoelzenbecher@gmx.de,+49(0)9080 772852,Eberthring 22
+Tabea,Gnatz,19500910,1950,F,18913,gerwin04@gmail.com,(02656) 30214,Gilbert-Weihmann-Straße 16-25
+Tim,Staude,19610516,1961,M,03151,daniellehamann@hotmail.de,00253030221,Siegrun-Warmer-Weg 29-75
+Sarah,Scheibe,19740811,1974,F,06892,falksorgatz@gmx.de,06137 59665,Lindaustraße 9813
+Mathilde,Staude,19511222,1951,F,98933,hildegartstiffel@aol.de,04204158490,Wulf-Hande-Straße 740
+Veit,Boucsein,19600704,1960,M,91800,msteckel@hotmail.de,07135 645298,Heinallee 1
+Giesela,Haering-kreusel,20030329,2003,F,56650,zdravko66@googlemail.com,(06520) 35401,Lisette-Stoll-Gasse 63-19
+Antonietta,Boucsein Beng,19971022,1997,F,52759,hedy98@gmail.com,+49(0)6409 54106,Jopichring 59-90
+Christina,Baum,19820822,1982,F,30743,ksager@googlemail.com,(04657) 697775,Kostolzinring 8-6
+Henny,Matthäi,19810202,1981,F,47520,thiessilja@googlemail.com,07636 472199,Isa-Ackermann-Allee 8
+Krzysztof,Schwital-krein,19841107,1984,M,43749,etzoldarnfried@aol.de,+49(0)8667 58925,Carla-Ladeck-Weg 8281
+Domenico,Siering,19971010,1997,M,82870,jkaester@hotmail.de,02075736185,Döringstraße 11/43
+Franz,Gutknecht,19590108,1959,M,23363,sabri37@googlemail.com,+49(0)6608 13262,Heinz-Otto-Trapp-Weg 86
+Inge,Hornich,19911018,1991,F,92767,hertrampfsevim@aol.de,08685 23458,Kobeltallee 70/62
+Erik,Trüb,20031206,2003,M,75588,hamannernst-august@hotmail.de,00416 331605,Salzstr. 24-95
+Elizabeth,Mangold,19980801,1998,F,82884,kochtrudel@web.de,+49(0)8044 86482,Meyergasse 80/59
+Adriana,Trupp,19491130,1949,F,10208,xkarge@aol.de,+49 (0) 9369 187297,Hatice-Adolph-Ring 227
+Samir,Hein,20050110,2005,M,57058,zeljko34@aol.de,+49(0)0363 924662,Gerlinde-Jähn-Straße 5674
+Reginald,Fröhlich,19511215,1951,M,35427,heseradelinde@web.de,(06894) 268237,Natalija-Franke-Ring 5374
+Konrad,Stiffel,19941201,1994,M,20760,thiesnadja@gmail.com,(05354) 018971,Neureutherweg 90-61
+Kenan,Hövel,19591104,1959,M,40693,zita90@gmx.de,(02345) 12993,Hans-Werner-Oderwald-Platz 9-1
+Lena,Stey,19510809,1951,F,78938,meikefliegner@gmx.de,0988762413,Pruschkeallee 67
+Juergen,Karge,19640520,1964,U,49209,edgarspeer@web.de,+49(0)6339 98589,Schachtstr. 5-2
+Edeltraud,Lange,19870513,1987,F,51489,schleichemanuel@aol.de,0585070392,Bonbachstraße 50/92
+Burkard,Etzler,20070903,2007,M,79821,dhecker@gmail.com,+49(0)9204 26837,Seipallee 1-3
+Jolanta,Jäkel,19841213,1984,F,02924,wera87@gmail.com,(06288) 38177,Jockelplatz 5193
+Sigmar,Schmiedt,19471227,1947,M,93465,gabriela42@gmx.de,+49(0)1673 64519,Mirja-Beier-Gasse 3-2
+Thilo,Pölitz,19660320,1966,M,39904,junckengordon@gmx.de,03251 76507,Jacob-Hesse-Platz 9
+Lili,Weitzel,19980822,1998,F,46927,jann11@gmx.de,+49 (0) 2307 679356,Henrike-Nohlmans-Gasse 25/38
+Irmingard,Weinhage,19600626,1960,F,89769,margitarogner@googlemail.com,+49(0)8137091676,Zlatko-Haering-Straße 81-15
+Lidwina,Hoffmann-gierschner,19930703,1993,F,63369,claus-peterpechel@gmx.de,03641927524,Sibel-Johann-Allee 9
+Branka,Kreusel-mälzer,20060622,2006,F,27845,yfiebig@hotmail.de,+49(0)7812 36425,Niko-Ziegert-Straße 1-5
+Nils,Kallert,19500902,1950,M,75207,ruppertdorothea@yahoo.de,04427718608,Keudelring 981
+Esther,Schleich,19620318,1962,F,37699,friedhold20@hotmail.de,+49(0) 091019534,Fischerweg 63
+Mechthilde,Bonbach,19710718,1971,F,74605,stiebitzkarl@web.de,+49(0) 037831267,Teresa-Holzapfel-Platz 4-7
+Freddy,Beer,19980625,1998,M,40738,foersterljiljana@yahoo.de,+49(0)0422 32306,Katharine-Gotthard-Allee 640
+Mandy,Mohaupt,19830906,1983,F,03377,ischomber@yahoo.de,(03548) 78793,Kabusring 5-1
+Edelbert,Briemer,19831130,1983,M,57827,gmosemann@gmx.de,+49(0)8415 585168,Wulffstraße 8441
+Gero,Söding Beng,19830601,1983,M,31276,zeckbauer@web.de,(02040) 655933,Kensyallee 7
+Ellen,Segebahn,19520323,1952,F,60798,konstantinosheidrich@web.de,05887 413167,Hübelstr. 5-2
+Corinne,Stoll Beng,19580208,1958,F,51673,haticekraus@aol.de,+49 (0) 8808 785458,Sabrina-Riehl-Platz 5572
+Brit,Pölitz,19930603,1993,F,29133,steinbergursula@web.de,00069112126,Kriemhild-Birnbaum-Weg 4
+David,Wilms,19750106,1975,M,82737,austermuehlenorbert@googlemail.com,(00518) 57888,Ursel-Lange-Ring 58/75
+Ivanka,Neuschäfer-meyer,19590314,1959,F,09535,jo83@aol.de,04189 32478,Juri-Heß-Platz 5-5
+Eckart,Johann,19520911,1952,M,03178,hartmannkatalin@web.de,02030 47790,Kuhlplatz 2-9
+Natascha,Etzler,19521122,1952,F,25164,wencke83@hotmail.de,+49(0)0681984604,Romy-Pohl-Gasse 71-24
+Ivanka,Warmer,19810614,1981,F,52478,lheinrich@web.de,0674069296,Gießstraße 9550
+Edeltraut,Gude,19450415,1945,F,71605,bienbernd@gmx.de,+49(0)7523208403,Philipp-Hellwig-Ring 1/6
+Genoveva,Möchlichen,19800820,1980,F,95986,gertrud39@gmx.de,+49 (0) 8988 898372,Hans-H.-Huhn-Weg 6
+Mariele,Textor,19931118,1993,F,68711,burckhard55@googlemail.com,+49(0) 635472360,Wenke-Boucsein-Straße 69/55
+Hellmuth,Steckel,19920730,1992,M,23370,mentzelekkehard@web.de,01541 602247,Metzstr. 6694
+Ina,Walter,20030719,2003,F,85413,gabriellaring@gmx.de,06506 415927,Nancy-Döring-Straße 2-3
+Sandy,Speer,19870126,1987,U,30696,konstanzebien@aol.de,00950 496554,Adelheid-Barth-Platz 765
+Alf,Gunpf,19560327,1956,M,37224,gkiller@googlemail.com,0177532634,Hesseplatz 44/89
+Jacek,Christoph,19660311,1966,M,35628,ioannisradisch@gmail.com,+49 (0) 6980 595573,Irmela-Hecker-Weg 3401
+Aleksandr,Atzler,19890126,1989,M,55142,songuelstolze@googlemail.com,+49 (0) 0712 819412,Vittorio-Ring-Straße 3-8
+Annelore,Carsten,20010312,2001,F,18847,friedrichhauffer@aol.de,(08558) 147614,Heidrichallee 78/28
+Istvan,Jäntsch,19840708,1984,U,82526,tjunitz@gmx.de,02173654163,Sölzergasse 23/17
+Ursel,Staude,19580527,1958,F,99607,cheuser@gmail.com,+49(0) 910699542,Henkweg 9-4
+Maria-luise,Buchholz,19910420,1991,F,82976,stadelmanninga@web.de,+49(0)5350 35342,Tlustekweg 72-25
+Mathilde,Schuster,20010512,2001,F,56956,chande@yahoo.de,04875 377580,Winklergasse 962
+Theresia,Eimer Beng,19511019,1951,F,65333,ingeborg71@aol.de,07322 469470,Ruthild-Schottin-Gasse 82/73
+Rudi,Lorch-pruschke,19660329,1966,M,21473,simone80@aol.de,0946081483,Aynur-Rogge-Weg 7-2
+Lisa,Hövel,19881107,1988,F,62141,kraushaarpeter-michael@gmail.com,09942819737,Kraushaarplatz 5-2
+Jens-peter,Roskoth,20030207,2003,M,83704,ujunitz@googlemail.com,06965 665532,Regina-Zobel-Weg 76
+Sinaida,Drub Beng,19710927,1971,F,80589,korinna47@gmail.com,05728 830299,Pärtzeltplatz 64-30
+Nadeschda,Wulff,19441123,1944,F,95428,suekrue78@gmail.com,(01429) 47590,Sauerstraße 3-8
+Siegfried,Hiller,19470607,1947,M,28431,janusrenner@aol.de,04596331457,Stumpfweg 99-88
+Vincent,Lange,19581026,1958,M,55608,veit91@web.de,+49 (0) 8328 966895,Aloisia-Wagenknecht-Weg 56-97
+Mariana,Schaaf,19510327,1951,F,24077,frederikkrause@googlemail.com,05201917116,Stiffelring 4
+Konstantin,Gieß,19671231,1967,M,34257,fpohl@hotmail.de,(09967) 53680,Nadeshda-Geißler-Ring 6-6
+Oxana,Löffler,19680121,1968,F,44118,aloysdrub@hotmail.de,+49 (0) 7503 280918,Zänkerweg 4-3
+Hans-rudolf,Sauer,19671123,1967,M,35824,louise60@aol.de,0522121163,Schülerallee 2/2
+Jonas,Bähr-jessel,20040228,2004,M,77166,kkramer@gmx.de,+49(0) 427664923,Wagenknechtallee 42
+Friedemann,Schomber,19850607,1985,M,47321,augustbriemer@hotmail.de,+49(0)1639282339,Meike-Neuschäfer-Allee 4
+Zita,Bauer,19841229,1984,F,31791,ruthild73@web.de,+49 (0) 3286 512571,Neuschäferstraße 6-8
+Karsten,Preiß,19940711,1994,M,15943,nadeschda94@googlemail.com,0996180089,Dietzplatz 28-73
+Toni,Lorch,19560110,1956,M,04122,arthurzobel@googlemail.com,+49(0) 850258893,Karzallee 22/81
+Ditmar,Wieloch-mohaupt,19760322,1976,M,63137,ante05@hotmail.de,0176713643,Junckstraße 1-6
+Thomas,Davids,19541209,1954,M,84936,lilian59@web.de,+49(0)2189 044541,Antonietta-Mitschke-Ring 74/89
+Heiderose,Staude,19771016,1977,F,12252,piotr17@aol.de,0000960937,Alessandro-Förster-Gasse 95/40
+Janna,Binner,19820922,1982,F,86673,gertraut81@aol.de,+49 (0) 9525 023446,Andrei-Mohaupt-Ring 124
+Korbinian,Hesse,19510211,1951,M,77471,ojessel@gmx.de,(06823) 811349,Hans-Rainer-Huhn-Straße 262
+Herbert,Mielcarek,20050130,2005,M,76503,ulrikeherrmann@aol.de,(04975) 74851,Drewesring 3
+Stephen,Junken,19730421,1973,M,79247,irmhild24@web.de,09806066011,Langestr. 45
+Mariola,Zimmer,20020506,2002,F,99678,rjacobi-jaeckel@yahoo.de,+49(0) 717531970,Jungferstraße 5
+Reimund,Häring,19731128,1973,M,20739,anatolgertz@gmail.com,+49(0)5391 749118,Heserstr. 468
+Carl,Aumann,20050803,2005,M,80991,hans-juergenbeer@hotmail.de,+49(0)1528 739841,Eimerweg 625
+Lilo,Nette Beng,19761013,1976,F,73076,erhard17@gmail.com,+49 (0) 6650 507594,Krausegasse 96
+Ira,Drewes,19820215,1982,F,52462,qhaase@gmail.com,(02386) 878734,Paula-Hahn-Straße 9-2
+Lidija,Heintze,19590313,1959,F,86928,diethelm67@gmail.com,+49(0)8025 46993,Niklas-Köhler-Gasse 869
+Reiner,Wähner-albers,19470430,1947,M,99120,veli22@hotmail.de,00552 878119,Finkering 56-57
+Corina,Patberg,19910127,1991,F,24873,hmangold@web.de,09751203738,Drewesring 15/54
+Antonie,Drubin,19880118,1988,F,36045,upatberg@googlemail.com,06236 862945,Sönke-Schüler-Platz 16/60
+Ferdinand,Kensy,19890812,1989,M,14485,azizschweitzer@hotmail.de,01848840665,Knappegasse 2/6
+Reni,Hethur,19801030,1980,F,40203,hkraushaar@web.de,+49(0)1428 70826,Lilian-Dobes-Ring 54/94
+Stanislaw,Heintze,19980813,1998,M,69593,theodora25@web.de,0272424297,Blochring 4689
+Thaddäus,Rudolph,19800114,1980,M,26009,notto@googlemail.com,+49 (0) 9863 360615,Reichmanngasse 90
+Berta,Misicher,19530706,1953,F,53953,fechneradriana@yahoo.de,07647 43808,Nils-Kabus-Ring 79/51
+Ina,Mangold,19721030,1972,F,68036,hans-martin61@gmx.de,0701311356,Meyerplatz 8
+Sofie,Schüler,19490214,1949,F,84942,antoninarudolph@aol.de,07673 51951,Gebhard-Jacobi Jäckel-Weg 64
+Gerhardt,Pergande,19731130,1973,M,13741,fscholl@web.de,07065 288413,Eugen-Kusch-Ring 955
+Nurettin,Hornig,19640316,1964,M,80188,eckbauercornelia@gmx.de,+49(0)9927262393,Spießring 883
+André,Gnatz,19460610,1946,M,36902,corneliuswilms@hotmail.de,(05445) 25162,Gunter-Davids-Platz 98/14
+Genoveva,Eberth,19670331,1967,F,31778,trubinsylke@hotmail.de,+49 (0) 2901 741997,Steinberggasse 72-95
+Karolina,Keudel,19740711,1974,F,69433,hrohleder@googlemail.com,+49 (0) 8048 476556,Hans-Patberg-Ring 4
+Peer,Hein,19830918,1983,M,78442,ginotrommler@hotmail.de,+49(0)8269 89327,Achim-Zahn-Weg 37-28
+Krystyna,Schuster,19460212,1946,F,90152,rennerrebecca@gmx.de,+49(0) 987800099,Gereon-Löchel-Ring 9964
+Vera,Niemeier-juncken,19740102,1974,F,70336,friederike35@gmx.de,00575 637054,Lindauring 86
+Fatima,Koch Ii,19860202,1986,F,28716,valeskaschinke@googlemail.com,+49(0)5293 17523,Geert-Reichmann-Weg 96/91
+Tilmann,Ebert,19901104,1990,M,40636,bluemelerwin@gmx.de,(04196) 09216,Romana-Neureuther-Allee 349
+Albina,Rohleder,19540910,1954,F,85634,koehlerraimund@yahoo.de,+49(0)7894453113,Löchelplatz 94-29
+Elisa,Ruppersberger,19931030,1993,F,06137,joana04@googlemail.com,+49(0)6517 49943,Handegasse 8/5
+Christiana,Flantz-weinhage,19510110,1951,F,72967,cynthia86@hotmail.de,03308 927895,Andy-Bohlander-Allee 7242
+Alice,Barth,19821015,1982,F,55689,leopoldine48@gmx.de,+49(0)2702592516,Oderwaldgasse 75/82
+Toni,Flantz,19620422,1962,M,95541,karlabeyer@gmail.com,03245626154,Carolin-Junck-Straße 68
+Romana,Tintzmann-schottin,19660921,1966,F,15724,jorgenaser@gmail.com,+49(0) 449488072,Lina-Hertrampf-Straße 4/6
+Lidwina,Eberth,20050810,2005,F,88920,heinz-willikitzmann@gmail.com,(06812) 350670,Antoinette-Stadelmann-Straße 59
+Heinz-otto,Wiek-gude,19601213,1960,M,47577,klemmhans-theo@yahoo.de,02363 01048,Preißring 893
+Sahin,Heser,19650725,1965,U,86362,theres05@gmail.com,03801643608,Henckring 7915
+Annegret,Gumprich,19971119,1997,F,03369,damianreinhardt@aol.de,01215698161,Erdmute-Scheibe-Allee 8-8
+Wilma,Hande-reinhardt,20020206,2002,F,97779,dippelmonja@web.de,(09896) 329086,Irina-Keudel-Ring 36
+Ulrich,Beier,19501101,1950,M,67845,vivianeortmann@gmx.de,06015084296,Döringplatz 3/8
+Leander,Schmidtke,19840929,1984,M,16745,nmende@yahoo.de,+49(0) 680055479,Aleksandra-Rosemann-Straße 81/70
+Salvatore,Heß,19800823,1980,M,77141,tillfoerster@yahoo.de,+49(0)4031 663525,Süßebierring 5722
+Rosemarie,Heinz Beng,19621216,1962,F,19646,backermann@hotmail.de,+49(0)6590737466,Boris-Liebelt-Allee 2
+Jennifer,Tschentscher,19890814,1989,F,37742,centaschleich@gmx.de,00788212175,Drewesweg 8-3
+Imre,Schleich,19520103,1952,M,87056,nadeshda25@aol.de,(05878) 78770,Haeringring 84-19
+Gitta,Fechner,19901110,1990,F,06217,ante11@googlemail.com,+49(0) 004540825,Weinholdring 70/65
+Lore,Scholtz,19761226,1976,F,44798,beierkonstanze@googlemail.com,05945 732102,Engelbert-Seidel-Straße 95
+Aziz,Bohnbach,19630309,1963,M,97367,csteinberg@gmx.de,0492333398,Madeleine-Trub-Ring 8
+Hassan,Stolze Beng,19570504,1957,M,84912,gerlachlydia@gmail.com,(04137) 860007,Warmerring 67
+Ewald,Kallert,19931024,1993,M,29845,bernadette13@hotmail.de,(06539) 556750,Susann-Trupp-Gasse 3-1
+Jan-peter,Reising,19520802,1952,M,47072,charlesklingelhoefer@gmx.de,+49(0)6190016911,Schuchhardtstr. 89/59
+Leila,Seifert,19740411,1974,F,87624,jkohl@hotmail.de,05213 209646,Luzia-Höfig-Ring 5/3
+Reinhardt,Dippel,19571012,1957,M,56328,ejunitz@hotmail.de,02598 252135,Jockelallee 76/17
+Hans-günter,Zimmer,19670215,1967,M,85291,heinfried60@gmx.de,+49 (0) 1757 415386,Gießgasse 2909
+H-dieter,Biggen,19711219,1971,U,15678,truebangelo@aol.de,04344761472,Inken-Kostolzin-Straße 239
+Ibrahim,Zirme,19790524,1979,M,99556,reinholdtrueb@gmail.com,0704003610,Ullrichweg 4/6
+Stephan,Geisel,19460918,1946,M,93580,mercedesadolph@gmx.de,+49(0)4906 878644,Scheelstr. 5/8
+Hilmar,Stadelmann,19990126,1999,M,03279,christoph07@web.de,(05467) 02419,Mielcarekring 8
+Annemarie,Stadelmann Beng,19570502,1957,F,33199,tjacob@web.de,00209661782,Grafstr. 4/9
+Hans,Peter Hölzenbecher,19970712,1997,M,19947,hethurarthur@gmx.de,(08270) 76799,Albrecht-Schinke-Allee 1
+Hendrik,Mohaupt,19601012,1960,M,03275,dippelivo@gmail.com,0497417591,Lachmannstraße 97-12
+Aynur,Weimer-förster,19830714,1983,F,15736,luisa68@web.de,0814263141,Willfried-Salz-Allee 5262
+Elena,Mans,19901211,1990,F,13379,jgotthard@web.de,+49(0) 409821426,Nancy-Kohl-Allee 62-88
+Louise,Mies,19450426,1945,F,88027,bienpaulo@web.de,+49(0)6814 92678,Anita-Werner-Straße 4
+Cläre,Etzler-schulz,19500802,1950,F,90994,francesca04@gmx.de,+49(0)7475 374491,Sonja-Heser-Platz 56
+Stefano,Carsten,20020623,2002,M,85821,hseidel@gmail.com,07652 35796,Gregor-Staude-Allee 2434
+Marija,Mies,19830203,1983,F,54359,schleichmarica@googlemail.com,+49(0) 281419261,Langerngasse 3065
+Dittmar,Beier Beng,20011130,2001,M,46685,birgerlachmann@hotmail.de,05144 40416,Bachmannweg 46/64
+Sibilla,Junken,19901123,1990,F,44222,grein-grothottokar@gmx.de,03794 82108,Suse-Hövel-Platz 342
+Mahmut,Jäkel Beng,19920227,1992,M,84211,dsiering@aol.de,00148 44688,Löwerweg 3/8
+Emil,Losekann,19680902,1968,M,69569,karl-ottowilms@aol.de,02880168052,Hilma-Lindau-Platz 2
+Eckhart,Fliegner,19810624,1981,M,17405,angelicawulf@aol.de,(07457) 29731,Sibille-Weihmann-Allee 42-92
+Amalia,Heydrich,19600717,1960,F,66937,valentinbeyer@aol.de,+49(0) 234887446,Hermann-Josef-Neureuther-Gasse 22-27
+Klaus-dieter,Zahn,19970110,1997,M,75701,muelichengerhardt@hotmail.de,07944 89141,Mosemannallee 5
+Petar,Schweitzer-karz,20060110,2006,M,50540,lstahr@googlemail.com,+49(0) 464209281,Sandy-Jessel-Gasse 27
+Inna,Hamann,19711222,1971,F,17261,siegmund48@gmail.com,07849 87438,Kochallee 328
+Andrei,Kambs-ruppersberger,19470302,1947,M,91194,dholsten@web.de,+49(0)7995260715,Edith-Eberth-Straße 8
+Erdmute,Birnbaum,19640321,1964,F,75749,zhendriks@web.de,+49(0)8124194887,Brudergasse 65-58
+Kirstin,Eckbauer,20050416,2005,F,20278,dowergvitali@gmx.de,(00716) 88471,Markus-Reuter-Weg 8/6
+Ivanka,Etzler,19920125,1992,F,15523,teresaschleich@gmx.de,06699058297,Gutknechtplatz 35-53
+Luzia,Stolze,20000116,2000,F,52760,eminthies@googlemail.com,08475 24250,Ludger-Gute-Straße 1-4
+Hajo,Caspar-kohl,19780410,1978,M,58308,magdalene36@gmail.com,04293688125,Roselinde-Linke-Platz 5/3
+Friedhelm,Wernecke,19821015,1982,M,65094,herrmannhermine@yahoo.de,+49(0)3373 92834,Ilse-Stroh-Gasse 15
+Branko,Mies-naser,19890128,1989,M,93659,yvettehoelzenbecher@hotmail.de,0863995184,Ester-Bolzmann-Weg 110
+Antonina,Vollbrecht,19611115,1961,F,44605,foersterleonardo@gmail.com,+49 (0) 5229 302813,Franco-Niemeier-Allee 85/26
+Babette,Misicher,19870731,1987,F,16736,annegretetzold@aol.de,+49(0)1684 632428,Faustplatz 17/22
+Yasemin,Otto,19950706,1995,F,62467,jesselconcetta@aol.de,+49(0)0918454706,Alfred-Säuberlich-Platz 14-83
+Hans,Peter Wagenknecht,20050214,2005,M,51564,upruschke@hotmail.de,(09139) 22948,Wähnerweg 14
+Ludwig,Jockel,19600314,1960,M,80331,oliviaheidrich@web.de,(08263) 45801,Schlosserstr. 6-8
+Adina,Gröttner,19911027,1991,F,61842,annedoredoerr@googlemail.com,+49(0)9106 01539,Hövelweg 4670
+Patrizia,Löwer,19841210,1984,F,54189,kabusrobby@aol.de,(05842) 68159,Wibke-Rosemann-Weg 9742
+Hertha,Holt,19560328,1956,F,36024,rognerdanny@aol.de,+49(0)5933 72281,Geißlergasse 7
+Antonina,Werner,19650511,1965,F,61115,goetz11@aol.de,+49(0)2869 88170,Miguel-Weihmann-Straße 78/71
+Fabienne,Schuster,19591004,1959,F,77009,ditschlerincora@gmx.de,+49(0) 651982941,Drubinstr. 68/58
+Meinhard,Hänel,19670917,1967,M,18935,olaf00@gmx.de,+49(0)3948 578174,Wendeallee 907
+Ingmar,Zobel,19481109,1948,M,66157,kuhlreiner@googlemail.com,03156 394408,Gerold-Albers-Straße 0
+Jennifer,Nerger,19780319,1978,F,81345,bettyschueler@gmx.de,+49(0) 181932920,Guiseppe-Christoph-Platz 8/9
+Dana,Junk,19711129,1971,F,62429,auguste42@yahoo.de,+49 (0) 6380 172116,Manja-Bärer-Ring 2
+Myriam,Langern,19930812,1993,F,72104,dolores07@web.de,+49(0)2657 480549,Ivo-Hornich-Allee 7/7
+Ortwin,Reuter,19681221,1968,M,42048,anettejunitz@hotmail.de,+49(0)2029 249870,Wolfram-Etzold-Allee 65
+Nikolai,Loos,20051112,2005,M,56400,klaus-d23@hotmail.de,0237575264,Hans-Otto-Kensy-Straße 829
+Ladislaus,Berger,19740721,1974,M,79388,stavroskallert@hotmail.de,+49 (0) 0990 089246,Vassilios-Kensy-Platz 72/95
+Manja,Sölzer Beng,19700202,1970,F,68854,siegrungorlitz@hotmail.de,+49(0) 973391151,Hörlestr. 131
+Dietlind,Stumpf,20011003,2001,F,07447,ryszardweimer@aol.de,08041240456,Hethurallee 711
+Wera,Kambs,19490628,1949,F,04728,augustapohl@gmx.de,01155 513372,Claus-Peter-Dehmel-Weg 911
+Eckart,Cichorius,19450212,1945,M,33185,segebahnathanasios@googlemail.com,0021951256,Trappstraße 49-39
+Emma,Mühle,19680413,1968,F,34035,rhofmann@gmail.com,03954 36980,Hofmannweg 0
+Philipp,Kostolzin,19711101,1971,M,30199,dorota76@gmx.de,(04165) 59448,Girschnerplatz 6/8
+Ruben,Schäfer,19590810,1959,M,54161,ana91@googlemail.com,+49(0)5978 18357,Geraldine-Schacht-Platz 5
+Hertha,Sölzer,19701001,1970,F,25733,hans-theomies@yahoo.de,(02464) 34620,Paffrathgasse 0
+Hajo,Mosemann,19960514,1996,M,40228,rohlederhansjoerg@gmail.com,(05769) 265190,Madlen-Birnbaum-Platz 6-7
+Milka,Harloff,19840209,1984,F,42137,haeringhulda@yahoo.de,+49(0)9655 46189,Jäkelstr. 53-44
+Maria-luise,Becker,19611111,1961,F,43274,doritpaffrath@aol.de,+49(0)9145 845445,Hornigstraße 24
+Rosa,Stoll-heinz,19890529,1989,F,32304,ante75@gmail.com,(05883) 408540,Adriana-Hecker-Weg 3/1
+Timo,Dörr Beng,19611211,1961,M,12521,fortmann@web.de,+49(0)6396664772,Dippelallee 422
+Henrike,Hölzenbecher,19550503,1955,F,71578,bolanderfanny@web.de,(00103) 059639,Davidsallee 18-63
+Carolin,Graf-mitschke,19721019,1972,F,24969,sorgatzfriedlinde@web.de,+49(0)7806 173748,Säuberlichplatz 1467
+Luisa,Jacobi Jäckel,19950606,1995,F,48505,valentin80@googlemail.com,+49 (0) 4881 567493,Siegrun-Zobel-Gasse 3096
+Anne-marie,Ortmann-pölitz,19801226,1980,F,23508,eschlosser@hotmail.de,(04883) 320121,Brita-Rogner-Allee 28-72
+Hanny,Hesse,19951210,1995,F,49601,ppreiss@hotmail.de,06467 152023,Anette-Dobes-Weg 35/69
+Notburga,Kaul-naser,20030522,2003,F,98432,wilfried28@web.de,+49(0)5538 07973,Schaafallee 8/4
+Marie-louise,Stadelmann,19850107,1985,F,32182,tschwital@web.de,(04827) 082605,Undine-Bohlander-Allee 41-91
+Priska,Sölzer,19900702,1990,F,11501,krista69@aol.de,01734957537,Schusterallee 820
+Wieland,Niemeier,19551111,1955,M,46306,caeciliering@gmx.de,+49(0) 345433154,Neureutherstr. 557
+Roswitha,Becker,20060518,2006,F,83353,dannyschaefer@gmail.com,+49(0)2786 50117,Marian-Kroker-Weg 87
+Veronica,Gutknecht-mende,19910402,1991,F,81988,putzkay-uwe@gmail.com,0980606313,Döhnallee 73
+Luitgard,Binner,19501024,1950,F,20221,silvana75@gmail.com,(04764) 64091,Grein Grothallee 30/57
+Alwina,Löwer,19810321,1981,F,76268,branka43@aol.de,+49(0)3480 93670,Harry-Eckbauer-Platz 59
+Leonid,Stadelmann,19741013,1974,M,42965,gertrudstumpf@hotmail.de,0754858118,Truppgasse 12/73
+Christian,Junk,20060721,2006,M,09199,miodragwiek@yahoo.de,+49 (0) 6315 635438,Beyerallee 5
+Amir,Riehl,19760629,1976,M,66321,gotthardadele@gmx.de,00986 584203,Haeringweg 9500
+Heinz-wilhelm,Bonbach,19571119,1957,M,79951,uwagenknecht@gmail.com,+49(0)9607 68691,Kuhlgasse 5-4
+Anneke,Hesse,19630613,1963,F,20987,qholzapfel@yahoo.de,05038 04001,Linkestr. 33/81
+Sara,Mies,19940913,1994,F,30504,vfoerster@gmail.com,0556900692,Hans-Otto-Barkholz-Straße 76
+Drago,Bolander,19570317,1957,M,16432,wilfriedschwital@aol.de,07089 297220,Helene-Seip-Platz 7/2
+Yusuf,Hoffmann-stadelmann,19980201,1998,M,84935,zkade@aol.de,00839548077,Milica-Ullmann-Allee 17-70
+Severin,Jähn-plath,19800507,1980,M,65877,bienjanine@web.de,+49 (0) 8008 755988,Geißlerallee 68
+Ernst-otto,Schuchhardt-kroker,19640804,1964,M,96013,leopoldnette@hotmail.de,0385988817,Wiekstr. 1
+Sepp,Heß,19701008,1970,M,22423,kathringnatz@hotmail.de,+49(0)2323 67434,Vinzenz-Stiebitz-Straße 904
+Arnfried,Schlosser,19530519,1953,M,17254,jjopich@aol.de,07667 504065,Edeltraut-Klemt-Gasse 20
+Cetin,Schlosser,19691121,1969,U,84101,helmuthharloff@hotmail.de,02664680751,Freudenbergerplatz 7840
+Konstanze,Atzler,19820123,1982,F,55856,chentschel@hotmail.de,03070137859,Sieringgasse 49
+Wilhelm,Putz,19631117,1963,M,18789,ramona58@web.de,+49 (0) 3314 700936,Dehmelallee 1/6
+Alma,Drubin,19890114,1989,F,08724,cristinagiess@yahoo.de,+49(0)6000 50928,Killerallee 9
+Trudel,Kobelt,19591220,1959,F,90794,heydrichlinus@gmail.com,+49(0)0140 40242,Kathrin-Paffrath-Weg 5072
+Anatol,Finke,19990219,1999,M,68761,toralfschuster@googlemail.com,(05288) 90833,Kramerstr. 4/3
+Philippe,Kensy-hein,19491004,1949,M,73898,susanne41@gmx.de,+49 (0) 8915 727555,Wilmsenweg 35-90
+Irma,Köhler,19660124,1966,F,84465,ymohaupt@gmx.de,0655668667,Hansgeorg-Patberg-Allee 80-64
+Gunar,Geißler,19490512,1949,U,49187,tim38@gmail.com,08440 536760,Katharina-Krause-Weg 874
+Greta,Weihmann,19820323,1982,F,77329,ibeckmann@hotmail.de,+49(0)7277 69211,Uwe-Hermann-Weg 56-63
+Ibrahim,Atzler,20030318,2003,M,03727,ijohann@googlemail.com,05221461381,Keudelplatz 9-8
+Elenore,Döring,19470402,1947,F,05160,tony72@gmx.de,+49(0)5064 870939,Carstenplatz 12
+Diana,Hornig-heß,20020902,2002,F,67552,adlerhans-erich@web.de,+49 (0) 3247 890685,Barthstraße 16
+Annedore,Ackermann,19990516,1999,F,93145,georgiosgrein-groth@gmx.de,+49(0)8126314483,Rognerstraße 7/6
+Heidelore,Werner,19520215,1952,F,51626,ohaering@aol.de,0394106785,Virginia-Lehmann-Ring 76-64
+Swen,Gumprich,19880813,1988,M,99400,willibertwarmer@gmx.de,0085368783,Irmgard-Speer-Gasse 15-59
+Ellinor,Mühle-scholl,19690716,1969,F,34968,freuter@gmx.de,0980494228,Janett-Hettner-Gasse 9
+Flora,Neuschäfer-adler,20011021,2001,F,81108,sauerpeter-michael@web.de,+49(0)0538031629,Rosemannstr. 54/15
+Jonathan,Freudenberger,19710316,1971,M,47195,haenelheide-marie@web.de,0072241442,Eleonore-Thanel-Allee 90
+Evangelia,Eberth,19600205,1960,F,20315,haeringthies@aol.de,(06099) 918020,Diethard-Mies-Allee 5167
+Sylvia,Ring,19780224,1978,F,05338,wagnermarianna@hotmail.de,(09392) 948815,Jopichring 12/48
+Andrea,Oderwald,19710506,1971,F,90954,muellerdorothee@yahoo.de,+49(0)7380804973,Knut-Blümel-Weg 35/81
+Rudi,Killer,19660520,1966,M,29557,patriziaadolph@web.de,+49(0)0077477574,Nick-Hertrampf-Platz 67/14

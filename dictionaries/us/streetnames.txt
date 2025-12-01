@@ -1,0 +1,120 @@
+# source: https://streetnamesearch.com/most-common-street-names/ for US overall, North Carolina, South Carolina, Ohio (removed ranking numbers and count columns, lowercased, expanded abbreviations, removed duplicates post-normalization)
+main street
+2nd street
+3rd street
+1st street
+oak street
+4th street
+elm street
+pine street
+church street
+maple street
+walnut street
+5th street
+n main street
+s main street
+washington street
+6th street
+e main street
+w main street
+center street
+high street
+park avenue
+cedar street
+north street
+7th street
+park street
+sunset drive
+river road
+south street
+chestnut street
+ridge road
+mill street
+cherry street
+lakeview drive
+spring street
+railroad street
+meadow lane
+school street
+circle drive
+west street
+8th street
+spruce street
+2nd avenue
+1st avenue
+jackson street
+shady lane
+jefferson street
+hill street
+lincoln street
+3rd avenue
+short street
+railroad avenue
+water street
+maple avenue
+9th street
+locust street
+ash street
+poplar street
+county line road
+airport road
+central avenue
+front street
+willow street
+highland avenue
+hillcrest drive
+woodland drive
+east street
+franklin street
+cedar lane
+10th street
+adams street
+vine street
+washington avenue
+4th avenue
+w 2nd street
+lincoln avenue
+birch street
+w 3rd street
+grove street
+e 3rd street
+hillside drive
+grant street
+e 2nd street
+pearl street
+smith road
+state street
+5th avenue
+charles street
+w 4th street
+hickory street
+n 2nd street
+n 3rd street
+dogwood lane
+hickory lane
+green street
+riverside drive
+cemetery road
+james street
+smith street
+fairway drive
+e 4th street
+dogwood drive
+lee street
+state road
+williams street
+forest drive
+lakeside drive
+johnson road
+wilson street
+brown road
+calhoun street
+us highway
+davis street
+king street
+union street
+market street
+sycamore street
+liberty street
+ohio street
+co highway

@@ -1,0 +1,201 @@
+# source: https://www.strassen-in-deutschland.de/die-haeufigsten-strassennamen-in-deutschland.html (normalized: lowercase, umlauts expanded)
+hauptstrasse
+schulstrasse
+gartenstrasse
+bahnhofstrasse
+dorfstrasse
+bergstrasse
+birkenweg
+lindenstrasse
+kirchstrasse
+waldstrasse
+ringstrasse
+schillerstrasse
+amselweg
+goethestrasse
+wiesenweg
+buchenweg
+jahnstrasse
+wiesenstrasse
+ahornweg
+finkenweg
+eichenweg
+am sportplatz
+feldstrasse
+muehlenweg
+rosenstrasse
+erlenweg
+friedhofstrasse
+blumenstrasse
+lindenweg
+tannenweg
+brunnenstrasse
+kirchweg
+bachstrasse
+raiffeisenstrasse
+mozartstrasse
+rosenweg
+lerchenweg
+drosselweg
+muehlenstrasse
+talstrasse
+gartenweg
+industriestrasse
+mittelstrasse
+beethovenstrasse
+poststrasse
+waldweg
+kirchplatz
+meisenweg
+fliederweg
+kirchgasse
+am bahnhof
+breslauer strasse
+lessingstrasse
+schlossstrasse
+kiefernweg
+fasanenweg
+burgstrasse
+neue strasse
+birkenstrasse
+uhlandstrasse
+kastanienweg
+koenigsberger strasse
+tulpenweg
+schulweg
+im winkel
+muehlweg
+marktplatz
+parkstrasse
+danziger strasse
+gruener weg
+kapellenweg
+schuetzenstrasse
+berliner strasse
+mittelweg
+roemerstrasse
+eschenweg
+heideweg
+nelkenweg
+fichtenweg
+am anger
+ulmenweg
+stettiner strasse
+wilhelmstrasse
+laerchenweg
+sonnenstrasse
+schubertstrasse
+friedrichstrasse
+eichendorffstrasse
+am hang
+sudetenstrasse
+marienstrasse
+friedhofsweg
+marktstrasse
+kurze strasse
+brueckenstrasse
+eichenstrasse
+schwalbenweg
+ginsterweg
+neuer weg
+lange strasse
+nordstrasse
+ahornstrasse
+pappelweg
+steinweg
+flurstrasse
+holunderweg
+akazienweg
+karlstrasse
+suedstrasse
+kolpingstrasse
+kapellenstrasse
+brunnenweg
+rathausstrasse
+buchenstrasse
+muehlstrasse
+hochstrasse
+seestrasse
+querstrasse
+friedensstrasse
+kantstrasse
+weidenweg
+sonnenweg
+pestalozzistrasse
+hoehenweg
+tulpenstrasse
+friedrich-ebert-strasse
+richard-wagner-strasse
+pfarrgasse
+robert-koch-strasse
+kreuzstrasse
+steinstrasse
+im wiesengrund
+sandweg
+siedlung
+heinrich-heine-strasse
+falkenweg
+gutenbergstrasse
+grenzweg
+nelkenstrasse
+asternweg
+dahlienweg
+schlehenweg
+albert-schweitzer-strasse
+weinbergstrasse
+teichstrasse
+am berg
+friedenstrasse
+schwarzer weg
+zeppelinstraße
+moerikestrasse
+veilchenweg
+wacholderweg
+grabenstrasse
+frankenstrasse
+klosterstrasse
+lerchenstrasse
+starenweg
+oststrasse
+bergweg
+haydnstrasse
+markt
+gerhart-hauptmann-strasse
+fichtenstrasse
+siemensstrasse
+wiesengrund
+hohlweg
+heckenweg
+hoelderlinstrasse
+alte dorfstrasse
+jaegerstrasse
+forststrasse
+lilienweg
+geschwister-scholl-strasse
+dorfplatz
+muehlgasse
+burgweg
+bismarckstrasse
+forstweg
+blumenweg
+hohe strasse
+an der kirche
+ludwigstrasse
+lindenallee
+tannenstrasse
+kirchenweg
+august-bebel-strasse
+kreuzweg
+leipziger strasse
+weiherstrasse
+rathausplatz
+daimlerstrasse
+am friedhof
+weststrasse
+ulmenstrasse
+feldweg
+rotdornweg
+kirchberg
+robert-bosch-strasse
+dieselstrasse
+erlenstrasse

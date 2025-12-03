@@ -44,9 +44,7 @@ pip install -r requirements.txt
 │   ├── ESSnet/              # CIS and Census datasets
 │   ├── de/                  # German datasets
 │   └── us                   # US datasets (NVR and OVR) (zipped due to size)
-├── dictionaries/            # Static dictionaries form web search
-│   ├── de/                  # Lists of first names, last names and addresses specific to Germany
-│   ├── us/                  # Lists of first names, last names and addresses specific to the US
+
 │   └── results/             # Results from the dictionary attack
 │   │   ├── ESSnet/          # Results using the CIS datasets with US-specific static dictionary
 │   │   ├── de/              # Results using the DA10 dataset with German-specififc static dictioanrey
@@ -67,11 +65,17 @@ pip install -r requirements.txt
 │   ├── brute_force/         # Results from the brute-force mode
 │   │   ├── 24CPUCores/      # Results from the brute-force attack on the German dataset D0 using 24 CPU cores
 │   │   └── 128CPUCores/     # Results from the brute-force attack on the German dataset D0 using 128 CPU cores
-│   └── dictionary/          # Results from the dictionary mode
-│       ├── baseline/        # Results from the baseline dictionary attack
-│       ├── de/              # Results from the dictionary attacks on German simulated datasets (with 500, 1000 and 2000 reference values)
-│       └── us/              # Results from the dictionary attacks on the North Carolina dataset (with 500, 1000 and 2000 reference values)
+│   ├── dictionary/          # Results from the dictionary mode
+│   │   ├── baseline/        # Results from the baseline dictionary attack
+│   │   ├── de/              # Results from the dictionary attacks on German simulated datasets (with 500, 1000 and 2000 reference values)
+│   │   └── us/              # Results from the dictionary attacks on the North Carolina dataset (with 500, 1000 and 2000 reference values)
+│   └── static_dictionaries\ # Results from the dictionary attack using static dictionaries
+│   │   ├── de/              # Results using the static dictionary attack on DA10 
+│   │   └── us/              # Results using the static dictionary attack on NVR 
 ├── scripts/                 # Folder containing helper scripts for key generation, value counting or replacing DOBs for brute-force attack testing
+├── static_dictionaries/     # Static dictionaries form web search
+│   ├── de/                  # Lists of first names, last names and addresses specific to Germany
+│   └── us/                  # Lists of first names, last names and addresses specific to the US
 ├── generated_key            # File containing the used AES keys for encryption and decryption
 └── README.md
 ```
@@ -103,9 +107,9 @@ Simulate the "Linkage Unit" (LU). This script converts plaintext records into en
 
 ```bash
 python match_keys/match_key_Creation/datavant-matchkey-algo-nosalt.py \
-  --in data/simulated/dataset_D0_clean.csv \
-  --out data/encrypted/tokens_D0.csv \
-  --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7" \
+  --in         raw_data/de/german_DO.csv \
+  --out        match_keys/de/german_matchkeys.csv \
+  --site-key   dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7 \
 ```
 Output: A CSV file containing only the encrypted tokens (no plaintext). This represents the data leak.
 
@@ -120,13 +124,13 @@ Uses a reference dictionary (e.g., Top-N names) to pivot through the tokens.
 
 ```bash
 python attack/multiple_attack_multproc_nomemo.py \
-  --in data/encrypted/tokens_D0.csv \
-  --out results/attack_results_D0.csv \
-  --dist-file data/dictionaries/known_data_distribution.csv \
-  --top-n 500 \
-  --columns T1,T2,T7,T4,T3,T9 \
-  --lang de \
-  --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7" 
+  --in        match_keys/de/german_matchkeys.csv \
+  --out       results/dictionary/de/attack_results_D0.csv \
+  --dist-file cleaned_data/de/german_DA10_cleaned.csv \
+  --top-n     500 \
+  --columns   T1,T2,T7,T4,T3,T9 \
+  --lang      de \
+  --site-key  dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7
 ```
 
 ### B. Brute-Force Mode (Name Generator)
@@ -135,12 +139,13 @@ Uses the recursive Soundex generator to reverse-engineer names without a diction
 
 ```bash
 python attack/multiple_attack_multproc_nomemo.py \
-  --in data/encrypted/tokens_D0.csv \
-  --out results/bf_results_D0.csv \
-  --columns T2,T1,T7,T4 \
+  --in           match_keys/de/german_matchkeys.csv \
+  --out          results/brute_force/de/results_D0.csv \
+  --columns      T2,T1,T7,T4 \
   --bruteforce \
-  --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7"
-  --max-fn-len 8 --max-ln-len 8
+  --site-key     dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7
+  --max-fn-len   8 \
+  --max-ln-len   8
 ```
 
 ## Arguments Explanation

@@ -1,0 +1,27 @@
+/home/babett/babett_masterthesis/datavant/multiple_attack_multproc-final-nomemo.py:812: DtypeWarning: Columns (3,4) have mixed types. Specify dtype option on import or set low_memory=False.
+  df = pd.read_csv(dist_file)
+[*] Loaded distribution file 'ohio_cleaned.csv': top_n=1000 (firsts=1000, lasts=1000, addresses=1000)
+[*] Attacking file 'nc_matchkeys-nr.csv' with columns: T2,T1,T4,T3,T9
+[*] Attacking in language mode: US
+[*] Using SHA-256(token_input) (no master salt).
+[*] Using AES-256-ECB for site token decryption (key length=32).
+[decrypt] T2: unique master tokens=7704256 (successes=38605451, failures=0)
+[decrypt] T1: unique master tokens=7647450 (successes=38605451, failures=0)
+[decrypt] T4: unique master tokens=7717151 (successes=38605451, failures=0)
+[decrypt] T3: unique master tokens=7720705 (successes=38605451, failures=0)
+[decrypt] T9: unique master tokens=6428533 (successes=38605451, failures=0)
+[*] Using 24 processes for parallel tasks.
+[*] Running in Dictionary/Reference Mode.
+[*] Attacking T2 (Parallel) using dictionary-derived Soundex codes...
+     -> Found 4596027 T2 preimages (2917.42s). Hashes: 20319256620
+[*] Attacking T1 using T2 dictionary hits...
+     -> Found 2906887 T1 preimages (58.29s). Hashes: 20330729310
+[*] Pivoting to T4 via T1/T2 dictionary hits...
+    -> Found 2491214 T4 preimages (223.52s). Hashes: 20344323519
+[*] Pivoting to T3 via T4...
+    -> Found 2494444 T3 (3571.43s). Hashes: 22835537519
+[*] Pivoting to T9 via T4 (Parallel)...
+    -> Found 37467 T9 (2218.02s). Hashes: 25102542259
+[*] Writing results to /mnt/hdd/babett/multattack_nc_21439_1000.csv...
+[*] Results written to /mnt/hdd/babett/multattack_nc_21439_1000.csv
+[TOTAL HASHES] 25102542259

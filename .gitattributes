@@ -23,3 +23,6 @@ results/dictionary/us/2000/217439_nvr_2000.csv filter=lfs diff=lfs merge=lfs -te
 results/dictionary/us/2000/17439_nvr_2000.csv filter=lfs diff=lfs merge=lfs -text
 results/dictionary/us/500/17439_nvr_500.csv filter=lfs diff=lfs merge=lfs -text
 results/dictionary/us/2000/12439_nvr_2000.csv filter=lfs diff=lfs merge=lfs -text
+results/dictionary/us/2000/21439_nvr_2000.csv filter=lfs diff=lfs merge=lfs -text
+results/dictionary/us/1000/21439_nvr_1000.csv filter=lfs diff=lfs merge=lfs -text
+results/dictionary/us/500/21439_nvr_500.csv filter=lfs diff=lfs merge=lfs -text

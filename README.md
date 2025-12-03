@@ -44,11 +44,10 @@ pip install -r requirements.txt
 │   ├── ESSnet/              # CIS and Census datasets
 │   ├── de/                  # German datasets
 │   └── us                   # US datasets (NVR and OVR) (zipped due to size)
-
 │   └── results/             # Results from the dictionary attack
-│   │   ├── ESSnet/          # Results using the CIS datasets with US-specific static dictionary
-│   │   ├── de/              # Results using the DA10 dataset with German-specififc static dictioanrey
-│   │   └── us/              # Results using the NVR datasets with US-specific static dictionary
+│       ├── ESSnet/          # Results using the CIS datasets with US-specific static dictionary
+│       ├── de/              # Results using the DA10 dataset with German-specififc static dictioanrey
+│       └── us/              # Results using the NVR datasets with US-specific static dictionary
 ├── match_keys/              # Folder containing all generated match keys and scripts to generate them
 │   ├── ESSnet/              # Match keys for CIS dataset
 │   ├── de/                  # Match keys for generated German datasets (D0, DA1, DB1, DA10, DB10, DA50, DB50) (with variations including only one DOB)
@@ -70,8 +69,8 @@ pip install -r requirements.txt
 │   │   ├── de/              # Results from the dictionary attacks on German simulated datasets (with 500, 1000 and 2000 reference values)
 │   │   └── us/              # Results from the dictionary attacks on the North Carolina dataset (with 500, 1000 and 2000 reference values)
 │   └── static_dictionaries\ # Results from the dictionary attack using static dictionaries
-│   │   ├── de/              # Results using the static dictionary attack on DA10 
-│   │   └── us/              # Results using the static dictionary attack on NVR 
+│       ├── de/              # Results using the static dictionary attack on DA10 
+│       └── us/              # Results using the static dictionary attack on NVR 
 ├── scripts/                 # Folder containing helper scripts for key generation, value counting or replacing DOBs for brute-force attack testing
 ├── static_dictionaries/     # Static dictionaries form web search
 │   ├── de/                  # Lists of first names, last names and addresses specific to Germany

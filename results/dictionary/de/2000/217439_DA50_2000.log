@@ -12,17 +12,17 @@
 [*] Using 24 processes for parallel tasks.
 [*] Running in Dictionary/Reference Mode.
 [*] Attacking T2 (Parallel) using dictionary-derived Soundex codes...
-     -> Found 9666 T2 preimages (3933.06s). Hashes: 36256419810
+     -> Found 9747 T2 preimages (4734.83s). Hashes: 39802698000
 [*] Attacking T1 using T2 dictionary hits...
-     -> Found 8605 T1 preimages (0.18s). Hashes: 36256459798
+     -> Found 8633 T1 preimages (0.18s). Hashes: 39802745256
 [*] Attacking T7 via T1 and T2 intersection...
-     -> Found 8599 T7 preimages (0.14s). Hashes: 36256477738
+     -> Found 8633 T7 preimages (0.14s). Hashes: 39802757375
 [*] Pivoting to T4 via T1/T2 dictionary hits...
-    -> Found 8573 T4 preimages (0.48s). Hashes: 36256518796
+    -> Found 8633 T4 preimages (0.48s). Hashes: 39802798719
 [*] Pivoting to T3 via T4...
-    -> Found 8566 T3 (10.07s). Hashes: 36265091796
+    -> Found 8626 T3 (10.07s). Hashes: 39811431719
 [*] Pivoting to T9 via T4 (Parallel)...
-    -> Found 1673 T9 (1082.93s). Hashes: 44839403465
-[*] Writing results to /mnt/hdd/babett/multattack_DA50_217439_2000.csv...
-[*] Results written to /mnt/hdd/babett/multattack_DA50_217439_2000.csv
-[TOTAL HASHES] 44839403465
+    -> Found 2584 T9 (1082.93s). Hashes: 48444569847
+[*] Writing results to /mnt/hdd/babett/multattack_ger_217439_2000.csv...
+[*] Results written to /mnt/hdd/babett/multattack_ger_217439_2000.csv
+[TOTAL HASHES] 48444569847

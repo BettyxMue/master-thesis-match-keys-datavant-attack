@@ -1,0 +1,30 @@
+[*] Loaded distribution file 'known_data_clean_10000.csv': top_n=500 (firsts=0, lasts=0, addresses=500)
+[*] Precomputing all possible Soundex codes...
+    -> Generated 6734 LN codes and 6734 FN codes.
+[*] Max brute-force lengths: FN=8, LN=8
+ [*] Max preimages per Soundex code: 100000
+[*] Using SHA-256(token_input) (no master salt).
+[*] Using AES-256-ECB for site token decryption (key length=32).
+[decrypt] T2: unique master tokens=9708 (successes=60000, failures=0)
+[decrypt] T1: unique master tokens=7926 (successes=60000, failures=0)
+[decrypt] T7: unique master tokens=9672 (successes=60000, failures=0)
+[decrypt] T4: unique master tokens=9955 (successes=60000, failures=0)
+[decrypt] T3: unique master tokens=10000 (successes=60000, failures=0)
+[decrypt] T9: unique master tokens=9999 (successes=60000, failures=0)
+[*] Using 24 processes for parallel tasks.
+[*] Running in Pure Brute-Force Mode.
+[*] Attacking T2 (Pure BF, Parallel)...
+    -> Found 9708 T2 (12.05s). Hashes: 136040268
+[*] Attacking T1 via T2 (Pure BF, Parallel)...
+    -> Found 132 T1 (6187.08s). Hashes: 956140268
+[*] Attacking T7 via T1 (Pure BF)...
+    -> Found 173 T7 (0.17s). Hashes: 956229500
+[*] Pivoting to T4 via T7/T2 (Pure BF, Parallel)...
+    -> Found 1 T4 (16851.41s). Hashes: 12724417514
+[*] Pivoting to T3 via T4...
+    -> Found 1 T3 (0.00s). Hashes: 12724418514
+[*] Pivoting to T9 via T4...
+    -> Found 0 T9 (0.26s). Hashes: 12724668546
+[*] Writing results to /mnt/hdd/babett/multattack_results_namesonly_nomemo_217439.csv...
+[*] Results written to /mnt/hdd/babett/multattack_results_namesonly_nomemo_217439.csv
+[TOTAL HASHES] 12724668546

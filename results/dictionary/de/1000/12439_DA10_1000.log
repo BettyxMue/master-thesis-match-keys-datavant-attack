@@ -1,0 +1,25 @@
+[*] Loaded distribution file 'known_data_clean_10000.csv': top_n=1000 (firsts=1000, lasts=1000, addresses=1000)
+[*] Attacking file 'german_matchkeys.csv' with columns: T1,T2,T4,T3,T9
+[*] Attacking in language mode: DE
+[*] Using SHA-256(token_input) (no master salt).
+[*] Using AES-256-ECB for site token decryption (key length=32).
+[decrypt] T1: unique master tokens=10000 (successes=50000, failures=0)
+[decrypt] T2: unique master tokens=10000 (successes=50000, failures=0)
+[decrypt] T4: unique master tokens=10000 (successes=50000, failures=0)
+[decrypt] T3: unique master tokens=10000 (successes=50000, failures=0)
+[decrypt] T9: unique master tokens=9999 (successes=50000, failures=0)
+[*] Using 24 processes for parallel tasks.
+[*] Running in Dictionary/Reference Mode.
+[*] Attacking T1 (Parallel)...
+    -> Found 8621 T1 preimages (194.25s). Hashes: 1794780000
+[*] Attacking T2 via T1 (Parallel)
+    -> Found 7325 T2 preimages (0.34s). Hashes: 1795033939
+[*] Pivoting to T4 via T1/T2...
+    -> Found 4438 T4 preimages (0.20s). Hashes: 1795109108
+[*] Pivoting to T3 via T4...
+    -> Found 4433 T3 (4.85s). Hashes: 1799547108
+[*] Pivoting to T9 via T4 (Parallel)...
+    -> Found 516 T9 (278.63s). Hashes: 4018848892
+[*] Writing results to /mnt/hdd/babett/final/multattack_multproc_12439_DA10_multT9_1000.csv...
+[*] Results written to /mnt/hdd/babett/final/multattack_multproc_12439_DA10_multT9_1000.csv
+[TOTAL HASHES] 4018848892

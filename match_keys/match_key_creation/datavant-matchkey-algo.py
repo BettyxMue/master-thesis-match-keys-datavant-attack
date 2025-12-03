@@ -1,4 +1,24 @@
 #!/usr/bin/env python3
+"""
+Datavant-like Token Generation Script (HMAC Variant)
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+Description:
+    This script simulates the "Tokenization" phase of a Privacy-Preserving Record Linkage (PPRL)
+    process, specifically modeling the Datavant architecture which uses a two-step encryption:
+    1. Master Token Creation: HMAC-SHA256(MasterSalt, Normalized_PII)
+    2. Site Token Creation: AES-ECB(SiteKey, MasterToken)
+
+    This double-layer approach separates the "hashing" logic (Master Salt) from the 
+    "site separation" logic (Site Key), allowing tokens to be transformed for linkage 
+    without exposing the raw hash.
+
+Usage:
+    python3 datavant-matchkey-algo.py --in input.csv --out output.csv \
+        --master-salt "YOUR_SALT" --site-key "YOUR_KEY"
+"""
+
 from jellyfish import soundex
 import argparse
 import base64
@@ -10,56 +30,38 @@ from Crypto.Cipher import AES
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 
-############################
-# Normalization utilities
-############################
+# ==============================================================================
+# 1. NORMALIZATION UTILITIES
+# ==============================================================================
+# Standardizes PII to ensure consistent hashing across different data sources.
 
 def norm_str(s: Optional[str]) -> str:
+    """
+    Removes non-alphanumeric characters and converts to lowercase.
+    Example: "O'Connor" -> "oconnor"
+    """
     if s is None:
         return ""
     return "".join(ch for ch in s.strip().lower() if ch.isalnum())
 
 def norm_name(s: Optional[str]) -> str:
+    """Wrapper for name normalization (currently alias for norm_str)."""
     return norm_str(s)
 
 def first_initial(name: Optional[str]) -> str:
+    """Extracts the first letter of the normalized name."""
     n = norm_name(name)
     return n[0] if n else ""
 
 def first_n(name: Optional[str], n: int) -> str:
+    """Extracts the first N letters of the normalized name."""
     nm = norm_name(name)
     return nm[:n] if nm else ""
 
-""" def soundex(name: Optional[str]) -> str:
-    # Classic Soundex (English). Good enough for experiments.
-    n = norm_name(name)
-    if not n:
-        return ""
-    first = n[0].upper()
-    map_tbl = {
-        "bfpv": "1",
-        "cgjkqsxz": "2",
-        "dt": "3",
-        "l": "4",
-        "mn": "5",
-        "r": "6",
-    }
-    def code(ch):
-        for k, v in map_tbl.items():
-            if ch in k:
-                return v
-        return ""
-    digits = []
-    prev = ""
-    for ch in n[1:]:
-        c = code(ch)
-        if c and c != prev:
-            digits.append(c)
-        prev = c
-    sd = (first + "".join(digits) + "000")[:4]
-    return sd """
-
 def norm_sex(sx: Optional[str]) -> str:
+    """
+    Standardizes gender/sex to single character codes: 'm', 'f', or 'u'.
+    """
     sx = (sx or "").strip().lower()
     if sx in ("m", "male"):
         return "m"
@@ -68,11 +70,13 @@ def norm_sex(sx: Optional[str]) -> str:
     return "u"  # unknown
 
 def norm_dob(d: Optional[str]) -> str:
-    """Return YYYYMMDD or '' if invalid."""
+    """
+    Standardizes dates to 'YYYYMMDD' string format.
+    Handles various input formats (dashes, dots, slashes).
+    """
     if not d or not str(d).strip():
         return ""
     s = str(d).strip()
-    # Try a few common formats
     fmts = ("%Y-%m-%d", "%d.%m.%Y", "%m/%d/%Y", "%Y/%m/%d", "%Y%m%d")
     for f in fmts:
         try:
@@ -80,72 +84,97 @@ def norm_dob(d: Optional[str]) -> str:
             return dt.strftime("%Y%m%d")
         except ValueError:
             pass
-    # If already looks like YYYYMMDD
     if len(s) == 8 and s.isdigit():
         return s
     return ""
 
 def year_of_birth(d: Optional[str]) -> str:
+    """Extracts 4-digit year from DOB."""
     ymd = norm_dob(d)
     return ymd[:4] if ymd else ""
 
 def zip3(z: Optional[str]) -> str:
+    """Extracts first 3 digits of ZIP code (HIPAA Safe Harbor)."""
     digits = "".join(ch for ch in str(z or "") if ch.isdigit())
     return digits[:3]
 
 def norm_phone(p: Optional[str]) -> str:
+    """Retains only digits from phone numbers."""
     return "".join(ch for ch in str(p or "") if ch.isdigit())
 
 def norm_email(e: Optional[str]) -> str:
-    # Minimal normalization; emails are case-insensitive in the local-part for most link use-cases
+    """Lowercases and trims emails."""
     return (e or "").strip().lower()
 
 def norm_address(a: Optional[str]) -> str:
-    # Light normalization; proper address standardization is complex
+    """Normalizes address string (alphanumeric only)."""
     return norm_str(a)
 
-############################
-# Crypto utilities
-############################
+
+# ==============================================================================
+# 2. CRYPTOGRAPHIC CORE
+# ==============================================================================
 
 def b64_44(raw: bytes) -> str:
-    """Return base64 string typically 44 chars with '==' padding (URL-safe optional)."""
+    """
+    Encodes binary data to Base64 string (ASCII).
+    Typically results in 44 chars for 32-byte inputs including padding.
+    """
     return base64.b64encode(raw).decode("ascii")
 
 def hmac_sha256(key: bytes, data: bytes) -> bytes:
+    """
+    Computes HMAC-SHA256.
+    Used to generate the 'Master Token' from the salt and PII.
+    """
     return hmac.new(key, data, hashlib.sha256).digest()
 
+def aes_ecb_encrypt(key: bytes, data: bytes) -> bytes:
+    """
+    Encrypts data using AES in ECB mode.
+    Validates key length (16/32 bytes) and data alignment.
+    
+    Note: SHA-256 output (32 bytes) is naturally aligned to AES block size (16 bytes).
+    """
+    if key is None or len(key) not in (16, 32):
+        raise ValueError("Key must be 16 or 32 bytes (AES-128 or AES-256).")
+    
+    if len(data) % 16 != 0:
+        raise ValueError("Plaintext length must be multiple of 16 bytes.")
+        
+    cipher = AES.new(key, AES.MODE_ECB)
+    return cipher.encrypt(data)
+
+def make_master_token(master_salt: bytes, token_input: str) -> bytes:
+    """
+    Step 1: Master Token Creation.
+    Combines the Master Salt and the concatenated PII string using HMAC.
+    
+    Output: 32 bytes (binary hash)
+    """
+    return hmac_sha256(master_salt, token_input.encode("utf-8"))
+
 def make_site_token(master_token: bytes, site_key: bytes) -> str:
-    """Site-specific AES over master token"""
+    """
+    Step 2: Site Token Creation.
+    Encrypts the Master Token with the Site Key to make it unique to the data owner.
+    
+    Output: Base64 string
+    """
     site_digest = aes_ecb_encrypt(site_key, master_token)
     return b64_44(site_digest)
 
-def aes_ecb_encrypt(key: bytes, data: bytes) -> bytes:
-    if key is not None and len(key) == 16:
-        """AES-128-ECB encrypt. Data must be a multiple of 16 bytes (SHA-256 is 32)."""
-        if len(data) % 16 != 0:
-            raise ValueError("Plaintext length must be a multiple of 16 bytes for ECB.")
-        cipher = AES.new(key, AES.MODE_ECB)
-        return cipher.encrypt(data)
-    elif key is not None and len(key) == 32:
-        """AES-256-ECB encrypt. Data must be a multiple of 32 bytes (SHA-256 is 32)."""
-        if len(data) % 32 != 0:
-            raise ValueError("Plaintext length must be a multiple of 32 bytes for ECB.")
-        cipher = AES.new(key, AES.MODE_ECB)
-        return cipher.encrypt(data)
-    else:
-        raise ValueError("Key must be either None or does not have a valid length (16 or 32 bytes).")
 
-def make_master_token(master_salt: bytes, token_input: str) -> bytes:
-    """HMAC-SHA256(salt, normalized_input) → 32-byte master token"""
-    return hmac_sha256(master_salt, token_input.encode("utf-8"))
-
-############################
-# Token recipe definitions
-############################
+# ==============================================================================
+# 3. TOKEN RECIPES
+# ==============================================================================
 
 def recipe_inputs(row: Dict[str, Any]) -> Dict[str, str]:
-    # Normalize once; reuse
+    """
+    Extracts and normalizes all fields from a raw CSV row.
+    Also computes derived features (Soundex, Initials).
+    """
+    # Basic Normalization
     fn = norm_name(row.get("first_name"))
     ln = norm_name(row.get("last_name"))
     dob = norm_dob(row.get("dob"))
@@ -156,7 +185,7 @@ def recipe_inputs(row: Dict[str, Any]) -> Dict[str, str]:
     em = norm_email(row.get("email"))
     addr = norm_address(row.get("address"))
 
-    # Precomputed variants
+    # Derived Features
     fi = first_initial(row.get("first_name"))
     f3 = first_n(row.get("first_name"), 3)
     sdx_fn = soundex(row.get("first_name"))
@@ -169,11 +198,12 @@ def recipe_inputs(row: Dict[str, Any]) -> Dict[str, str]:
 
 def build_token_inputs(rowvars: Dict[str, str]) -> Dict[str, str]:
     """
-    Define Datavant-like token recipes (no SSN by default).
-    You can toggle/add recipes as needed.
-    Each token input is a single string; fields concatenated with a clear delimiter
-    before hashing (delimiters are fine since we HMAC the full string).
+    Constructs the raw input strings for each Token Type (Match Key).
+    Only generates a token if all required components are present.
+    
+    Format: "Field1|Field2|..."
     """
+    # Unpack for cleaner logic
     fn = rowvars["fn"]; ln = rowvars["ln"]; dob = rowvars["dob"]; sx = rowvars["sx"]
     zp = rowvars["zp"]; fi = rowvars["fi"]; f3 = rowvars["f3"]
     sdx_fn = rowvars["sdx_fn"]; sdx_ln = rowvars["sdx_ln"]
@@ -197,8 +227,6 @@ def build_token_inputs(rowvars: Dict[str, str]) -> Dict[str, str]:
     if ln and fn and sx and dob:
         tokens["T4"] = "|".join([ln, fn, sx, dob])
 
-    # T5: SSN
-
     # T7: Last + First3 + sex + DOB
     if ln and f3 and sx and dob:
         tokens["T7"] = "|".join([ln, f3, sx, dob])
@@ -207,27 +235,11 @@ def build_token_inputs(rowvars: Dict[str, str]) -> Dict[str, str]:
     if fn and addr:
         tokens["T9"] = "|".join([fn, addr])
 
-    # T16: SSN + First
-
-    # T22: Phone
-    if ph:
-        tokens["T22"] = ph
-
-    # T40: 
-
-    """# (Optional) Email-based token
-    if em:
-        tokens["TEMAIL"] = em
-
-    # (Optional) Name + YOB (weaker)
-    if ln and fn and yob:
-        tokens["TNAMEYOB"] = "|".join([ln, fn, yob])"""
-
     return tokens
 
-############################
-# Main processing
-############################
+# ==============================================================================
+# 4. MAIN PROCESSING LOOP
+# ==============================================================================
 
 def process_csv(
     infile: str,
@@ -251,22 +263,34 @@ def process_csv(
     except ValueError:
         site = site_key.encode("utf-8")
 
-    reader = csv.DictReader(open(infile, newline="", encoding="utf-8"))
-    rows = list(reader)
+    # Open Input
+    try:
+        f_in = open(infile, newline="", encoding="utf-8")
+        reader = csv.DictReader(f_in)
+        rows = list(reader)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Input file not found: {infile}")
 
     # Gather all token names that appear
     token_names: List[str] = []
     outputs: List[Dict[str, str]] = []
 
+    print(f"[*] Processing {len(rows)} records...")
+
     for i, row in enumerate(rows):
+        # Determine Record ID
         rid = row.get(id_column) if id_column and id_column in row else str(i)
+
+        # Normalize & Build Recipes
         vars_ = recipe_inputs(row)
         token_inputs = build_token_inputs(vars_)
 
         # Compute site-specific tokens
         token_values: Dict[str, str] = {}
         for tname, tinput in token_inputs.items():
+            # Step 1: HMAC with Master Salt
             master_token = make_master_token(master, tinput)
+            # Step 2: AES with Site Key
             site_token = make_site_token(master_token, site)
             token_values[tname] = site_token
 

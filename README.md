@@ -29,11 +29,11 @@ pip install -r requirements.txt
 ```
 
 ## Key Dependencies
-* ```pycryptodome```: For AES-256 and HMAC operations.
-* ```jellyfish```: For Soundex encoding.
-* ```Faker```: For generating synthetic German/US datasets.
-* ```pandas```: For data manipulation.
-* ```gender-guesser```: For imputing gender in real-world datasets.
+* ```pycryptodome```: for AES-256 and HMAC operations.
+* ```jellyfish```: for Soundex encoding.
+* ```Faker```: for generating synthetic German/US datasets.
+* ```pandas```: for data manipulation.
+* ```gender-guesser```: for imputing gender in real-world datasets.
 
 ## Repository Structure
 
@@ -99,7 +99,7 @@ Note that, depending on which datasets should be cleaned, the respective script 
 
 **Step 3: Tokenisation (Encryption)**
 
-Simulate the "Linkage Unit" (LU). This script converts plaintext records into encrypted match keys (T1…T9) using a Master Salt (HMAC) and a Site Key (AES-256).
+Simulate the "Linkage Unit" (LU). This script converts plaintext records into encrypted match keys (T1…T9) using a Master Salt (HMAC) and a Site Key (AES-128 or -256).
 
 ```bash
 python match_keys/match_key_Creation/datavant-matchkey-algo-nosalt.py \

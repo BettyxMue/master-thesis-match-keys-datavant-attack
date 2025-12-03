@@ -2,7 +2,7 @@
 
 This repository contains the implementation of a **Token Escalation Attack** framework, developed as part of the Master's Thesis **"Record Linkage with Match Key Algorithms: Is it secure?"**.
 
-## 📌 Overview
+## Overview
 
 Privacy-Preserving Record Linkage (PPRL) systems often use multiple, redundant "match keys" (tokens) to link patient records across databases. This project demonstrates that providing correlated tokens (e.g., a low-entropy Soundex token alongside a high-entropy Name token) introduces a critical vulnerability: **Entropy Dependencies**.
 
@@ -11,7 +11,7 @@ This framework implements a cryptanalytic attack that:
 2.  **Pivots** (Escalates) this information to reduce the search space for high-entropy tokens (T4).
 3.  **Re-identifies** individuals in encrypted datasets using both Dictionary and Brute-Force methods.
 
-## 🛠️ Installation & Requirements
+## Installation & Requirements
 
 The framework is built in Python 3.13+. It relies on multiprocessing for performance.
 
@@ -35,26 +35,26 @@ pip install -r requirements.txt
 * ```pandas```: For data manipulation.
 * ```gender-guesser```: For imputing gender in real-world datasets.
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 .
 ├── data/
 │   ├── dictionaries/      # Frequency lists (names, streets) for the dictionary attack
 │   ├── simulated/         # Generated synthetic datasets (Plaintext)
-│   └── encrypted/         # Tokenized datasets (Target for the attack)
+│   └── encrypted/         # Tokenised datasets (Target for the attack)
 ├── logs/                  # Execution logs
 ├── results/               # Attack output (CSV files with re-identified records)
 ├── src/
 │   ├── generate_data.py   # Step 1: Simulates entities (Faker)
-│   ├── clean_data.py      # Step 2: Normalizes raw data (HIPAA rules)
+│   ├── clean_data.py      # Step 2: Normalises raw data (HIPAA rules)
 │   ├── encrypt_tokens.py  # Step 3: Generates Datavant-like Match Keys
 │   ├── attack.py          # Step 4: The Main Attack Framework
 │   └── utils/             # Helper functions (Soundex maps, Generators)
 └── README.md
 ```
 
-## 🚀 Usage Guide. Reproducing the Results
+## Usage Guide. Reproducing the Results
 
 **Step 1: Dataset Creation (Simulation)**
 Generate a synthetic dataset with realistic name distributions.
@@ -71,7 +71,7 @@ Prepare the data for tokenisation by standardising formats (e.g., removing speci
 python src/clean_data.py --in data/simulated/dataset_D0.csv --out data/simulated/dataset_D0_clean.csv
 ```
 
-**Step 3: Tokenization (Encryption)**
+**Step 3: Tokenisation (Encryption)**
 
 Simulate the "Linkage Unit" (LU). This script converts plaintext records into encrypted match keys (T1…T9) using a Master Salt (HMAC) and a Site Key (AES-256).
 
@@ -104,7 +104,7 @@ python src/attack.py \
   --master-salt "e0b28255c5071c0121159"
 ```
 
-### B. Brute-Force Mode (Generator)
+### B. Brute-Force Mode (Name Generator)
 
 Uses the recursive Soundex generator to reverse-engineer names without a dictionary.
 
@@ -119,7 +119,7 @@ python src/attack.py \
   --max-fn-len 8 --max-ln-len 8
 ```
 
-# 🔑 Arguments Explanation
+# Arguments Explanation
 ```markdown
 | Argument | Required | Default | Description |
 | :--- | :---: | :---: | :--- |
@@ -139,7 +139,7 @@ python src/attack.py \
 | `--fix-dob` | ❌ | `False` | Debug option: Forces the attack to only check `20000101` as the DOB. |
 ```
 
-# 📊 Interpreting Results
+# Interpreting Results
 
 The attack script outputs a log file and a CSV result file.
 * **RT (Recovered Tokens):** The absolute number of unique tokens successfully re-identified.
@@ -156,6 +156,6 @@ Example Output:
 ...
 ```
 
-## ⚖️ Ethical Considerations
+## Ethical Considerations
 
-This software is a Proof of Concept (PoC) for academic research. It is designed to audit the security of PPRL systems using synthetic or publicly available data. It should not be used to target real individuals or protected health information (PHI) without explicit authorization.
+This software is a Proof of Concept (PoC) for academic research. It is designed to audit the security of PPRL systems using synthetic or publicly available data. It should not be used to target real individuals or protected health information (PHI) without explicit authorisation.

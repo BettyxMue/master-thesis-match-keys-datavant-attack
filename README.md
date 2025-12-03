@@ -39,18 +39,40 @@ pip install -r requirements.txt
 
 ```text
 .
-├── data/
-│   ├── dictionaries/      # Frequency lists (names, streets) for the dictionary attack
-│   ├── simulated/         # Generated synthetic datasets (Plaintext)
-│   └── encrypted/         # Tokenised datasets (Target for the attack)
-├── logs/                  # Execution logs
-├── results/               # Attack output (CSV files with re-identified records)
-├── src/
-│   ├── generate_data.py   # Step 1: Simulates entities (Faker)
-│   ├── clean_data.py      # Step 2: Normalises raw data (HIPAA rules)
-│   ├── encrypt_tokens.py  # Step 3: Generates Datavant-like Match Keys
-│   ├── attack.py          # Step 4: The Main Attack Framework
-│   └── utils/             # Helper functions (Soundex maps, Generators)
+├── attack/                  # Main attack function
+├── cleaned_data/            # Normalised and standardised data for usage as reference dataset or match key creation
+│   ├── ESSnet/              # CIS and Census datasets
+│   ├── de/                  # German datasets
+│   └── us                   # US datasets (NVR and OVR) (zipped due to size)
+├── dictionaries/            # Static dictionaries form web search
+│   ├── de/                  # Lists of first names, last names and addresses specific to Germany
+│   ├── us/                  # Lists of first names, last names and addresses specific to the US
+│   └── results/             # Results from the dictionary attack
+│   │   ├── ESSnet/          # Results using the CIS datasets with US-specific static dictionary
+│   │   ├── de/              # Results using the DA10 dataset with German-specififc static dictioanrey
+│   │   └── us/              # Results using the NVR datasets with US-specific static dictionary
+├── match_keys/              # Folder containing all generated match keys and scripts to generate them
+│   ├── ESSnet/              # Match keys for CIS dataset
+│   ├── de/                  # Match keys for generated German datasets (D0, DA1, DB1, DA10, DB10, DA50, DB50) (with variations including only one DOB)
+│   ├── us                   # Match keys for NVR dataset (zipped due to size) (with variations including only one DOB or the exclusion of house numbers)
+│   └── match_key_creation/  # Scripts for generating match keys (with and without secret salt)
+├── old_approaches/          # Folder containing scripts and results from the first and reworked approaches for the development of the final attack
+├── raw_data/                # Folder containing the raw data used to create the cleaned datasets and scripts for cleaning
+│   ├── ESSnet/              # Raw data from ESSnet for CIS and Census datasets
+│   ├── de/                  # Raw data generated from Faker using different sets (e.g., 1234, 4321, 5678) and the German locale (de_DE)
+│   ├── us                   # Raw data from NVR and OVR datasets  (zipped due to size) 
+│   ├── data_cleaning/       # Folder containing scripts for cleaning specific datasets
+│   └── data_simulation/     # Folder containing scripts for data simulation
+├── results/                 # Folder containing all the results of the final attack
+│   ├── brute_force/         # Results from the brute-force mode
+│   │   ├── 24CPUCores/      # Results from the brute-force attack on the German dataset D0 using 24 CPU cores
+│   │   └── 128CPUCores/     # Results from the brute-force attack on the German dataset D0 using 128 CPU cores
+│   └── dictionary/          # Results from the dictionary mode
+│       ├── baseline         # Results from the baseline dictionary attack
+│       ├── de/              # Results from the dictionary attacks on German simulated datasets (with 500, 1000 and 2000 reference values)
+│       └── us/              # Results from the dictionary attacks on the North Carolina dataset (with 500, 1000 and 2000 reference values)
+├── scripts/                 # Folder containing helper scripts for key generation, value counting or replacing DOBs for brute-force attack testing
+├── generated_key            # File containing the used AES keys for encryption and decryption
 └── README.md
 ```
 
@@ -60,48 +82,51 @@ pip install -r requirements.txt
 Generate a synthetic dataset with realistic name distributions.
 
 ```bash
-python src/generate_data.py --locale de_DE --count 10000 --seed 1234 --out data/simulated/dataset_D0.csv
+python raw_data/data_simulation/gen_dataset.py
 ```
+Respective changes regarding seeds (e.g., 1234, 4321, 5678) and locale ("de_DE" or "en_US") must be adjusted within the code directly.
 
 **Step 2: Data Cleaning & Normalisation**
 
 Prepare the data for tokenisation by standardising formats (e.g., removing special characters, formatting DOB to YYYYMMDD).
+Note that, depending on which datasets should be cleaned, the respective script needs to be run:
 
-```bash
-python src/clean_data.py --in data/simulated/dataset_D0.csv --out data/simulated/dataset_D0_clean.csv
-```
+* ```cleandata_essnet.py```: for cleaning the datasets CIS or Census from ESSnet.
+* ```cleandata_german.py```: for cleaning all simulated German datasets.
+* ```cleandata_nc.py```: for cleaning NVR (North Carolina) data.
+* ```cleandata_ohio.py```: for cleaning OVR (Ohio) data.
+* ```clean_address.pyr```: for removing house numbers from the addresses.
 
 **Step 3: Tokenisation (Encryption)**
 
 Simulate the "Linkage Unit" (LU). This script converts plaintext records into encrypted match keys (T1…T9) using a Master Salt (HMAC) and a Site Key (AES-256).
 
 ```bash
-python src/encrypt_tokens.py \
+python match_keys/match_key_Creation/datavant-matchkey-algo-nosalt.py \
   --in data/simulated/dataset_D0_clean.csv \
   --out data/encrypted/tokens_D0.csv \
   --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7" \
-  --master-salt "e0b28255c5071c0121159"
 ```
 Output: A CSV file containing only the encrypted tokens (no plaintext). This represents the data leak.
 
 **Step 4: Execution of the Attack**
 
 Run the main attack ```multiple_attack_multproc_nomemo.py``` script to re-identify the encrypted tokens.
+When deciding which columns to use for attacking the match keys, note that the written sequence of columns decides the attack path.
 
 ### A. Dictionary Mode (Recommended)
 
 Uses a reference dictionary (e.g., Top-N names) to pivot through the tokens.
 
 ```bash
-python src/attack.py \
+python attack/multiple_attack_multproc_nomemo.py \
   --in data/encrypted/tokens_D0.csv \
   --out results/attack_results_D0.csv \
   --dist-file data/dictionaries/known_data_distribution.csv \
   --top-n 500 \
   --columns T1,T2,T7,T4,T3,T9 \
   --lang de \
-  --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7" \
-  --master-salt "e0b28255c5071c0121159"
+  --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7" 
 ```
 
 ### B. Brute-Force Mode (Name Generator)
@@ -109,17 +134,16 @@ python src/attack.py \
 Uses the recursive Soundex generator to reverse-engineer names without a dictionary.
 
 ```bash
-python src/attack.py \
+python attack/multiple_attack_multproc_nomemo.py \
   --in data/encrypted/tokens_D0.csv \
   --out results/bf_results_D0.csv \
   --columns T2,T1,T7,T4 \
   --bruteforce \
-  --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7" \
-  --master-salt "e0b28255c5071c0121159" \
+  --site-key "dc31ebf7f2879ea343d5b08d1e912b88f413c6c50ac49e1386136758a59d64d7"
   --max-fn-len 8 --max-ln-len 8
 ```
 
-# Arguments Explanation
+## Arguments Explanation
 ```markdown
 | Argument | Required | Default | Description |
 | :--- | :---: | :---: | :--- |
@@ -136,10 +160,10 @@ python src/attack.py \
 | `--max-ln-len` | ❌ | `8` | (Brute-force only) Max length for generated Last Names. |
 | `--bf-max-preimages` | ❌ | `100000` | (Brute-force only) Limit on name candidates generated per Soundex code to prevent OOM errors. |
 | `--excl-nr` | ❌ | `False` | If set, excludes house numbers from the T9 (Address) pivot to save time. |
-| `--fix-dob` | ❌ | `False` | Debug option: Forces the attack to only check `20000101` as the DOB. |
+| `--fix-dob` | ❌ | `False` |  Forces the attack to only check `20000101` as the DOB. |
 ```
 
-# Interpreting Results
+## Interpreting Results
 
 The attack script outputs a log file and a CSV result file.
 * **RT (Recovered Tokens):** The absolute number of unique tokens successfully re-identified.
@@ -158,4 +182,4 @@ Example Output:
 
 ## Ethical Considerations
 
-This software is a Proof of Concept (PoC) for academic research. It is designed to audit the security of PPRL systems using synthetic or publicly available data. It should not be used to target real individuals or protected health information (PHI) without explicit authorisation.
+This attack framework is a Proof of Concept (PoC) for academic research. It is designed to audit the security of PPRL systems using synthetic or publicly available data. It should not be used to target real individuals or protected health information (PHI) without explicit authorisation.

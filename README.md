@@ -68,7 +68,7 @@ pip install -r requirements.txt
 │   │   ├── baseline/        # Results from the baseline dictionary attack
 │   │   ├── de/              # Results from the dictionary attacks on German simulated datasets (with 500, 1000 and 2000 reference values)
 │   │   └── us/              # Results from the dictionary attacks on the North Carolina dataset (with 500, 1000 and 2000 reference values)
-│   └── static_dictionaries\ # Results from the dictionary attack using static dictionaries
+│   └── static_dictionaries/ # Results from the dictionary attack using static dictionaries
 │       ├── de/              # Results using the static dictionary attack on DA10 
 │       └── us/              # Results using the static dictionary attack on NVR 
 ├── scripts/                 # Folder containing helper scripts for key generation, value counting or replacing DOBs for brute-force attack testing

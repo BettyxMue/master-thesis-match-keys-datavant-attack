@@ -1,10 +1,10 @@
 # Token Escalation Attack on Datavant-Like Match Keys
 
-This repository contains the implementation of a **Token Escalation Attack** framework, developed as part of the Master's Thesis **"Record Linkage with Match Key Algorithms: Is it secure?"**.
+This repository contains the implementation of a **Escalation Attack** framework, developed as part of the master's thesis **"Record Linkage with Match Key Algorithms: Is it secure?"**.
 
 ## Overview
 
-Privacy-Preserving Record Linkage (PPRL) systems often use multiple, redundant "match keys" (tokens) to link patient records across databases. This project demonstrates that providing correlated tokens (e.g., a low-entropy Soundex token alongside a high-entropy Name token) introduces a critical vulnerability: **Entropy Dependencies**.
+Privacy-Preserving Record Linkage (PPRL) systems often use multiple, redundant "match keys" (tokens) to link patient records across databases. This project demonstrates that providing correlated tokens (e.g., a low-entropy Soundex token alongside a high-entropy Name token) introduces a critical vulnerability: **entropy dependencies**.
 
 This framework implements a cryptanalytic attack that:
 1.  **Exploits** low-entropy tokens (T1, T2) to recover partial attributes (Gender, DOB, Soundex).

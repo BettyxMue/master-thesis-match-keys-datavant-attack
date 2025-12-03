@@ -68,7 +68,7 @@ pip install -r requirements.txt
 │   │   ├── 24CPUCores/      # Results from the brute-force attack on the German dataset D0 using 24 CPU cores
 │   │   └── 128CPUCores/     # Results from the brute-force attack on the German dataset D0 using 128 CPU cores
 │   └── dictionary/          # Results from the dictionary mode
-│       ├── baseline         # Results from the baseline dictionary attack
+│       ├── baseline/        # Results from the baseline dictionary attack
 │       ├── de/              # Results from the dictionary attacks on German simulated datasets (with 500, 1000 and 2000 reference values)
 │       └── us/              # Results from the dictionary attacks on the North Carolina dataset (with 500, 1000 and 2000 reference values)
 ├── scripts/                 # Folder containing helper scripts for key generation, value counting or replacing DOBs for brute-force attack testing

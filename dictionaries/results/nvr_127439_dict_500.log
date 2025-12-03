@@ -1,0 +1,28 @@
+[*] Using hardcoded dictionaries: firsts=206, lasts=1000, addresses=119
+[*] Attacking file 'nc_matchkeys-nr.csv' with columns: T1,T2,T7,T4,T3,T9
+[*] Attacking in language mode: US
+[*] Using SHA-256(token_input) (no master salt).
+[*] Using AES-256-ECB for site token decryption (key length=32).
+[decrypt] T1: unique master tokens=7647450 (successes=46326548, failures=0)
+[decrypt] T2: unique master tokens=7704256 (successes=46326548, failures=0)
+[decrypt] T7: unique master tokens=7712896 (successes=46326548, failures=0)
+[decrypt] T4: unique master tokens=7717151 (successes=46326548, failures=0)
+[decrypt] T3: unique master tokens=7720705 (successes=46326548, failures=0)
+[decrypt] T9: unique master tokens=6428533 (successes=46326548, failures=0)
+[*] Using 24 processes for parallel tasks.
+[*] Running in Dictionary/Reference Mode.
+[*] Attacking T1 (Parallel)...
+    -> Found 3214508 T1 preimages (396.06s). Hashes: 1794780000
+[*] Attacking T2 via T1 (Parallel)
+    -> Found 2155440 T2 preimages (244.12s). Hashes: 1828044086
+[*] Attacking T7 via T1 and T2 intersection...
+     -> Found 1781081 T7 preimages (188.83s). Hashes: 1833108952
+[*] Pivoting to T4 via T7 and T2 (Optimized, Serial)...
+    -> Found 1562179 T4 preimages (131.44s). Hashes: 1839177854
+[*] Pivoting to T3 via T4...
+    -> Found 1565056 T3 (2217.79s). Hashes: 3401356854
+[*] Pivoting to T9 via T4 (Parallel)...
+    -> Found 15792 T9 (310.70s). Hashes: 3587256155
+[*] Writing results to /mnt/hdd/babett/multattack_nvr_127439_dict_500.csv...
+[*] Results written to /mnt/hdd/babett/multattack_nvr_127439_dict_500.csv
+[TOTAL HASHES] 3587256155

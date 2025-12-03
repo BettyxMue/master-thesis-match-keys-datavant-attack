@@ -1,0 +1,28 @@
+[*] Using hardcoded dictionaries: firsts=206, lasts=1000, addresses=119
+[*] Attacking file 'cis_matchkeys.csv' with columns: T1,T2,T7,T4,T3,T9
+[*] Attacking in language mode: US
+[*] Using SHA-256(token_input) (no master salt).
+[*] Using AES-256-ECB for site token decryption (key length=32).
+[decrypt] T1: unique master tokens=23418 (successes=140532, failures=0)
+[decrypt] T2: unique master tokens=23421 (successes=140532, failures=0)
+[decrypt] T7: unique master tokens=23422 (successes=140532, failures=0)
+[decrypt] T4: unique master tokens=23422 (successes=140532, failures=0)
+[decrypt] T3: unique master tokens=23422 (successes=140532, failures=0)
+[decrypt] T9: unique master tokens=23067 (successes=140532, failures=0)
+[*] Using 24 processes for parallel tasks.
+[*] Running in Dictionary/Reference Mode.
+[*] Attacking T1 (Parallel)...
+    -> Found 15185 T1 preimages (203.17s). Hashes: 1794780000
+[*] Attacking T2 via T1 (Parallel)
+    -> Found 7437 T2 preimages (0.83s). Hashes: 1794924523
+[*] Attacking T7 via T1 and T2 intersection...
+     -> Found 5539 T7 preimages (0.09s). Hashes: 1794935314
+[*] Pivoting to T4 via T7 and T2 (Optimized, Serial)...
+    -> Found 4575 T4 preimages (0.08s). Hashes: 1794950300
+[*] Pivoting to T3 via T4...
+    -> Found 4575 T3 (5.52s). Hashes: 1799525300
+[*] Pivoting to T9 via T4 (Parallel)...
+    -> Found 580 T9 (36.83s). Hashes: 2072282225
+[*] Writing results to /mnt/hdd/babett/multattack_cis_127439_dict_500.csv...
+[*] Results written to /mnt/hdd/babett/multattack_cis_127439_dict_500.csv
+[TOTAL HASHES] 2072282225

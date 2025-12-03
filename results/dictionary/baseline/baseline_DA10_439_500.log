@@ -1,0 +1,19 @@
+[*] Loaded distribution file 'known_data_clean_10000.csv': top_n=500 (firsts=500, lasts=500, addresses=500)
+[*] Precomputing all possible Soundex codes...
+    -> Generated 6734 LN codes and 6734 FN codes.
+[*] Max brute-force lengths: FN=8, LN=8
+[*] Using SHA-256(token_input) (no master salt).
+[*] Using AES-256-ECB for site token decryption (key length=32).
+[decrypt] T4: unique master tokens=10000 (successes=30000, failures=0)
+[decrypt] T3: unique master tokens=10000 (successes=30000, failures=0)
+[decrypt] T9: unique master tokens=9999 (successes=30000, failures=0)
+[*] Running in Dictionary/Reference Mode.
+[*] Running baseline of attacks.
+[*] Pivoting to T4...
+    -> Found 2246 T4 preimages (16821.71s). Hashes: 17257500000
+[*] Pivoting to T3 via T4...
+    -> Found 2245 T3 (2.22s). Hashes: 17259746000
+[*] Pivoting to T9 via T4...
+    -> Found 162 T9 (60.19s). Hashes: 17821317872
+[*] Results written to /mnt/hdd/babett/baseline_ger_4321_500.csv
+[TOTAL HASHES] 17821317872

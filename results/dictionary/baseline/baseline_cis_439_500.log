@@ -1,0 +1,20 @@
+[*] Loaded distribution file 'census_cleaned.csv': top_n=500 (firsts=500, lasts=500, addresses=500)
+[*] Attacking file 'cis_matchkeys.csv' with columns: T4,T3,T9
+[*] Attacking in language mode: US
+[*] Using SHA-256(token_input) (no master salt).
+[*] Using AES-256-ECB for site token decryption (key length=32).
+[decrypt] T4: unique master tokens=23422 (successes=70266, failures=0)
+[decrypt] T3: unique master tokens=23422 (successes=70266, failures=0)
+[decrypt] T9: unique master tokens=23067 (successes=70266, failures=0)
+[*] Using 24 processes for parallel tasks.
+[*] Running in Dictionary/Reference Mode.
+[*] Running baseline of attacks.
+[*] Attacking T4...
+    -> Found 14389 T4 preimages (20515.30s). Hashes: 17257500000
+[*] Pivoting to T3 via T4...
+    -> Found 14389 T3 (16.98s). Hashes: 17271889000
+[*] Pivoting to T9 via T4 (Parallel)...
+    -> Found 17079 T9 (461.03s). Hashes: 20869139000
+[*] Writing results to /mnt/hdd/babett/multattack_cis_439_500.csv...
+[*] Results written to /mnt/hdd/babett/multattack_cis_439_500.csv
+[TOTAL HASHES] 20869139000

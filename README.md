@@ -1,6 +1,6 @@
 # Token Escalation Attack on Datavant-Like Match Keys
 
-This repository contains the implementation of a **Escalation Attack** framework, developed as part of the master's thesis **"Record Linkage with Match Key Algorithms: Is it secure?"**.
+This repository contains the implementation of a **Escalation Attack** framework, developed as part of the master's thesis **"Record Linkage with Match Key Algorithms - Is it secure?"**.
 
 ## Overview
 

@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+"""
+Script for cleaning address column by removing numbers and keeping only street names.
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+This script cleans the address column by removing numbers and keeping only street names.
+Used for the easier attack on the US datasets due to high variety in housenumbers.
+
+Usage:
+    python3 raw_data/data_cleaning/clean_address.py
+"""
+
 import argparse
 from pathlib import Path
 import sys
@@ -5,6 +18,7 @@ import pandas as pd
 
 SUPPORTED_EXTS = {".csv", ".xlsx", ".xls", ".parquet"}
 
+# Load DataFrame with optional string columns
 def load_df(path: Path, string_columns=None) -> pd.DataFrame:
     ext = path.suffix.lower()
     sc = list(string_columns) if string_columns else []
@@ -23,6 +37,7 @@ def load_df(path: Path, string_columns=None) -> pd.DataFrame:
         return df
     raise ValueError(f"Unsupported input extension: {ext}")
 
+# Save DataFrame to file
 def save_df(df: pd.DataFrame, path: Path) -> None:
     ext = path.suffix.lower()
     if ext == ".csv":
@@ -34,9 +49,11 @@ def save_df(df: pd.DataFrame, path: Path) -> None:
     else:
         raise ValueError(f"Unsupported output extension: {ext}")
 
+# Compute default output path
 def compute_output_path(inp: Path) -> Path:
     return inp.with_name(f"{inp.stem}.cleaned{inp.suffix}")
 
+# Clean addresses by removing numbers and keeping only street names
 def clean_addresses(df: pd.DataFrame, col: str) -> pd.DataFrame:
     if col not in df.columns:
         raise KeyError(f"Column '{col}' not found.")
@@ -52,12 +69,14 @@ def parse_args():
     p.add_argument("-o", "--output", type=Path, help="Output file path (defaults to <input>.cleaned<ext>)")
     p.add_argument("-c", "--column", default="address", help="Column name to clean (default: address)")
     p.add_argument("--inplace", action="store_true", help="Overwrite the input file in place")
-    # New: force columns to be treated as strings on read, e.g., -S birth_year
     p.add_argument("-S", "--string-columns", nargs="+", help="Columns to force to string dtype when reading")
     return p.parse_args()
 
 def main():
+    # Parse arguments
     args = parse_args()
+
+    # Validate arguments
     if not args.input.exists():
         print(f"Input not found: {args.input}", file=sys.stderr)
         sys.exit(1)
@@ -68,18 +87,19 @@ def main():
         print("Use either --inplace or --output, not both.", file=sys.stderr)
         sys.exit(1)
 
+    # Determine output path
     out_path = args.input if args.inplace else (args.output or compute_output_path(args.input))
     if out_path.suffix.lower() not in SUPPORTED_EXTS:
         print(f"Unsupported output extension: {out_path.suffix}", file=sys.stderr)
         sys.exit(1)
 
+    # Load, clean, and save
     df = load_df(args.input, string_columns=args.string_columns)
     try:
         df = clean_addresses(df, args.column)
     except KeyError as e:
         print(str(e), file=sys.stderr)
         sys.exit(1)
-
     save_df(df, out_path)
     print(f"Saved: {out_path}")
 

@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+"""
+Script for Data Cleaning of German Voter Data
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+This script cleans the German Voter dataset by selecting relevant columns, normalizing addresses, adjusting names and dates, and handling special cases in addresses.
+With hardcoded paths for input and output files!
+
+Usage:
+    python3 raw_data/data_cleaning/cleandata_german.py
+"""
+
 import pandas as pd
 import re
 import random

@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+"""
+Script for generating a simulated dataset
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+This script generates a simulated dataset using the Faker library. 
+It creates synthetic records with realistic names, birthdates, addresses and other attributes.
+With hard coded values! Need to be changed in order to adjust dataset size or attributes.
+
+Usage:
+    python3 raw_data/data_simulation/gen_dataset.py
+"""
+
 import pandas as pd
 import random
 from faker import Faker
@@ -73,16 +87,6 @@ def generate_records():
     random_birthdate = fake.date_of_birth(minimum_age=min_age, maximum_age=max_age)
     dob = random_birthdate.strftime('%Y%m%d')
     year_of_birth = random_birthdate.strftime('%Y')
-
-    """ # Generate email aligned with first and last name but with randomization
-    email_domains = ["example.com", "mail.com", "test.org"]
-    random_domain = random.choice(email_domains)
-    email = f"{normalize(first_name)}.{normalize(last_name)}{random.randint(1, 99)}@{random_domain}" """
-
-    """# email = fake.email()
-    email = profile['mail']
-    phone = fake.phone_number()"""
-
     postcode = fake.postcode()
     address = fake.street_address()
 

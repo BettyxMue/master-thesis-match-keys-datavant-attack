@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+"""
+Script for Data Cleaning of ESSNET Voter Data
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+This script cleans the ESSNET Voter dataset by selecting relevant columns, normalizing addresses, adjusting names and dates, and handling special cases in addresses.
+With hardcoded paths for input and output files!
+
+Usage:
+    python3 raw_data/data_cleaning/cleandata_essnet.py
+"""
+
 import pandas as pd
 import argparse
 import re
@@ -30,6 +43,7 @@ def normalize_name(s: str) -> str:
     cleaned = re.sub(r"\s+", "", cleaned)
     return cleaned
 
+# Normalize address: lowercase, trim, collapse spaces
 def normalize_address(s: str) -> str:
     if not s:
         return ""
@@ -38,6 +52,7 @@ def normalize_address(s: str) -> str:
     s = re.sub(r"\s+", " ", s)
     return s
 
+# Normalize sex column
 def normalize_sex(s: str) -> str:
     s = s.strip().lower()
     if s in ["m", "male"]:
@@ -46,6 +61,7 @@ def normalize_sex(s: str) -> str:
         return "f"
     return "u"
 
+# Main processing function
 def process_file(input_path: str, output_path: str, fillyear: bool):
     df = pd.read_csv(input_path, delimiter=",", quotechar='"', dtype=str, encoding="utf-8")
     # Ensure expected columns exist
@@ -71,10 +87,12 @@ def process_file(input_path: str, output_path: str, fillyear: bool):
     year_digits = year.str.extract(r"(\d{1,4})")[0].fillna("")
     year = year_digits.str.zfill(4).where(year_digits.ne(""), "")
 
+    # Normalize month
     month_raw = df["DOB_MON"].fillna("").astype(str).str.strip()
     month_digits = month_raw.str.extract(r"(\d{1,2})")[0].fillna("")
     month = month_digits.str.zfill(2).where(month_digits.ne(""), "")
 
+    # Normalize day
     day_raw = df["DOB_DAY"].fillna("").astype(str).str.strip()
     day_digits = day_raw.str.extract(r"(\d{1,2})")[0].fillna("")
     day = day_digits.str.zfill(2).where(day_digits.ne(""), "")
@@ -84,7 +102,10 @@ def process_file(input_path: str, output_path: str, fillyear: bool):
     dob = pd.Series([""] * len(df), index=df.index, dtype="object")
     dob.loc[valid_dob] = year.loc[valid_dob] + month.loc[valid_dob] + day.loc[valid_dob]
 
+    # Normalize address
     address = df["ENUMCAP"].fillna("").apply(normalize_address)
+    
+    # Normalize sex
     sex = df["SEX"].fillna("").str.strip().str.lower().apply(normalize_sex)
 
     # Assign stable random ZIP per distinct address
@@ -105,6 +126,7 @@ def process_file(input_path: str, output_path: str, fillyear: bool):
     sex = sex[non_empty]
     yob = year[non_empty]
 
+    # Output
     out = pd.DataFrame({
         "first_name": first,
         "last_name": last,

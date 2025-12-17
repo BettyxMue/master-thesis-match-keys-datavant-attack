@@ -1,7 +1,22 @@
+#!/usr/bin/env python3
+"""
+DOB Replacement Script
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+This script processes a CSV file to replace the date of birth (DOB) with a fixed value.
+The cleaned data is saved to a new CSV file.
+
+Usage:
+    python3 scripts/replacedob.py --input input.csv --output output.csv
+"""
+
 import argparse
 import pandas as pd
 
+# Function to process the file
 def process_file(input_path: str, output_path: str):
+    # Read the input CSV
     df = pd.read_csv(input_path, delimiter=",", quotechar='"', dtype=str, encoding="utf-8")
 
     # Select relevant columns

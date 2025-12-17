@@ -1,10 +1,21 @@
+#!/usr/bin/env python3
+"""
+Script for cleaning the Ohio voter dataset
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+This script cleans the Ohio voter dataset by selecting relevant columns, normalizing addresses, adjusting names and dates, and guessing the sex of individuals.
+With hardcoded paths for input and output files!
+
+Usage:
+    python3 raw_data/data_cleaning/cleandata_ohio.py 
+"""
+
 import pandas as pd
-import re
 from gender_guesser.detector import Detector
 
 # Load a sample of the voter dataset
 file_path = r"ohio_voter.txt"
-#df = pd.read_csv(xxx)
 df = pd.read_csv(file_path, delimiter=",", quotechar='"', dtype=str, encoding="utf-8")
 
 # Select relevant columns
@@ -46,6 +57,7 @@ address_replacements = {
     "cir": "circle"
 }
 
+# Function to normalize addresses
 def normalize_address(address):
     for abbr, full in address_replacements.items():
         address = address.replace(abbr, full)

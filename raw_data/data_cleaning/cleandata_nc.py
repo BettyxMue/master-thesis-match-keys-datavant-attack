@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+"""
+Script for cleaning the North Carolina Voter Registration dataset
+Master Thesis: Record Linkage with Match Key Algorithms - Is it secure?
+Author: Babett Müller
+
+This script cleans the North Carolina Voter Registration dataset by selecting relevant columns, normalizing addresses, adjusting names and dates, and guessing the sex of individuals.
+With hardcoded paths for input and output files!
+
+Usage:
+    python3 raw_data/data_cleaning/cleandata_nc.py
+"""
+
 import pandas as pd
 import re
 from gender_guesser.detector import Detector
@@ -5,9 +18,7 @@ import numpy as np
 
 # Load a sample of the voter dataset
 file_path = r"ncvoter_Statewide.txt"
-# df = pd.read_csv(file_path)
 df = pd.read_csv(file_path, delimiter="\t", dtype=str, encoding="ISO-8859-1")
-# df = pd.read_csv(file_path, dtype={"zip": str, "phone": str})
 
 # Select relevant columns
 df_copy = df[[
@@ -54,10 +65,13 @@ address_replacements = {
     "sq": "square",
     "cir": "circle"
 }
+
+# Precompile sets for faster lookup
 _STREET_ABBR = set(address_replacements.keys())
 _STREET_FULL = set(address_replacements.values())
 _STREET_TERMINATORS = _STREET_ABBR | _STREET_FULL
 
+# Normalize address by truncating after street type and expanding abbreviations
 def normalize_address(address):
     if pd.isna(address):
         return ""
@@ -84,6 +98,7 @@ def normalize_address(address):
             expanded.append(address_replacements.get(t, t))
     return " ".join(expanded)
 
+# Normalize sex values
 def normalize_sex(s: str) -> str:
     s = s.strip().lower()
     if s in ["m", "male"]:
@@ -144,7 +159,8 @@ if "dob" not in df_new.columns or df_new["dob"].isnull().any():
         .str.extract(r"(\d{4})")[0]
     )
     valid_yob_mask = yob_clean.notna() & yob_clean.str.fullmatch(r"\d{4}")
-
+    
+    # Sample MMDD for missing DOBs
     target_mask = missing_mask & valid_yob_mask
     n = int(target_mask.sum())
     if n > 0:
@@ -175,9 +191,16 @@ if "year_of_birth" in df_new.columns:
     ymask = df_new["year_of_birth"].isna() | (df_new["year_of_birth"].astype(str).str.strip() == "")
     df_new.loc[ymask & df_new["dob"].notna(), "year_of_birth"] = df_new.loc[ymask, "dob"].str[:4]
 
+# Guess sex from first name if unknown
 df_new["address"] = df_new["address"].replace(r"(?i)^removed$", "", regex=True).str.lower()
+
+# Remove apartment/unit numbers from address
 df_new["address"] = df_new["address"].str.replace(r"#\s*\w+", "", regex=True)
+
+# Collapse multiple spaces in address
 df_new["address"] = df_new["address"].apply(lambda x: " ".join(x.split()) if isinstance(x, str) else x)
+
+# Remove '#' from names
 df_new["last_name"] = df_new["last_name"].str.replace("#", "", regex=False)
 
 # Optional: Strip whitespace and standardize formatting

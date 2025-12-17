@@ -14,11 +14,11 @@ Description:
     Key Features:
     - Support for both German ('de') and US ('us') address formats.
     - Configurable "Top-N" dictionary size.
-    - Recursive pivoting logic (T1 -> T4 -> T3 -> T9).
+    - Low-entropy pivoting logic (T1 -> T2 -> T4 -> T3 -> T9).
 
 Usage:
     python3 old_approaches/low_entropy_old.py --in encrypted_tokens.csv --out results.txt \
-        --site-key "KEY" (--master-salt "SALT") --columns "T1,T2,T4,T9"
+        --site-key "KEY" (--master-salt "SALT") --columns "T1,T2,T4,T3,T9"
 """
 
 import argparse
